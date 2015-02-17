@@ -1,0 +1,118 @@
+bunsen-pipemenus (0.14-1)
+
+  * Adjust dependencies, minor tweaks
+
+ -- John Crawley <john@rafflesnagoya.com> Tue, 17 Feb 2015 23:05:24 +0900
+
+cb-pipemenus (0.14) unstable; urgency=low
+
+  * Update dropbox download urls.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Sun, 08 Dec 2013 21:01:41 +0000
+
+cb-pipemenus (0.13) unstable; urgency=low
+
+  * Remove inotify-tools from depends.
+  * Update standard version.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Fri, 03 May 2013 22:16:20 +0100
+
+cb-pipemenus (0.12) unstable; urgency=low
+
+  * Adjust to use new cb metapackges.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Mon, 14 Jan 2013 22:01:20 +0000
+
+cb-pipemenus (0.11) unstable; urgency=low
+
+  * debian/control:
+    - mesa-utils add to depends.
+  * cb-compositor:
+    - adjust to detect opengl support.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Sun, 04 Nov 2012 11:15:18 +0000
+
+cb-pipemenus (0.10) unstable; urgency=low
+
+  [ John Crawley ]
+  * cb-places-pipemenu:
+    - Portability fix. Now no longer breaks if run on bash instead of dash.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Thu, 27 Sep 2012 17:33:47 +0100
+
+cb-pipemenus (0.09) unstable; urgency=low
+
+  * Update compositing menu to work with new compton config.
+  * Add watch option to compositing menu/script.
+  * Add notify-tools to depends.
+  * Add cb-metapackage to depends.
+  * Update dropbox referal code for Jo.
+  * Update pipemenu syntax, replacing depreciated <execute>'s to <command>.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Wed, 26 Sep 2012 20:50:04 +0100
+
+cb-pipemenus (0.08) unstable; urgency=low
+
+  * Update Dropbox referral code.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Mon, 17 Sep 2012 12:23:16 +0100
+
+cb-pipemenus (0.07) unstable; urgency=low
+
+  [ John Crawley ]
+  * cb-places-pipemenu:
+    - References to scriptname in comments updated to cb-places-pipemenu.
+  * cb-recent-files-pipemenu:
+    - Updated references to recently_opened_menu.sh to cb-recent-files-menu.
+    - Outputs error message in menu if recently-used.xbel cannot be found.
+    - Escape _ to __ in menu labels.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Thu, 26 Jul 2012 08:01:49 +0100
+
+cb-pipemenus (0.06) unstable; urgency=low
+
+  * Add John Crawley's "Places" & "Recent Files" pipemenus.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Wed, 25 Jul 2012 09:11:46 +0100
+
+cb-pipemenus (0.05) unstable; urgency=low
+
+  * Modified 'connectiontest' function to use the reliable wget 
+    method instead of unreliable ping.
+  * Moved 'connectiontest' function to a new file (cb-include.cfg),
+    that can be sourced inside any bash script and used to store 
+    common variables and functions.
+  * Modified relevant cb-* scripts to reflect this change.
+  * Modified 'cb-x-www-browser-pipemenu' script to use vendor 
+    supplied URLs as primary sources of APT keys; but implemented 
+    fallback to packages.crunchbang.org if primary sources fail. This
+    concerns Opera and Google Chrome options.
+
+ -- Giorgi Tavkelishvili <gtavkelishvili@linuxpg.org> Sat, 19 May 2012 14:03:30 +0400
+
+cb-pipemenus (0.04) unstable; urgency=low
+
+  * Add cb-sshconfig-pipemenu
+  * Add python & python-paramiko to depends
+
+ -- Philip Newborough <corenominal@corenominal.org>  Fri, 27 Apr 2012 08:34:48 +0100
+
+cb-pipemenus (0.03) unstable; urgency=low
+
+  * cb-x-www-browser-pipemenu:
+    - add installation routine for Iceweasel
+    - add installation routine for Chromium Browser
+
+ -- Philip Newborough <corenominal@corenominal.org>  Wed, 25 Apr 2012 09:09:38 +0100
+
+cb-pipemenus (0.02) unstable; urgency=low
+
+  * cb-dropbox-pipemenu: get binary files from official site.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Fri, 20 Apr 2012 11:02:16 +0100
+
+cb-pipemenus (0.01) unstable; urgency=low
+
+  * Initial release.
+
+ -- Philip Newborough <corenominal@corenominal.org>  Mon, 16 Apr 2012 11:28:48 +0100

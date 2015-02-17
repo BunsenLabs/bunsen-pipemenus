@@ -1,0 +1,11 @@
+Package: bunsen-pipemenus
+Version: 0.14-1
+Architecture: all
+Maintainer: John Crawley <john@rafflesnagoya.com>
+Depends: openbox, zenity, terminator, wget, compton, curl, tar, python, python-paramiko, mesa-utils
+Section: misc
+Priority: extra
+Description: Experimental - various Openbox pipemenus.
+ Contains various Openbox pipemenus for use with
+ Bunsen Linux. 
+ Adapted from cb-pipemenus by Philip Newborough
