@@ -7,7 +7,7 @@
 
 
 # In order to add another browser, simply add it to this array:
-TOOLS=('chromium-browser' 'iceweasel' 'google-chrome' 'opera')
+TOOLS=('chromium' 'iceweasel' 'google-chrome' 'opera')
 # If the package needs additional configuration before installation simply create a function called setupBrowserName, it will be called automatically.
 
 KEY_URLS_GOOGLE=('https://dl-ssl.google.com/linux/linux_signing_key.pub' 'http://packages.crunchbang.org/waldorf-files/apt-keys/google-chrome.key')
@@ -91,7 +91,7 @@ elif [[ $1 = --install-* ]]; then
         clear
         connectiontest 1 || continue
 
-        setupFunctionName="setup${browserName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromiumBrowser'
+        setupFunctionName="setup${browserName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
         if [[ $(type -t "$setupFunctionName") == 'function' ]]; then
             "$setupFunctionName" || continue # run setup function if it exists
         fi
