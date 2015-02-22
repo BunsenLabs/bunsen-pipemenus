@@ -1,5 +1,5 @@
 Package: bunsen-pipemenus
-Version: 0.14-2
+Version: 0.14-3
 Architecture: all
 Maintainer: John Crawley <john@rafflesnagoya.com>
 Depends: openbox, zenity, terminator, wget, compton, curl, tar, python, python-paramiko, mesa-utils
