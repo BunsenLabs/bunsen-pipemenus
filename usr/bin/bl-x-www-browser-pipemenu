@@ -1,0 +1,136 @@
+#!/bin/bash
+# ---------------------------------------------------------------------
+# A pipemenu to install a browser on Bunsen Labs Linux.
+# Originally written for CrunchBang Linux <http://crunchbang.org/>
+# by Philip Newborough (aka corenominal) <corenominal@corenominal.org>
+# ---------------------------------------------------------------------
+
+
+# In order to add another browser, simply add it to this array:
+TOOLS=('chromium-browser' 'iceweasel' 'google-chrome' 'opera')
+# If the package needs additional configuration before installation simply create a function called setupBrowserName, it will be called automatically.
+
+KEY_URLS_GOOGLE=('https://dl-ssl.google.com/linux/linux_signing_key.pub' 'http://packages.crunchbang.org/waldorf-files/apt-keys/google-chrome.key')
+KEY_URLS_OPERA=('http://deb.opera.com/archive.key' 'http://packages.crunchbang.org/waldorf-files/apt-keys/opera.key')
+
+if ! . bl-include.cfg 2> /dev/null; then
+    say 'Failed to locate bl-include.cfg in PATH' >&2
+    exit 1
+fi
+
+browserExists() {
+    for curTool in "${TOOLS[@]}"; do # if $packageName exists in tools array
+        [[ $curTool = "$1" ]] &&
+            return 0
+    done
+    say "Unable to install $1. There is no such browser that I know of." >&2
+    say "You can try one of these: ${TOOLS[@]}" >&2
+    return 1
+}
+
+addAptKey() {
+    clear
+    say 'Adding APT key...'
+    keyFile=$(mktemp -u)
+    for curKey; do
+        wget -O "$keyFile" "$curKey" 2> /dev/null && break; # success. No need to try other keys
+        say "Failed to retrieve key from $curKey . Trying another source..."
+    done
+    if [[ $? != 0 ]]; then
+        say 'Failed to retrieve APT key!' >&2
+        return 1
+    fi
+    sudo apt-key add "$keyFile"
+    rm -f "$keyFile"
+    return 0
+}
+
+setupGoogleChrome() {
+    addAptKey "${KEY_URLS_GOOGLE[@]}" || return 1
+    say 'Creating APT sources file...' 1
+    echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee '/etc/apt/sources.list.d/google-chrome.list'
+}
+
+setupOpera() {
+    addAptKey "${KEY_URLS_OPERA[@]}" || return 1
+    say 'Creating APT sources file...' 1
+    echo 'deb http://deb.opera.com/opera/ stable non-free' | sudo tee '/etc/apt/sources.list.d/opera.list'
+}
+
+if [[ $1 && ! $1 =~ --install-* ]]; then
+    browserExists "${1:2}" || exit 1
+    browserName=${1:2}
+    browserName=${browserName//-/ }
+    terminator --title="Install ${browserName~}" --command="$0 --install-${1:2}"
+
+elif [[ $1 = --install-* ]]; then
+    packageName=${1#--install-}
+    browserName=${packageName//-/ }
+    browserName=${browserName~}
+    browserNameUpper=${browserName^^}
+
+    browserExists "$packageName" || exit 1
+
+    while true; do # do it until the package is successfully installed or user wants to exit
+        if [[ $TRYAGAIN ]]; then # previous try failed
+            say
+            say "There was a problem installing $browserName."
+            say
+            prompt '  Hit any key to try again, or "q" to quit...' Q && break
+        fi
+        TRYAGAIN=true
+
+        clear
+        say
+        say "INSTALL ${browserNameUpper% BROWSER} BROWSER"
+        say '------------------------'
+        say "This script will install $browserName."
+        say
+        prompt '  Run the installer now?' || break
+
+        clear
+        connectiontest 1 || continue
+
+        setupFunctionName="setup${browserName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromiumBrowser'
+        if [[ $(type -t "$setupFunctionName") == 'function' ]]; then
+            "$setupFunctionName" || continue # run setup function if it exists
+        fi
+
+        clear
+        say 'Updating sources...' 1
+        sudo apt-get update
+
+        clear
+        say 'Installing package...' 1
+        sudo apt-get install -y "$packageName" || continue
+
+        clear
+        say
+        say "$browserName has been installed successfully."
+        say
+        say 'Hit any key to exit...'
+        read -srn1
+        break
+    done
+else # pipemenu
+    menuStart
+    for curTool in "${TOOLS[@]}"; do
+        curToolName=${curTool//-/ }
+        curToolName=${curToolName~}
+        if type "$curTool" &> /dev/null; then
+            INSTALLED=true
+            menuItem "$curToolName" "$curTool"
+            [[ $curToolName =~ 'Chrom' ]] &&
+                menuItem "$curToolName (Private Mode)" "$curTool --incognito" # Incognito mode for chrome and chromium
+        else
+            menuItem "Install $curToolName" "$0 --$curTool"
+        fi
+    done
+
+    if [[ $INSTALLED ]]; then
+        menuSeparator
+        menuItem 'Select default browser' 'terminator --command="sudo update-alternatives --config x-www-browser"'
+    fi
+    menuEnd
+fi
+exit 0

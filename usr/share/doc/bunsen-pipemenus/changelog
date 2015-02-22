@@ -1,3 +1,9 @@
+bunsen-pipemenus (0.14-2)
+
+  * Import refactored code by Alex Daniel
+
+ -- John Crawley <john@rafflesnagoya.com> Wed, 18 Feb 2015 16:34:00 +0900
+
 bunsen-pipemenus (0.14-1)
 
   * Adjust dependencies, minor tweaks

@@ -1,5 +1,5 @@
 #!/bin/sh
-#    cb-places-pipemenu - a places openbox pipe menu
+#    bl-places-pipemenu - a places openbox pipe menu
 #    Copyright (C) 2010  John Crawley
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -11,26 +11,26 @@
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
-#    Version 2012/09/27-cb
+#    Version 2015/02/15-cb
 
 #    NB The shell, not bash, is invoked in the hope that
 #    dash will be used, as it is much faster.
 
 # Usage: add
-# <menu id="places" label="Places" execute="/path/to/cb-places-pipemenu ~/" />
+# <menu id="places" label="Places" execute="/path/to/bl-places-pipemenu ~/" />
 # to your .config/openbox/menu.xml
 
 # or, if you want the "recent files" menu incorporated at the top, use:
-# <menu id="places" label="Places" execute="/path/to/cb-places-pipemenu --recent ~/" />
-# make sure you have cb-recent-files-pipemenu somewhere, and enter its path below.
+# <menu id="places" label="Places" execute="/path/to/bl-places-pipemenu --recent ~/" />
+# make sure you have bl-recent-files-pipemenu somewhere, and enter its path below.
 
 # path to your "recent files" script, if you want to incorporate it:
-recent_script=/usr/bin/cb-recent-files-pipemenu
+recent_script=/usr/bin/bl-recent-files-pipemenu
 
 # Command to open folders at "Browse here..." - any file manager
-open_folder_cmd=thunar
-# Default command to open files with - others might be xdg-open, gnome-open, pcmanfm...
-default_open_cmd=exo-open  # exo-open comes with thunar
+open_folder_cmd=xdg-open
+# Default command to open files with - others might be xdg-open, gnome-open, thunar, pcmanfm...
+default_open_cmd=xdg-open  # exo-open comes with thunar
 # Text editor of choice
 text_editor=geany
 

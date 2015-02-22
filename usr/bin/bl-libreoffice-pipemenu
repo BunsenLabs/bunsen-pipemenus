@@ -1,0 +1,37 @@
+#!/bin/bash
+# ---------------------------------------------------------------------
+# An Openbox pipemenu for use with LibreOffice and Bunsen Labs Linux.
+# Originally written for CrunchBang Linux <http://crunchbang.org/>
+# by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
+# ---------------------------------------------------------------------
+
+if ! . bl-include.cfg 2> /dev/null; then
+    echo '  Failed to locate bl-include.cfg in PATH' >&2
+    exit 1
+fi
+
+if [[ $1 = '--install' ]]; then
+    terminator --title='Install LibreOffice' --command="$0 --install-lo"
+
+elif [[ $1 = '--install-lo' ]]; then
+    promptInstall 'LIBREOFFICE' 'LibreOffice' 'bl-meta-libreoffice'
+
+else
+    # Pipemenu
+    menuStart
+
+    tools=('writer' 'calc' 'impress' 'draw' 'base')
+
+    for curTool in "${tools[@]}"; do
+        if type "lo$curTool" &> /dev/null; then
+            INSTALLED=true
+            menuItem "${curTool^}" "lo$curTool"
+        fi
+    done
+
+    [[ ! $INSTALLED ]] &&
+        menuItem 'Install LibreOffice' "$0 --install"
+
+    menuEnd
+fi
+exit 0

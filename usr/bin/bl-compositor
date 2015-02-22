@@ -1,0 +1,67 @@
+#!/bin/bash
+# bl-compositor
+# Openbox Pipe Menu for use with compton compositor
+# Originally written for CrunchBang Linux <http://crunchbang.org/>
+# by Philip Newborough <corenominal@corenominal.org>
+# Adapted for Bunsen Labs Linux.
+
+RESTART_ATTEMPTS=20
+
+if ! . bl-include.cfg 2> /dev/null; then
+    echo '  Failed to locate bl-include.cfg in PATH' >&2
+    exit 1
+fi
+
+# ------------- Set xcompmgr command options -----------------------------------
+EXECXCOMP='compton'
+if glxinfo | egrep -iq 'direct rendering: yes'; then
+    EXECXCOMP+=' --vsync opengl'
+fi
+
+# Edit xcompmgr settings
+if [[ $1 = '--edit' ]]; then
+    [[ ! -f $HOME/.config/compton.conf ]] &&
+        cp '/etc/xdg/compton.conf' "$HOME/.config/compton.conf"
+
+    if [[ -x /usr/bin/geany ]]; then
+        geany "$HOME/.config/compton.conf" &
+    else
+        terminator --command='nano "$HOME/.config/compton.conf"'
+    fi
+elif [[ $1 = '--toggle' || $1 = '--start' ]]; then # Toggle compositing with compton. 
+    # TODO why --toggle and --start act exactly the same?
+    if ! pidof compton > /dev/null; then
+        $EXECXCOMP &
+    else
+        killall compton
+    fi
+elif [[ $1 = '--restart' ]]; then
+    killall -q compton
+    for (( i=0; i < RESTART_ATTEMPTS; i++ )); do
+        pidof compton > /dev/null || # no process found! Safe to start again
+            break
+
+        (( i == RESTART_ATTEMPTS - 1 )) && # still didn't die? Probably hangs. Force it to die!
+            killall -q -S KILL compton
+
+        sleep 0.25
+    done
+    "$0" --start
+elif [[ $1 = '--watch' ]]; then
+    while inotifywait -e modify "$HOME/.config/compton.conf"; do
+        "$0" --restart # TODO move this to function?
+    done
+else
+    # Output Openbox menu
+    menuStart
+    if ! pidof compton > /dev/null; then
+        menuItem 'Enable Compositing' "$0 --start"
+    else
+        menuItem 'Restart Compositing' "$0 --restart"
+        menuItem 'Disable Compositing' "$0 --toggle"
+        menuSeparator
+    fi
+    menuItem 'Edit Compositing Settings' "$0 --edit"
+    menuEnd
+fi
+exit 0

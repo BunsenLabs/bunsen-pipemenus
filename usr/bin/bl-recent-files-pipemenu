@@ -1,6 +1,6 @@
 #!/bin/sh
-#    cb-recent-files-pipemenu - a script to parse .recently-used.xbel
-#    and generate openbox pipe menu
+#    bl-recent-files-pipemenu - a script to parse recently-used.xbel
+#    and generate an openbox pipe menu
 #    Copyright (C) 2010  John Crawley
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -15,8 +15,8 @@
 #    version 2015/01/29-cb
 
 # Usage: add
-# <menu id="recent" label="Recent Files" execute="/path/to/cb-recent-files-pipemenu" />
-# to your .config/openbox/menu.xml, or use with cb-places-pipemenu (see comments there)
+# <menu id="recent" label="Recent Files" execute="/path/to/bl-recent-files-pipemenu" />
+# to your .config/openbox/menu.xml, or use with bl-places-pipemenu (see comments there)
 
 maximum_entries=15 # max. number of entries in menu
 

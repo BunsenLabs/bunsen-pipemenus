@@ -1,0 +1,29 @@
+#!/bin/bash
+if ! . bl-include.cfg 2> /dev/null; then
+    echo '  Failed to locate bl-include.cfg in PATH' >&2
+    exit 1
+fi
+
+menuStart
+menuSeparator 'Online Help'
+menuItem 'Frequently Asked Questions' 'x-www-browser http://crunchbanglinux.org/wiki/faq'
+menuItem 'Tips, Scripts &amp; Tricks' 'x-www-browser http://crunchbanglinux.org/forums/topic/378/quick-reference/'
+menuItem 'Themes Guide' 'x-www-browser http://crunchbanglinux.org/wiki/theming'
+menuSeparator
+
+menuSubmenu 'CrunchBangWWW' 'CrunchBang Linux'
+menuItem 'CrunchBang Linux Homepage' 'x-www-browser http://crunchbanglinux.org/'
+menuItem 'CrunchBang Linux Wiki Pages' 'x-www-browser http://crunchbanglinux.org/wiki/'
+menuItem 'CrunchBang Linux Forums' 'x-www-browser http://crunchbanglinux.org/forums/'
+menuItem 'CrunchBang Linux Blog' 'x-www-browser http://crunchbanglinux.org/blog/'
+menuItem 'CrunchBang Linux Planet' 'x-www-browser http://crunchbanglinux.org/planet/'
+menuSubmenuEnd
+
+menuSubmenu 'OpenboxWWW' 'Openbox'
+menuItem 'Openbox Homepage' 'x-www-browser "http://openbox.org/wiki/Main_Page"'
+menuItem 'Openbox Documentation' 'x-www-browser "http://openbox.org/wiki/Help:Contents"'
+menuItem 'Openbox FAQ' 'x-www-browser "http://openbox.org/wiki/Help:FAQ"'
+menuItem 'Openbox Getting Started' 'x-www-browser "http://openbox.org/wiki/Help:Getting_started"'
+menuItem 'Openbox Community Portal' 'x-www-browser "http://openbox.org/wiki/Openbox:Community_portal"'
+menuSubmenuEnd
+menuEnd

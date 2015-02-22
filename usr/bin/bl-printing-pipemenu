@@ -1,0 +1,29 @@
+#!/bin/bash
+# ---------------------------------------------------------------------
+# An Openbox pipemenu for configuring printing under Bunsen labs Linux.
+# Originally written for CrunchBang Linux <http://crunchbanglinux.org/>
+# by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
+# ---------------------------------------------------------------------
+
+if ! . bl-include.cfg 2> /dev/null; then
+    echo '  Failed to locate bl-include.cfg in PATH' >&2
+    exit 1
+fi
+
+if [[ $1 = '--install' ]]; then
+    terminator --title='Install Printer Support' --command="$0 --install-printing"
+
+elif [[ $1 = '--install-printing' ]]; then
+    promptInstall 'PRINTING SUPPORT' 'printing support' 'bl-meta-printer-support'
+
+else
+    # Pipemenu
+    menuStart
+    if type 'system-config-printer' &> /dev/null; then
+        menuItem 'Configure Printers' 'gksudo system-config-printer'
+    else
+        menuItem 'Install Printing Support' "$0 --install"
+    fi
+    menuEnd
+fi
+exit 0
