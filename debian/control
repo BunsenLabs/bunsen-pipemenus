@@ -1,0 +1,15 @@
+Source: bunsen-pipemenus
+Section: misc
+Priority: extra
+Maintainer: John Crawley <john@rafflesnagoya.com>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.5
+Homepage: https://github.com/BunsenLabs/bunsen-pipemenus
+
+Package: bunsen-pipemenus
+Architecture: all
+Depends: openbox, zenity, terminator, wget, compton, curl, tar, python, python-paramiko, mesa-utils, ${misc:Depends}
+Description: Experimental - various Openbox pipemenus
+ Contains various Openbox pipemenus for use with
+ Bunsen Linux. 
+ Adapted from cb-pipemenus by Philip Newborough
