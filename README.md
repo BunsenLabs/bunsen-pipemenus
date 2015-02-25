@@ -1,2 +1,0 @@
-# bunsen-pipemenus
-This is a collection of pipemenu scripts for Openbox, based on cb-pipemenus from CrunchBang Linux.
