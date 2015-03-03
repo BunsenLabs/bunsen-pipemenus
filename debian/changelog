@@ -1,3 +1,9 @@
+bunsen-pipemenus (0.14-5) unstable; urgency=medium
+
+  * Fix wrong README.md entry in debian/docs
+
+ -- Jens Oliver John <dev@2ion.de>  Thu, 26 Feb 2015 13:44:59 +0100
+
 bunsen-pipemenus (0.14-4) unstable; urgency=medium
 
   * Adapt current Debian source package format, remove DEBIAN directory
