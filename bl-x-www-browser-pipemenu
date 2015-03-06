@@ -5,6 +5,7 @@
 # by Philip Newborough (aka corenominal) <corenominal@corenominal.org>
 # ---------------------------------------------------------------------
 
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 # In order to add another browser, simply add it to this array:
 TOOLS=('chromium' 'iceweasel' 'google-chrome' 'opera')
@@ -13,8 +14,8 @@ TOOLS=('chromium' 'iceweasel' 'google-chrome' 'opera')
 KEY_URLS_GOOGLE=('https://dl-ssl.google.com/linux/linux_signing_key.pub' 'http://packages.crunchbang.org/waldorf-files/apt-keys/google-chrome.key')
 KEY_URLS_OPERA=('http://deb.opera.com/archive.key' 'http://packages.crunchbang.org/waldorf-files/apt-keys/opera.key')
 
-if ! . bl-include.cfg 2> /dev/null; then
-    say 'Failed to locate bl-include.cfg in PATH' >&2
+if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
+    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 

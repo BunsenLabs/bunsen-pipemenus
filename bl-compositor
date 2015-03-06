@@ -7,8 +7,10 @@
 
 RESTART_ATTEMPTS=20
 
-if ! . bl-include.cfg 2> /dev/null; then
-    echo '  Failed to locate bl-include.cfg in PATH' >&2
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+
+if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
+    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 
@@ -28,7 +30,7 @@ if [[ $1 = '--edit' ]]; then
     else
         terminator --command='nano "$HOME/.config/compton.conf"'
     fi
-elif [[ $1 = '--toggle' || $1 = '--start' ]]; then # Toggle compositing with compton. 
+elif [[ $1 = '--toggle' || $1 = '--start' ]]; then # Toggle compositing with compton.
     # TODO why --toggle and --start act exactly the same?
     if ! pidof compton > /dev/null; then
         $EXECXCOMP &

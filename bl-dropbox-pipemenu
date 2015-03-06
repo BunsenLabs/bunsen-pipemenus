@@ -5,6 +5,8 @@
 # by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
 # --------------------------------------------------------------------
 
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+
 PROMPT_DELAY_TEXT='It is a good idea to add a delay before autostarting Dropbox
 so that your system can establish a working network connection.
 
@@ -14,9 +16,8 @@ PROMPT_DELAY_VARIANTS=(FALSE 10 FALSE 20 FALSE 30 FALSE 40 FALSE 50 TRUE 60)
 
 USERDBDIR="$HOME/.dropbox-dist/"
 
-
-if ! . bl-include.cfg 2> /dev/null; then
-    echo '  Failed to locate bl-include.cfg in PATH' >&2
+if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
+    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 

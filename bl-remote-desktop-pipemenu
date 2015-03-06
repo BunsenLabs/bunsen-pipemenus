@@ -4,9 +4,10 @@
 # Originally written for CrunchBang Linux <http://crunchbang.org/>
 # by Philip Newborough (aka corenominal) <corenominal@corenominal.org>
 # ---------------------------------------------------------------------
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
-if ! . bl-include.cfg 2> /dev/null; then
-    echo '  Failed to locate bl-include.cfg in PATH' >&2
+if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
+    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 

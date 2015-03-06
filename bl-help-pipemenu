@@ -1,6 +1,9 @@
 #!/bin/bash
-if ! . bl-include.cfg 2> /dev/null; then
-    echo '  Failed to locate bl-include.cfg in PATH' >&2
+
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+
+if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
+    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 
