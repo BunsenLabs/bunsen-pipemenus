@@ -8,7 +8,7 @@ Homepage: https://github.com/BunsenLabs/bunsen-pipemenus
 
 Package: bunsen-pipemenus
 Architecture: all
-Depends: openbox, zenity, terminator, wget, compton, curl, tar, python, python-paramiko, mesa-utils, ${misc:Depends}
+Depends: ${misc:Depends}, bunsen-common, openbox, zenity, terminator, wget, compton, curl, tar, python, python-paramiko, mesa-utils
 Description: Experimental - various Openbox pipemenus
  Contains various Openbox pipemenus for use with
  Bunsen Linux. 

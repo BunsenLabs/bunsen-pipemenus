@@ -1,3 +1,11 @@
+bunsen-pipemenus (0.14-6) unstable; urgency=low
+
+  * Move bl-include.cfg to bunsen-common
+  * Rewrite file paths to new location of bl-include.cfg
+  * Add dependency on bunsen-common
+
+ -- John Crawley <john@rafflesnagoya.com>  Fri, 06 Mar 2015 22:07:46 +0900
+
 bunsen-pipemenus (0.14-5) unstable; urgency=medium
 
   * Fix wrong README.md entry in debian/docs
