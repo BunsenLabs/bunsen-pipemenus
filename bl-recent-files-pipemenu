@@ -70,8 +70,8 @@ detect_bookmarks_file () {
       "${XDG_DATA_HOME}/${SUFFIX}"        \
       "${HOME}/.local/share/${SUFFIX}"    \
       "${HOME}/.${SUFFIX}" ; do
-    if test -r "${CANDIDATE}" ; then
-      echo "${CANDIDATE}"
+    if test -r "$CANDIDATE" ; then
+      echo "$CANDIDATE"
       return 0
     fi
   done
@@ -138,7 +138,7 @@ mk_list_item_with_handler () {
 
   executor=$(echo "$executor" | tr -d "'%u")
   
-  printf "$_TEMPLATE_ITEM" "${appname}: $(decode_url "$label")" "$executor" "$arg"
+  printf "$_TEMPLATE_ITEM" "$appname: $(decode_url "$label")" "$executor" "$arg"
 }
 
 mk_cleanbookmarks_item () {
@@ -180,14 +180,14 @@ done
 
 # probe for the user-provided file, or try to auto-detect a file
 
-if test -n "${BOOKMARKS_FILE}" ; then
+if test -n "$BOOKMARKS_FILE" ; then
   # check user-provided file for validity
-  if ! test -r "${BOOKMARKS_FILE}" ; then
-    die "cannot read file: ${BOOKMARKS_FILE}" 
+  if ! test -r "$BOOKMARKS_FILE" ; then
+    die "cannot read file: $BOOKMARKS_FILE"
   fi
 else
   # try to auto-detect a file
-  BOOKMARKS_FILE=$(detect_bookmarks_file "${COMMON_NAME}")
+  BOOKMARKS_FILE=$(detect_bookmarks_file "$COMMON_NAME")
   if test $? -ne 0 ; then
     die "failed to detect a recently-used file"
   fi
