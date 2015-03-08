@@ -1,3 +1,10 @@
+bunsen-pipemenus (0.14-7) unstable; urgency=low
+
+  * Change references to terminator to x-terminal-emulator.
+  * Fix some bugs in bl-x-www-browser-pipemenu.
+
+ -- John Crawley <john@rafflesnagoya.com>  Sun, 08 Mar 2015 14:18:22 +0900
+
 bunsen-pipemenus (0.14-6) unstable; urgency=low
 
   * Move bl-include.cfg to bunsen-common
