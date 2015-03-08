@@ -28,7 +28,7 @@ if [[ $1 = '--edit' ]]; then
     if [[ -x /usr/bin/geany ]]; then
         geany "$HOME/.config/compton.conf" &
     else
-        terminator --command='nano "$HOME/.config/compton.conf"'
+        x-terminal-emulator -e nano "$HOME/.config/compton.conf"
     fi
 elif [[ $1 = '--toggle' || $1 = '--start' ]]; then # Toggle compositing with compton.
     # TODO why --toggle and --start act exactly the same?

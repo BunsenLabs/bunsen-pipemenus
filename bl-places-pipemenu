@@ -37,10 +37,10 @@ text_editor=geany
 # function to open files with default open command, or alternative command for certain files
 # - add other conditions to choice
 open_file() {
-	[ -x "$1" ] && exec "$text_editor" "$1"     # comment out this line if you don't want to edit executables instead of executing
-	#[ -x "$1" ] && exec "terminator -e" "$1"     # uncomment this and comment out previous line to run executables in terminal instead of editing
-	[ "${1##*.}" = desktop ] && exec "$text_editor" "$1"     # comment out this line if you don't want to edit .desktop files instead of executing
-	exec "$default_open_cmd" "$1"     # use default open command if above conditions not satisfied
+    [ -x "$1" ] && exec "$text_editor" "$1"     # comment out this line if you don't want to edit executables instead of executing
+    #[ -x "$1" ] && exec "x-terminal-emulator -e" "$1"     # uncomment this and comment out previous line to run executables in terminal instead of editing
+    [ "${1##*.}" = desktop ] && exec "$text_editor" "$1"     # comment out this line if you don't want to edit .desktop files instead of executing
+    exec "$default_open_cmd" "$1"     # use default open command if above conditions not satisfied
 }
 
 # extra dotfiles to display in HOME folder (dotfiles are hidden by default)
@@ -100,11 +100,11 @@ esac
 
 output="$output"'<separator label="'$pathe'" />
 <item label="Browse here...">
-	<action name="Execute">
-		<command>
-		 &apos;'"$open_folder_cmd"'&apos; &apos;'"$pathe_apos"'&apos;
-		</command>
-	</action>
+    <action name="Execute">
+        <command>
+         &apos;'"$open_folder_cmd"'&apos; &apos;'"$pathe_apos"'&apos;
+        </command>
+    </action>
 </item>
 <separator />
 '
@@ -115,8 +115,8 @@ for i in "$path"* $extra_entries
 do
     [ -e "$i" ] || continue    # only output code if file exists
     shortname="${i##*/}"
-	case $shortname in
-	*\&*|*\<*|*\>*|*\"*|*\'*) shortnamee=$(sed "s/\&/\&amp;/g;s/</\&lt;/g;s/>/\&gt;/g;s/\"/\&quot;/g;s/'/\&apos;/g;" <<XXX
+    case $shortname in
+    *\&*|*\<*|*\>*|*\"*|*\'*) shortnamee=$(sed "s/\&/\&amp;/g;s/</\&lt;/g;s/>/\&gt;/g;s/\"/\&quot;/g;s/'/\&apos;/g;" <<XXX
 $shortname
 XXX
 )
@@ -139,12 +139,12 @@ XXX
     ;;
     *) shortnamee_label=$shortnamee;;
     esac
-	[ -d "$i" ] && {
+    [ -d "$i" ] && {
 # NOTE1 If you want directories and files listed together
-# change next line (directories_menu="$directories_menu"') to read:	files_menu="$files_menu"' (note the one single quote at the end)
-	directories_menu="$directories_menu"'
+# change next line (directories_menu="$directories_menu"') to read: files_menu="$files_menu"' (note the one single quote at the end)
+    directories_menu="$directories_menu"'
 <menu id="'"${pathe_apos}${shortnamee_apos}"'" label="'"$shortnamee_label"'" execute="&apos;'"$0"'&apos; &apos;'"${pathe_apos}${shortnamee_apos}"'&apos;" />'; continue; }
-	files_menu="$files_menu"'
+    files_menu="$files_menu"'
 <item label="'"$shortnamee_label"'">
     <action name="Execute">
         <command>
