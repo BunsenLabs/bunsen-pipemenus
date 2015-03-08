@@ -171,13 +171,13 @@ trap cleanup SIGINT
 
 while getopts Hcf:hm:o: OPT ; do
   case "$OPT" in
-    H)  ORIGINAL_HANDLER=1        ;;
-    c)  INCL_CLEAR_BOOKMARKS=1    ;;
-    f)  BOOKMARKS_FILE=$OPTARG    ;;
-    h)  usage ; exit 0            ;;
-    m)  MAXIMUM_ENTRIES=$OPTARG   ;;
-    o)  OPEN_COMMAND=$OPTARG      ;;
-    *)  exit 1                    ;; 
+    H)  ORIGINAL_HANDLER=1                        ;;
+    c)  INCL_CLEAR_BOOKMARKS=1                    ;;
+    f)  BOOKMARKS_FILE=$OPTARG                    ;;
+    h)  usage ; exit 0                            ;;
+    m)  MAXIMUM_ENTRIES=$OPTARG                   ;;
+    o)  OPEN_COMMAND=$OPTARG ; ORIGINAL_HANDLER=0 ;;
+    *)  exit 1                                    ;; 
   esac
 done
 
