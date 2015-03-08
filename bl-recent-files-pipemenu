@@ -150,11 +150,6 @@ cleanup () {
   rm -f "$FILE_COLUMNS" "$FILE_COLUMN_PROGNAME" "$FILE_COLUMN_FILENAME" "$FILE_COLUMN_EXECNAME"
 }
 
-clear_bookmarks () {
-  local file=$1
-  echo > "$file"
-}
-
 usage () {
   echo "Usage:  ${0##*/} [-Hch] [-f FILE] [-m MAX-ENTRIES] [-o OPEN-CMD]
         Where:  -H              Open recent files with their associated application.
