@@ -164,6 +164,9 @@ usage () {
 
 # main ()
 
+trap cleanup EXIT
+trap cleanup SIGINT
+
 # process command line options
 
 while getopts Hcf:hm:o: OPT ; do
@@ -226,5 +229,4 @@ fi
 
 echo "$_TEMPLATE_END"
 
-cleanup 
 exit 0
