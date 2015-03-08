@@ -1,105 +1,235 @@
 #!/bin/sh
-#    bl-recent-files-pipemenu - a script to parse recently-used.xbel
-#    and generate an openbox pipe menu
-#    Copyright (C) 2010  John Crawley
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#    version 2015/01/29-cb
 
-# Usage: add
-# <menu id="recent" label="Recent Files" execute="/path/to/bl-recent-files-pipemenu" />
-# to your .config/openbox/menu.xml, or use with bl-places-pipemenu (see comments there)
+# bl-recent-files-pipemenu - an openbox pipemenu for recent files
+# Copyright (C) 2015 Jens John <dev@2ion.de>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-maximum_entries=15 # max. number of entries in menu
+BOOKMARKS_FILE=
+COMMON_NAME=recently-used.xbel
+MAXIMUM_ENTRIES=999
+OPEN_COMMAND=xdg-open
+ORIGINAL_HANDLER=0
+INCL_CLEAR_BOOKMARKS=0
 
-#######################################################################
+FILE_COLUMN_PROGNAME=$(mktemp)
+FILE_COLUMN_EXECNAME=$(mktemp)
+FILE_COLUMN_FILENAME=$(mktemp)
+FILE_COLUMNS=$(mktemp)
 
-# look for recently-used.xbel
-if [ $XDG_DATA_HOME ] && [ -r "${XDG_DATA_HOME}/recently-used.xbel" ]
-then
-    file_path="${XDG_DATA_HOME}/recently-used.xbel"
-elif [ -r "${HOME}/.local/share/recently-used.xbel" ]
-then
-    file_path="${HOME}/.local/share/recently-used.xbel"
-elif [ -r "${HOME}/.recently-used.xbel" ]
-then
-    file_path="${HOME}/.recently-used.xbel"
-else
-    echo "$0: cannot find a readable recently-used.xbel file" >&2
-    echo '<openbox_pipe_menu>
-<separator label="No recently-used.xbel file found." />
+_TEMPLATE_ITEM='
+  <item label="%s">
+    <action name="Execute">
+      <command>
+        %s "%s"
+      </command>
+    </action>
+  </item>'
+
+_TEMPLATE_BEGIN='
+<openbox_pipe_menu>'
+
+_TEMPLATE_END='
 </openbox_pipe_menu>'
-    exit 1
+
+_TEMPLATE_CLEANBOOKMARKS='
+  <separator />
+  <item label="Clear recent files">
+    <action name="Execute">
+      <command>
+        rm --one-file-system -- "%s"
+      </command>
+    </action>
+  </item>'
+
+OUTPUT_BUFFER=""
+
+log () {
+  echo "$@" >&2
+}
+
+die () {
+  log "$@"
+  exit 1
+}
+
+detect_bookmarks_file () {
+  local SUFFIX=$1
+  for CANDIDATE in                        \
+      "${XDG_DATA_HOME}/${SUFFIX}"        \
+      "${HOME}/.local/share/${SUFFIX}"    \
+      "${HOME}/.${SUFFIX}" ; do
+    if test -r "${CANDIDATE}" ; then
+      echo "${CANDIDATE}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+mk_application_name_column () {
+  local infile=$1
+  local outfile=$2
+  xmllint \
+    --format \
+    --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@name" \
+    "$infile" \
+    | sed 's_ name=_\nname=_g' \
+    > "$outfile"
+}
+
+mk_application_exec_column () {
+  local infile=$1
+  local outfile=$2
+  xmllint \
+    --format \
+    --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@exec" \
+    "$infile" \
+    | sed 's_ exec=_\nexec=_g' \
+    > "$outfile"
+}
+
+mk_application_file_column () {
+  local infile=$1
+  local outfile=$2
+  xmllint \
+    --xpath "/xbel/bookmark/@href" \
+    "$infile" \
+    | sed 's_ href=_\nhref=_g' \
+    > "$outfile"
+}
+
+mk_columns () {
+  local infile=$1
+  mk_application_file_column "$infile" "$FILE_COLUMN_FILENAME"
+  mk_application_exec_column "$infile" "$FILE_COLUMN_EXECNAME"
+  mk_application_name_column "$infile" "$FILE_COLUMN_PROGNAME"
+  paste "$FILE_COLUMN_PROGNAME" "$FILE_COLUMN_EXECNAME" "$FILE_COLUMN_FILENAME" > "$FILE_COLUMNS"
+}
+
+decode_url () {
+  local url=$1
+  perl -MURI::Escape -e 'print uri_unescape($ARGV[0]);' "$url"
+}
+
+mk_list_item () {
+  local label=$1
+  local command=$2
+  local arg=$3
+  printf "$_TEMPLATE_ITEM" "$(decode_url "$label")" "$command" "$arg"
+}
+
+mk_list_item_with_handler () {
+  local label=$1
+  local executor="$2"
+  local arg=$3
+  local appname=$4
+
+  executor=$(echo "$executor" | tr -d "'%u")
+  
+  printf "$_TEMPLATE_ITEM" "${appname}: $(decode_url "$label")" "$executor" "$arg"
+}
+
+mk_cleanbookmarks_item () {
+  local bookmarksfile="$1"
+  printf "$_TEMPLATE_CLEANBOOKMARKS" "$bookmarksfile"
+}
+
+cleanup () {
+  rm -f "$FILE_COLUMNS" "$FILE_COLUMN_PROGNAME" "$FILE_COLUMN_FILENAME" "$FILE_COLUMN_EXECNAME"
+}
+
+clear_bookmarks () {
+  local file=$1
+  echo > "$file"
+}
+
+usage () {
+  echo "Usage:  ${0##*/} [-Hch] [-f FILE] [-m MAX-ENTRIES] [-o OPEN-CMD]
+        Where:  -H              Open recent files with their associated application.
+                -c              Include a menu entry for clearing the recently used files.
+                -f FILE         Use the .xbel file from the specified location instead of
+                                trying to auto-detect it.
+                -h              Print this message and exit.
+                -m MAX-ENTRIES  Set the number of menu items to include, ignore the rest.
+                -o OPEN-CMD     When not using -H, use OPEN-CMD to open any recent files.
+                                Defaults to xdg-open."
+}
+
+# main ()
+
+# process command line options
+
+while getopts Hcf:hm:o: OPT ; do
+  case "$OPT" in
+    H)  ORIGINAL_HANDLER=1        ;;
+    c)  INCL_CLEAR_BOOKMARKS=1    ;;
+    f)  BOOKMARKS_FILE=$OPTARG    ;;
+    h)  usage ; exit 0            ;;
+    m)  MAXIMUM_ENTRIES=$OPTARG   ;;
+    o)  OPEN_COMMAND=$OPTARG      ;;
+    *)  exit 1                    ;; 
+  esac
+done
+
+# probe for the user-provided file, or try to auto-detect a file
+
+if test -n "${BOOKMARKS_FILE}" ; then
+  # check user-provided file for validity
+  if ! test -r "${BOOKMARKS_FILE}" ; then
+    die "cannot read file: ${BOOKMARKS_FILE}" 
+  fi
+else
+  # try to auto-detect a file
+  BOOKMARKS_FILE=$(detect_bookmarks_file "${COMMON_NAME}")
+  if test $? -ne 0 ; then
+    die "failed to detect a recently-used file"
+  fi
 fi
 
-# if argument is --clear, empty .recently-used.xbel
-[ "$1" = '--clear' ] && {
-cat <<':EOF' > "${file_path}"
-<?xml version="1.0" encoding="UTF-8"?>
-<xbel version="1.0"
-      xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks"
-      xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info"
->
-</xbel>
-:EOF
-exit
-}
+mk_columns "$BOOKMARKS_FILE"
 
-maximum_entries=$((maximum_entries+2))
+COUNT=0 ; while read LINE ; do
+  if test -z "$LINE" ; then continue ; fi
 
-pre='    <item label="'
-mid='">
-    <action name="Execute"><command>'
-post='</command></action>
-    </item>'
+  # $name := application name
+  # $exec := command
+  # $href := file argument
+  eval "$LINE" || continue
 
-files=$( tac "${file_path}" |  awk -v MAX="$maximum_entries" -v PR="$pre" -v MI="$mid" -v PO="$post" 'BEGIN {
-    RS="</bookmark>";
-    FS="<info>";
-}
-(NR == MAX) {exit}
-!/<bookmark/ {next}
-!/href=[\"'\'']file:\/\// {next}
-# $1 is the command, $2 the file path
-{
-    sub(/count=\"1\".*$/,"",$1)
-    sub(/^.*exec=\"\&apos\;/,"",$1)
-    sub(/&apos\;.*$/,"",$1)
-    sub(/\%.*$/,"",$1)
-    sub(/ *$/,"",$1)
-    sub(/^.*file:\/\//,"",$2)
-    sub(/[\"'\''].*$/,"",$2)
-    gsub(/%22/,"\\&quot;",$2)
-    gsub(/%3C/,"\\&lt;",$2)
-    gsub(/%3E/,"\\&gt;",$2)
-    name=$2
-    sub(/^.*\//,"",name)
-    gsub(/_/,"__",name)
-    gsub(/\&apos;/,"\\&apos;\\&quot;\\&apos;\\&quot;\\&apos;",$2)
-    print (PR name MI $1 " '"'"'" $2 "'"'"'" PO)
-}' )
+  if test $ORIGINAL_HANDLER -eq 1 ; then
+    OUTPUT_BUFFER="${OUTPUT_BUFFER} $(mk_list_item_with_handler "$(basename "$href")" "$exec" "$href" "$name")"
+  else
+    OUTPUT_BUFFER="${OUTPUT_BUFFER} $(mk_list_item "$(basename "$href")" "$OPEN_COMMAND" "$href")"
+  fi
 
-# use perl to decode urlencoded characters
-files=$(perl -MURI::Escape -e 'print uri_unescape($ARGV[0]);' "$files")
+  COUNT=$(( COUNT + 1 ))
+  if test $COUNT -eq $MAXIMUM_ENTRIES ; then break ; fi
 
-output='<openbox_pipe_menu>
-'"$files"'
-<separator />
-    <item label="Clear Recent Files">
-        <action name="Execute">
-            <command>
-            &apos;'"$0"'&apos; --clear
-            </command>
-        </action>
-    </item>
-</openbox_pipe_menu>
-'
-printf '%s' "$output"  # printf because echo sometimes eats backslashes
+done < "$FILE_COLUMNS"
+
+# output
+
+echo "$_TEMPLATE_BEGIN"
+
+echo "$OUTPUT_BUFFER"
+
+if test $INCL_CLEAR_BOOKMARKS -eq 1 ; then
+  mk_cleanbookmarks_item "$BOOKMARKS_FILE"
+fi
+
+echo "$_TEMPLATE_END"
+
+cleanup 
+exit 0
