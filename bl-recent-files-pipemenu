@@ -176,7 +176,7 @@ done
 if test -n "$BOOKMARKS_FILE" ; then
   test -r "$BOOKMARKS_FILE" || die "cannot read file: $BOOKMARKS_FILE"
 else
-  BOOKMARKS_FILE=$(detect_bookmarks_file "$COMMON_NAME") || die "failed to detect a recently-used file"
+  BOOKMARKS_FILE=$(detect_bookmarks_file "$COMMON_NAME") || die "failed to detect a $COMMON_NAME file"
 fi
 
 mk_application_file_column "$BOOKMARKS_FILE" "$FILE_COLUMN_FILENAME"
