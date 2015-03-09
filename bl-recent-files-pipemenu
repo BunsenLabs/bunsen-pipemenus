@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/dash
 
 # bl-recent-files-pipemenu - an openbox pipemenu for recent files
 # Copyright (C) 2015 Jens John <dev@2ion.de>
@@ -84,7 +84,7 @@ mk_application_name_column () {
   xmllint \
     --format \
     --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@name" \
-    "$infile" \
+    "$infile" 2>/dev/null \
     | sed 's_ name=_\nname=_g' \
     > "$outfile"
 }
@@ -95,7 +95,7 @@ mk_application_exec_column () {
   xmllint \
     --format \
     --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@exec" \
-    "$infile" \
+    "$infile" 2>/dev/null \
     | sed 's_ exec=_\nexec=_g' \
     > "$outfile"
 }
@@ -105,7 +105,7 @@ mk_application_file_column () {
   local outfile=$2
   xmllint \
     --xpath "/xbel/bookmark/@href" \
-    "$infile" \
+    "$infile" 2>/dev/null \
     | sed 's_ href=_\nhref=_g' \
     > "$outfile"
 }
@@ -165,7 +165,7 @@ usage () {
 # main ()
 
 trap cleanup EXIT
-trap cleanup SIGINT
+trap cleanup INT
 
 # process command line options
 
