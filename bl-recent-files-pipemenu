@@ -22,6 +22,7 @@ MAXIMUM_ENTRIES=999
 OPEN_COMMAND=xdg-open
 ORIGINAL_HANDLER=0
 INCL_CLEAR_BOOKMARKS=0
+REVERSE_BUFFER=
 
 FILE_COLUMN_PROGNAME=$(mktemp)
 FILE_COLUMN_EXECNAME=$(mktemp)
@@ -183,10 +184,6 @@ mk_application_exec_column "$BOOKMARKS_FILE" "$FILE_COLUMN_EXECNAME"
 mk_application_name_column "$BOOKMARKS_FILE" "$FILE_COLUMN_PROGNAME"
 paste "$FILE_COLUMN_PROGNAME" "$FILE_COLUMN_EXECNAME" "$FILE_COLUMN_FILENAME" > "$FILE_COLUMNS"
 
-# output
-
-echo "$_TEMPLATE_BEGIN"
-
 COUNT=0 ; while read LINE ; do
   if test -z "$LINE" ; then continue ; fi
 
@@ -196,14 +193,20 @@ COUNT=0 ; while read LINE ; do
   eval "$LINE" || continue
 
   if test $ORIGINAL_HANDLER -eq 1 ; then
-    mk_list_item_with_handler "$(basename "$href")" "$exec" "$href" "$name"
+    REVERSE_BUFFER="$(mk_list_item_with_handler "$(basename "$href")" "$exec" "$href" "$name") ${REVERSE_BUFFER}"
   else
-    mk_list_item "$(basename "$href")" "$OPEN_COMMAND" "$href"
+    REVERSE_BUFFER="$(mk_list_item "$(basename "$href")" "$OPEN_COMMAND" "$href") ${REVERSE_BUFFER}"
   fi
 
   COUNT=$(( COUNT + 1 ))
   if test $COUNT -eq $MAXIMUM_ENTRIES ; then break ; fi
 done < "$FILE_COLUMNS"
+
+# output
+
+echo "$_TEMPLATE_BEGIN"
+
+echo "$REVERSE_BUFFER"
 
 if test $INCL_CLEAR_BOOKMARKS -eq 1 ; then
   mk_cleanbookmarks_item "$BOOKMARKS_FILE"
