@@ -82,10 +82,9 @@ mk_application_name_column () {
   local infile=$1
   local outfile=$2
   xmllint \
-    --format \
     --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@name" \
-    "$infile" \
-    | sed 's_ name=_\nname=_g' \
+    "$infile" 2>/dev/null \
+    | sed 's_ name=_\nname=_' \
     > "$outfile"
 }
 
@@ -93,10 +92,9 @@ mk_application_exec_column () {
   local infile=$1
   local outfile=$2
   xmllint \
-    --format \
     --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@exec" \
-    "$infile" \
-    | sed 's_ exec=_\nexec=_g' \
+    "$infile" 2>/dev/null \
+    | sed 's_ exec=_\nexec=_' \
     > "$outfile"
 }
 
@@ -105,17 +103,9 @@ mk_application_file_column () {
   local outfile=$2
   xmllint \
     --xpath "/xbel/bookmark/@href" \
-    "$infile" \
-    | sed 's_ href=_\nhref=_g' \
+    "$infile" 2>/dev/null \
+    | sed 's_ href=_\nhref=_' \
     > "$outfile"
-}
-
-mk_columns () {
-  local infile=$1
-  mk_application_file_column "$infile" "$FILE_COLUMN_FILENAME"
-  mk_application_exec_column "$infile" "$FILE_COLUMN_EXECNAME"
-  mk_application_name_column "$infile" "$FILE_COLUMN_PROGNAME"
-  paste "$FILE_COLUMN_PROGNAME" "$FILE_COLUMN_EXECNAME" "$FILE_COLUMN_FILENAME" > "$FILE_COLUMNS"
 }
 
 decode_url () {
@@ -135,9 +125,7 @@ mk_list_item_with_handler () {
   local executor="$2"
   local arg=$3
   local appname=$4
-
   executor=$(echo "$executor" | tr -d "'%u")
-  
   printf "$_TEMPLATE_ITEM" "$appname: $(decode_url "$label")" "$executor" "$arg"
 }
 
@@ -165,7 +153,6 @@ usage () {
 # main ()
 
 trap cleanup EXIT
-trap cleanup SIGINT
 
 # process command line options
 
@@ -184,19 +171,15 @@ done
 # probe for the user-provided file, or try to auto-detect a file
 
 if test -n "$BOOKMARKS_FILE" ; then
-  # check user-provided file for validity
-  if ! test -r "$BOOKMARKS_FILE" ; then
-    die "cannot read file: $BOOKMARKS_FILE"
-  fi
+  test -r "$BOOKMARKS_FILE" || die "cannot read file: $BOOKMARKS_FILE"
 else
-  # try to auto-detect a file
-  BOOKMARKS_FILE=$(detect_bookmarks_file "$COMMON_NAME")
-  if test $? -ne 0 ; then
-    die "failed to detect a recently-used file"
-  fi
+  BOOKMARKS_FILE=$(detect_bookmarks_file "$COMMON_NAME") || die "failed to detect a recently-used file"
 fi
 
-mk_columns "$BOOKMARKS_FILE"
+mk_application_file_column "$BOOKMARKS_FILE" "$FILE_COLUMN_FILENAME"
+mk_application_exec_column "$BOOKMARKS_FILE" "$FILE_COLUMN_EXECNAME"
+mk_application_name_column "$BOOKMARKS_FILE" "$FILE_COLUMN_PROGNAME"
+paste "$FILE_COLUMN_PROGNAME" "$FILE_COLUMN_EXECNAME" "$FILE_COLUMN_FILENAME" > "$FILE_COLUMNS"
 
 COUNT=0 ; while read LINE ; do
   if test -z "$LINE" ; then continue ; fi
@@ -214,7 +197,6 @@ COUNT=0 ; while read LINE ; do
 
   COUNT=$(( COUNT + 1 ))
   if test $COUNT -eq $MAXIMUM_ENTRIES ; then break ; fi
-
 done < "$FILE_COLUMNS"
 
 # output
