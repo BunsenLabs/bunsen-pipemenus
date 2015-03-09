@@ -108,14 +108,6 @@ mk_application_file_column () {
     > "$outfile"
 }
 
-mk_columns () {
-  local infile=$1
-  mk_application_file_column "$infile" "$FILE_COLUMN_FILENAME"
-  mk_application_exec_column "$infile" "$FILE_COLUMN_EXECNAME"
-  mk_application_name_column "$infile" "$FILE_COLUMN_PROGNAME"
-  paste "$FILE_COLUMN_PROGNAME" "$FILE_COLUMN_EXECNAME" "$FILE_COLUMN_FILENAME" > "$FILE_COLUMNS"
-}
-
 decode_url () {
   local url=$1
   perl -MURI::Escape -e 'print uri_unescape($ARGV[0]);' "$url"
@@ -191,7 +183,10 @@ else
   fi
 fi
 
-mk_columns "$BOOKMARKS_FILE"
+mk_application_file_column "$BOOKMARKS_FILE" "$FILE_COLUMN_FILENAME"
+mk_application_exec_column "$BOOKMARKS_FILE" "$FILE_COLUMN_EXECNAME"
+mk_application_name_column "$BOOKMARKS_FILE" "$FILE_COLUMN_PROGNAME"
+paste "$FILE_COLUMN_PROGNAME" "$FILE_COLUMN_EXECNAME" "$FILE_COLUMN_FILENAME" > "$FILE_COLUMNS"
 
 COUNT=0 ; while read LINE ; do
   if test -z "$LINE" ; then continue ; fi
