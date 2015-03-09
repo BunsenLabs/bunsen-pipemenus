@@ -12,7 +12,7 @@
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
-#    version 2015/01/29-cb
+#    version 2015/01/29-bl
 
 # Usage: add
 # <menu id="recent" label="Recent Files" execute="/path/to/bl-recent-files-pipemenu" />
@@ -57,8 +57,12 @@ maximum_entries=$((maximum_entries+2))
 
 pre='    <item label="'
 mid='">
-    <action name="Execute"><command>'
-post='</command></action>
+        <action name="Execute">
+            <command>
+            '
+post='
+            </command>
+        </action>
     </item>'
 
 files=$( tac "${file_path}" |  awk -v MAX="$maximum_entries" -v PR="$pre" -v MI="$mid" -v PO="$post" 'BEGIN {
@@ -70,7 +74,7 @@ files=$( tac "${file_path}" |  awk -v MAX="$maximum_entries" -v PR="$pre" -v MI=
 !/href=[\"'\'']file:\/\// {next}
 # $1 is the command, $2 the file path
 {
-    sub(/count=\"1\".*$/,"",$1)
+    sub(/count=\".*$/,"",$1)
     sub(/^.*exec=\"\&apos\;/,"",$1)
     sub(/&apos\;.*$/,"",$1)
     sub(/\%.*$/,"",$1)
@@ -84,7 +88,7 @@ files=$( tac "${file_path}" |  awk -v MAX="$maximum_entries" -v PR="$pre" -v MI=
     sub(/^.*\//,"",name)
     gsub(/_/,"__",name)
     gsub(/\&apos;/,"\\&apos;\\&quot;\\&apos;\\&quot;\\&apos;",$2)
-    print (PR name MI $1 " '"'"'" $2 "'"'"'" PO)
+    print (PR name MI $1 " &apos;" $2 "&apos;" PO)
 }' )
 
 # use perl to decode urlencoded characters

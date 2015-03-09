@@ -8,8 +8,9 @@
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 # In order to add another browser, add the package name to this array:
-TOOLS=('chromium' 'iceweasel' 'google-chrome-stable' 'opera' )
-# If the package needs additional configuration before installation simply create a function called setupBrowserName, it will be called automatically.
+TOOLS=('chromium' 'iceweasel' 'google-chrome-stable' 'opera')
+# If the package needs additional configuration before installation
+# create a function called setupBrowserName, it will be called automatically.
 
 KEY_URLS_GOOGLE=('https://dl-ssl.google.com/linux/linux_signing_key.pub' 'http://packages.crunchbang.org/waldorf-files/apt-keys/google-chrome.key')
 KEY_URLS_OPERA=('http://deb.opera.com/archive.key' 'http://packages.crunchbang.org/waldorf-files/apt-keys/opera.key')
@@ -33,6 +34,7 @@ addAptKey() {
     clear
     say 'Adding APT key...'
     keyFile=$(mktemp)
+    gotKey=false
     for curKey; do
         wget -O "$keyFile" "$curKey" 2> /dev/null && {
             gotKey=true
@@ -42,7 +44,7 @@ addAptKey() {
         say "Failed to retrieve key from $curKey . Trying another source..."
     done
     if ! $gotKey; then
-        say 'Failed to retrieve APT key!' >&2
+        say 'Failed to retrieve APT key!' 3 >&2
         return 1
     fi
     say 'Adding key'
@@ -65,7 +67,6 @@ setupOpera() {
 
 if [[ $1 && ! $1 = --install-* ]]; then
     packageName=${1#--}
-#    browserExists "$packageName" || exit 1 # would fail silently
     read -ra words <<< "${packageName//-/ }"
     x-terminal-emulator --title "Install ${words[*]^}" -e "$0" "--install-$packageName"
 
@@ -77,47 +78,13 @@ elif [[ $1 = --install-* ]]; then
     browserName=${words[*]^}
     browserNameUpper=${browserName^^}
 
-    while true; do # do it until the package is successfully installed or user wants to exit
-        if [[ $TRYAGAIN ]]; then # previous try failed
-            say
-            say "There was a problem installing $browserName."
-            say
-            prompt '  Hit any key to try again, or "q" to quit...' Q && break
-        fi
-        TRYAGAIN=true
+    setupFunctionName="setup${browserName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
+    if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
+        "$setupFunctionName" || continue # run setup function if it exists
+    fi
 
-        clear
-        say
-        say "INSTALL ${browserNameUpper% BROWSER} BROWSER"
-        say '------------------------'
-        say "This script will install $browserName."
-        say
-        prompt '  Run the installer now?' || break
+    promptInstall "${browserNameUpper% BROWSER} BROWSER" "$browserName" "$packageName"
 
-        clear
-        connectiontest 1 || continue
-
-        setupFunctionName="setup${browserName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
-        if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-            "$setupFunctionName" || continue # run setup function if it exists
-        fi
-
-        clear
-        say 'Updating sources...' 1
-        sudo apt-get update
-
-        clear
-        say 'Installing package...' 1
-        sudo apt-get install -y "$packageName" || continue
-
-        clear
-        say
-        say "$browserName has been installed successfully."
-        say
-        say 'Hit any key to exit...'
-        read -srn1
-        break
-    done
 else # pipemenu
     INSTALLED=false
     menuStart
@@ -134,7 +101,7 @@ else # pipemenu
         fi
     done
 
-    if [[ $INSTALLED ]]; then
+    if $INSTALLED ; then
         menuSeparator
         menuItem 'Select default browser' 'x-terminal-emulator -e sudo update-alternatives --config x-www-browser'
     fi
