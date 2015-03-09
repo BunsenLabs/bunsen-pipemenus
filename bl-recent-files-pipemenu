@@ -197,7 +197,6 @@ COUNT=0 ; while read LINE ; do
 
   COUNT=$(( COUNT + 1 ))
   if test $COUNT -eq $MAXIMUM_ENTRIES ; then break ; fi
-
 done < "$FILE_COLUMNS"
 
 # output
