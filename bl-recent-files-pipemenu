@@ -82,7 +82,6 @@ mk_application_name_column () {
   local infile=$1
   local outfile=$2
   xmllint \
-    --format \
     --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@name" \
     "$infile" 2>/dev/null \
     | sed 's_ name=_\nname=_' \
@@ -93,7 +92,6 @@ mk_application_exec_column () {
   local infile=$1
   local outfile=$2
   xmllint \
-    --format \
     --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@exec" \
     "$infile" 2>/dev/null \
     | sed 's_ exec=_\nexec=_' \
