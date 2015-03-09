@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/dash
 
 # bl-recent-files-pipemenu - an openbox pipemenu for recent files
 # Copyright (C) 2015 Jens John <dev@2ion.de>
