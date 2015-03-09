@@ -161,7 +161,6 @@ usage () {
 # main ()
 
 trap cleanup EXIT
-trap cleanup INT
 
 # process command line options
 
