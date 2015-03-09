@@ -80,7 +80,9 @@ elif [[ $1 = --install-* ]]; then
 
     setupFunctionName="setup${browserName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-        "$setupFunctionName" || continue # run setup function if it exists
+        export "$setupFunctionName"
+    else
+        unset "$setupFunctionName"
     fi
 
     promptInstall "${browserNameUpper% BROWSER} BROWSER" "$browserName" "$packageName"
