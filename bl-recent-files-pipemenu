@@ -84,7 +84,7 @@ mk_application_name_column () {
   xmllint \
     --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@name" \
     "$infile" 2>/dev/null \
-    | sed 's_ name=_\nname=_' \
+    | sed 's_ name=_\nname=_g' \
     > "$outfile"
 }
 
@@ -94,7 +94,7 @@ mk_application_exec_column () {
   xmllint \
     --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@exec" \
     "$infile" 2>/dev/null \
-    | sed 's_ exec=_\nexec=_' \
+    | sed 's_ exec=_\nexec=_g' \
     > "$outfile"
 }
 
@@ -104,7 +104,7 @@ mk_application_file_column () {
   xmllint \
     --xpath "/xbel/bookmark/@href" \
     "$infile" 2>/dev/null \
-    | sed 's_ href=_\nhref=_' \
+    | sed 's_ href=_\nhref=_g' \
     > "$outfile"
 }
 
