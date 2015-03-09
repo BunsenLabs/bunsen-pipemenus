@@ -133,9 +133,7 @@ mk_list_item_with_handler () {
   local executor="$2"
   local arg=$3
   local appname=$4
-
   executor=$(echo "$executor" | tr -d "'%u")
-  
   printf "$_TEMPLATE_ITEM" "$appname: $(decode_url "$label")" "$executor" "$arg"
 }
 
