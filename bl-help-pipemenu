@@ -9,18 +9,9 @@ fi
 
 menuStart
 menuSeparator 'Online Help'
-menuItem 'Frequently Asked Questions' 'x-www-browser http://crunchbanglinux.org/wiki/faq'
-menuItem 'Tips, Scripts &amp; Tricks' 'x-www-browser http://crunchbanglinux.org/forums/topic/378/quick-reference/'
-menuItem 'Themes Guide' 'x-www-browser http://crunchbanglinux.org/wiki/theming'
+menuItem 'Forum Help &amp; Support' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?id=38737"'
+menuItem 'Tips, Tricks &amp; Scripts' '"x-www-browser http://crunchbang.org/forums/viewforum.php?id=8"'
 menuSeparator
-
-menuSubmenu 'CrunchBangWWW' 'CrunchBang Linux'
-menuItem 'CrunchBang Linux Homepage' 'x-www-browser http://crunchbanglinux.org/'
-menuItem 'CrunchBang Linux Wiki Pages' 'x-www-browser http://crunchbanglinux.org/wiki/'
-menuItem 'CrunchBang Linux Forums' 'x-www-browser http://crunchbanglinux.org/forums/'
-menuItem 'CrunchBang Linux Blog' 'x-www-browser http://crunchbanglinux.org/blog/'
-menuItem 'CrunchBang Linux Planet' 'x-www-browser http://crunchbanglinux.org/planet/'
-menuSubmenuEnd
 
 menuSubmenu 'OpenboxWWW' 'Openbox'
 menuItem 'Openbox Homepage' 'x-www-browser "http://openbox.org/wiki/Main_Page"'
@@ -28,5 +19,19 @@ menuItem 'Openbox Documentation' 'x-www-browser "http://openbox.org/wiki/Help:Co
 menuItem 'Openbox FAQ' 'x-www-browser "http://openbox.org/wiki/Help:FAQ"'
 menuItem 'Openbox Getting Started' 'x-www-browser "http://openbox.org/wiki/Help:Getting_started"'
 menuItem 'Openbox Community Portal' 'x-www-browser "http://openbox.org/wiki/Openbox:Community_portal"'
+menuSubmenuEnd
+menuSeparator
+
+menuSubmenu 'Tint2WWW' 'Tint2 panel'
+menuItem 'Tint2 wiki: FAQ' 'x-www-browser "https://code.google.com/p/tint2/wiki/FAQ"'
+menuItem 'Tint2 Documentation' 'x-www-browser "https://code.google.com/p/tint2/wiki/Configure"'
+menuItem 'Tint2 forum thread' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?id=3232"'
+menuSubmenuEnd
+menuSeparator
+
+menuSubmenu 'ConkyWWW' 'Conky'
+menuItem 'Conky Configuration settings' 'x-www-browser "http://conky.sourceforge.net/config_settings.html"'
+menuItem 'Conky variables''x-www-browser "http://conky.sourceforge.net/variables.html"'
+menuItem 'Conky Archive' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?pid=371424"'
 menuSubmenuEnd
 menuEnd
