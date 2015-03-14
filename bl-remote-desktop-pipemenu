@@ -45,7 +45,7 @@ else
         fi
         menuItem 'VNC Server Preferences' 'vino-preferences'
     else
-        menuItem 'Install VNC Server' '$0 --server'
+        menuItem 'Install VNC Server' "$0 --server"
     fi
 
     menuEnd
