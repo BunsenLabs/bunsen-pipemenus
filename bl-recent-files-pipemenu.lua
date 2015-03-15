@@ -24,7 +24,7 @@ end
 
 local function decode_url(s)
   if s:find("%", 1, true) then
-    return url.unquote(s)
+    return url.unescape(s)
   end
   return s
 end
@@ -93,6 +93,6 @@ local function print_menu(m)
   print(xml.tostring(m, "", "  "))
 end
 
-add_items_from_xbel(M, "/tmp/recently-used.xbel")
+add_items_from_xbel(M, "/home/joj/.local/share/recently-used.xbel")
 add_remove_file_item(M, "/tmp/recently-used.xbel")
 print_menu(M)
