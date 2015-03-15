@@ -49,7 +49,7 @@ local function add_executable_item(m, label, cmd, args)
   return self
 end
 
-local function add_items_from_xbel(m, path, override_cmd, reverse_output)
+local function add_items_from_xbel(m, path, reverse_output, override_cmd)
   if not posix.access(path) then return self end
 
   local function clean_executable_name(s)
@@ -93,6 +93,29 @@ local function print_menu(m)
   print(xml.tostring(m, "", "  "))
 end
 
-add_items_from_xbel(M, "/home/joj/.local/share/recently-used.xbel")
-add_remove_file_item(M, "/tmp/recently-used.xbel")
-print_menu(M)
+local function detect_xbel_path()
+  local hp = os.getenv("HOME")
+  local xh = os.getenv("XDG_DATA_HOME")
+  local fn = "recently-used.xbel"
+  local function check_path(t)
+    for _,p in ipairs(t) do
+      if posix.access(p) then return p end
+    end
+    return nil
+  end
+  return check_path{
+    string.format("%s/%s", xf, fn),
+    string.format("%s/.local/share/%s", hp, fn),
+    string.format("%s/.%s", hp, fn)
+  }
+end
+
+local function main()
+  local xbel_path = _G.arg[1] or detect_xbel_path()
+  add_items_from_xbel(M, xbel_path)
+  add_remove_file_item(M, xbel_path)
+  print_menu(M)
+  return 0
+end
+
+return main()
