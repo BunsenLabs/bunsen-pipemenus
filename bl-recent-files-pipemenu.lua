@@ -54,14 +54,15 @@ local function add_executable_item(m, label, cmd, args)
 end
 
 local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
-  if not posix.access(path) then return self end
+  if not posix.access(path) then return false end
 
   local function clean_executable_name(s)
     return s:sub(2, -5)
   end
 
   local x = xml.parse(path, true)
-  if not x then return self end
+  if not x then return false end
+
   local buf, c = {}, 0
 
   for bookmark in x:childtags() do
