@@ -94,7 +94,7 @@ local function add_remove_file_item(m, path)
   m:add_direct_child(xml.elem("separator"))
   m:add_direct_child(
     mk_item_tag("Clear recent files",
-      mk_action_tag("Execute", mk_command_tag("rm", "-- " .. path)))
+      mk_action_tag("Execute", mk_command_tag("/bin/bash", "-c '> " .. path .. "'")))
     )
 end
 
