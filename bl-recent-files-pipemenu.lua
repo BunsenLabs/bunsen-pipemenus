@@ -49,7 +49,7 @@ local function add_executable_item(m, label, cmd, args)
   return self
 end
 
-local function add_items_from_xbel(m, path, reverse_output, override_cmd)
+local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
   if not posix.access(path) then return self end
 
   local function clean_executable_name(s)
@@ -58,7 +58,7 @@ local function add_items_from_xbel(m, path, reverse_output, override_cmd)
 
   local x = xml.parse(path, true)
   if not x then return self end
-  local buf = {}
+  local buf, c = {}, 0
 
   for bookmark in x:childtags() do
     local file = bookmark:get_attribs().href
@@ -66,6 +66,13 @@ local function add_items_from_xbel(m, path, reverse_output, override_cmd)
     local i = mk_item_tag(decode_url(posix.basename(file)), {
         mk_action_tag("Execute", mk_command_tag(override_cmd or clean_executable_name(prop.exec), file))
       })
+    if cnt then
+      if c == cnt then
+        break
+      else
+        c = c + 1
+      end
+    end
     if reverse_output then
       table.insert(buf, 1, i)
     else
@@ -111,8 +118,9 @@ local function detect_xbel_path()
 end
 
 local function main()
-  local xbel_path, reverse, override = detect_xbel_path(), nil, nil
-  for o, optarg, opterr in posix.getopt(_G.arg, "hf:ro:", {
+  local xbel_path, reverse, cnt, override = detect_xbel_path(), false, false, false
+  for o, optarg, opterr in posix.getopt(_G.arg, "hf:l:o:r", {
+    { "limit",        "required", 'l' },
     { "help",         "none",     'h' },
     { "file",         "required", 'f' },
     { "reverse",      "none",     'r' },
@@ -129,13 +137,15 @@ local function main()
         printf("User-supplied XBEL file path is not readable: %s. Abort.", xbel_path)
         return 1
       end
+    elseif o == 'l' then
+      cnt = tonumber(optarg)
     elseif o == 'o' then
       override = optarg
     elseif o == 'r' then
       reverse = true
     end
   end
-  add_items_from_xbel(M, xbel_path, reverse, override)
+  add_items_from_xbel(M, xbel_path, reverse, cnt, override)
   add_remove_file_item(M, xbel_path)
   print_menu(M)
   return 0
