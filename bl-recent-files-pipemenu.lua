@@ -148,8 +148,7 @@ Where: -h, --help       Show this message and exit.
     elseif o == 'f' then
       xbel_path = optarg
       if not posix.access(xbel_path) then
-        printf("User-supplied XBEL file path is not readable: %s. Abort.", xbel_path)
-        return 1
+        printf("Warning: User-specified XBEL file doesn't exist.", xbel_path)
       end
     elseif o == 'l' then
       cnt = tonumber(optarg)
