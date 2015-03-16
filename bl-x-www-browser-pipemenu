@@ -80,12 +80,10 @@ elif [[ $1 = --install-* ]]; then
 
     setupFunctionName="setup${browserName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-        export setupFunctionName
+        promptInstall --setup "$setupFunctionName" "${browserNameUpper% BROWSER} BROWSER" "$browserName" "$packageName"
     else
-        unset setupFunctionName
+        promptInstall "${browserNameUpper% BROWSER} BROWSER" "$browserName" "$packageName"
     fi
-
-    promptInstall "${browserNameUpper% BROWSER} BROWSER" "$browserName" "$packageName"
 
 else # pipemenu
     INSTALLED=false
@@ -96,7 +94,7 @@ else # pipemenu
         if type "$curTool" &> /dev/null; then
             INSTALLED=true
             menuItem "$curToolName" "$curTool"
-            [[ $curTool = chrom* ]] &&
+            [[ $curTool = 'chromium' || $curTool = google-chrome-* ]] &&
                 menuItem "$curToolName (Private Mode)" "$curTool --incognito" # Incognito mode for chrome and chromium
         else
             menuItem "Install $curToolName" "$0 --$curTool"

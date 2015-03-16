@@ -106,4 +106,4 @@ output='<openbox_pipe_menu>
     </item>
 </openbox_pipe_menu>
 '
-printf '%s' "$output"  # printf because echo sometimes eats backslashes
+printf '%s' "$output"

@@ -11,7 +11,7 @@
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
-#    Version 2015/02/15-cb
+#    Version 2015/02/15-bl
 
 #    NB The shell, not bash, is invoked in the hope that
 #    dash will be used, as it is much faster.

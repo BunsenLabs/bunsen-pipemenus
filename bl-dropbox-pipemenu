@@ -53,13 +53,14 @@ elif [[ $1 = '--install-dropbox' ]]; then
         ;;
     esac
 
-    shitTemp=$(mktemp -u)
-    curl -s -I "$DROPBOXURL" > "$shitTemp"
-    if [[ $? = 0 ]]; then # TODO this check is just wrong. It doesn't even make sure if it is possible to download a file or not.
-        read _ RESPONSE _ <<< $(head -n 1 "$shitTemp")
+#    shitTemp=$(mktemp -u)
+#    curl -s -I "$DROPBOXURL" > "$shitTemp"
+#    if [[ $? = 0 ]]; then # TODO this check is just wrong. It doesn't even make sure if it is possible to download a file or not.
+#        read _ RESPONSE _ <<< $(head -n 1 "$shitTemp")
 
         #if [ $RESPONSE -ne "200" ]; then
-        if [[ RESPONSE != 302 ]]; then
+#        if [[ RESPONSE != 302 ]]; then
+        if  ! grep -q 'Remote file exists' <<<$(wget --spider "$DROPBOXURL" 2>&1) then
             zenity --warning --title='Dropbox Installation' --text 'Error, failed to contact server. Please try again later.'
             exit 1
         else
@@ -68,10 +69,10 @@ elif [[ $1 = '--install-dropbox' ]]; then
              sed -u 's/^.* \+\([0-9]\+%\) \+\([0-9.]\+[GMKB]\) \+\([0-9hms.]\+\).*$/\1\n# Downloading... \2 (\3)/' | \
              zenity --progress --title='Installing Dropbox' --auto-kill --auto-close
         fi
-    else
-        zenity --warning --title='Dropbox Installation' --text 'Error, failed to contact server. Please try again later.'
-        exit 1
-    fi
+#    else
+#        zenity --warning --title='Dropbox Installation' --text 'Error, failed to contact server. Please try again later.'
+#        exit 1
+#    fi
 
     #extract binary
     tar -xf "$dropboxFile"
@@ -89,7 +90,7 @@ elif [[ $1 = '--install-dropbox' ]]; then
         ans=$(zenity  --title='Dropbox Installation' --list --text  "$PROMPT_DELAY_TEXT" --radiolist  --column 'Pick' --column 'Seconds:' "${PROMPT_DELAY_VARIANTS[@]}")
         if [[ $? = 0 ]]; then
             echo >> "$HOME/.config/openbox/autostart"
-            echo '# Autostart the Dropbox deamon' >> "$HOME/.config/openbox/autostart"
+            echo '# Autostart the Dropbox daemon' >> "$HOME/.config/openbox/autostart"
             echo "(sleep ${ans}s && \"\$HOME/.dropbox-dist/dropboxd\") &" >> "$HOME/.config/openbox/autostart"
             echo >> "$HOME/.config/openbox/autostart"
         fi
