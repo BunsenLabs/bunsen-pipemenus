@@ -19,7 +19,7 @@ local function quote(s)
 end
 
 local function printf(f, ...)
-  return string.format(f, ...)
+  print(string.format(f, ...))
 end
 
 local function decode_url(s)
@@ -111,11 +111,34 @@ local function detect_xbel_path()
 end
 
 local function main()
-  local xbel_path = _G.arg[1] or detect_xbel_path()
-  add_items_from_xbel(M, xbel_path)
+  local xbel_path, reverse, override = detect_xbel_path(), nil, nil
+  for o, optarg, opterr in posix.getopt(_G.arg, "hf:ro:", {
+    { "help",         "none",     'h' },
+    { "file",         "required", 'f' },
+    { "reverse",      "none",     'r' },
+    { "override-cmd", "required", 'o' }}) do
+    if o == '?' then
+      printf("Invalid option or missing argument: %s", arg[opterr-1])
+      return 1
+    elseif o == 'h' then
+      printf("Usage: %s [-h|--help] [-f|--file XBEL-FILE] [-r|--reverse] [-o|--override-cmd COMMAND]", arg[1])
+      return 0
+    elseif o == 'f' then
+      xbel_path = optarg
+      if not posix.access(xbel_path) then
+        printf("User-supplied XBEL file path is not readable: %s. Abort.", xbel_path)
+        return 1
+      end
+    elseif o == 'o' then
+      override = optarg
+    elseif o == 'r' then
+      reverse = true
+    end
+  end
+  add_items_from_xbel(M, xbel_path, reverse, override)
   add_remove_file_item(M, xbel_path)
   print_menu(M)
   return 0
 end
 
-return main()
+os.exit(main())
