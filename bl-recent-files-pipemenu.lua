@@ -123,17 +123,24 @@ end
 
 local function main()
   local xbel_path, reverse, cnt, override = detect_xbel_path(), false, false, false
-  for o, optarg, opterr in posix.getopt(_G.arg, "hf:l:o:r", {
-    { "limit",        "required", 'l' },
-    { "help",         "none",     'h' },
-    { "file",         "required", 'f' },
-    { "reverse",      "none",     'r' },
-    { "override-cmd", "required", 'o' }}) do
+  for o, optarg, opterr in posix.getopt(arg, "hf:l:o:r", {
+    { "limit",    "required", 'l' },
+    { "help",     "none",     'h' },
+    { "file",     "required", 'f' },
+    { "reverse",  "none",     'r' },
+    { "open-cmd", "required", 'o' }}) do
     if o == '?' then
       printf("Invalid option or missing argument: %s", arg[opterr-1])
       return 1
     elseif o == 'h' then
-      printf("Usage: %s [-h|--help] [-f|--file XBEL-FILE] [-l|--limit ITEM-LIMIT] [-o|--override-cmd COMMAND] [-r|--reverse] ", arg[0])
+      printf([[Usage: %s [-h|--help] [-f|--file XBEL] [-l|--limit NUM] [-o|--open-cmd CMD] [-r|--reverse]
+Where: -h, --help       Show this message and exit.
+       -f, --file       XBEL. Path to a 'recently-used.xbel' file.
+                        Omit in order to attempt to auto-detect the path.
+       -l, --limit      NUM. Include up to NUM items in the menu.
+       -o, --open-cmd   CMD. Open files using CMD. By default, files will be
+                        opened in the application they were being used with.
+       -r, --reverse    Put the most-recently used items at the top of the menu.]], arg[0])
       return 0
     elseif o == 'f' then
       xbel_path = optarg
