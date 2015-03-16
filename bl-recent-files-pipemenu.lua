@@ -23,8 +23,12 @@ local function printf(f, ...)
 end
 
 local function decode_url(s)
+  local s = s
+  if s:sub(1, 1) == '_' then
+    s = "_" .. s -- Inhibit Openbox hotkey mechanism
+  end
   if s:find("%", 1, true) then
-    return url.unescape(s)
+    s = url.unescape(s)
   end
   return s
 end
@@ -129,7 +133,7 @@ local function main()
       printf("Invalid option or missing argument: %s", arg[opterr-1])
       return 1
     elseif o == 'h' then
-      printf("Usage: %s [-h|--help] [-f|--file XBEL-FILE] [-r|--reverse] [-o|--override-cmd COMMAND]", arg[1])
+      printf("Usage: %s [-h|--help] [-f|--file XBEL-FILE] [-l|--limit ITEM-LIMIT] [-o|--override-cmd COMMAND] [-r|--reverse] ", arg[0])
       return 0
     elseif o == 'f' then
       xbel_path = optarg
