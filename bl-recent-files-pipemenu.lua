@@ -87,8 +87,6 @@ local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
   for _,i in ipairs(buf) do
     m:add_direct_child(i)
   end
-
-  return m
 end
 
 local function add_remove_file_item(m, path)
@@ -97,7 +95,12 @@ local function add_remove_file_item(m, path)
     mk_item_tag("Clear recent files",
       mk_action_tag("Execute", mk_command_tag("rm", "-- " .. path)))
     )
-  return m
+end
+
+local function add_is_empty_message(m)
+  m:add_direct_child(
+    mk_item_tag("No recently used files.", {})
+  )
 end
 
 local function print_menu(m)
@@ -156,9 +159,17 @@ Where: -h, --help       Show this message and exit.
       reverse = true
     end
   end
+
   add_items_from_xbel(M, xbel_path, reverse, cnt, override)
-  add_remove_file_item(M, xbel_path)
+
+  if #M == 0 then
+    add_is_empty_message(M)
+  else
+    add_remove_file_item(M, xbel_path)
+  end
+
   print_menu(M)
+
   return 0
 end
 
