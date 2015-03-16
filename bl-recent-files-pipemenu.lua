@@ -50,7 +50,6 @@ local function add_executable_item(m, label, cmd, args)
     mk_item_tag(label, {
       mk_action_tag("Execute", mk_command_tag(cmd, args))
     }))
-  return self
 end
 
 local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
