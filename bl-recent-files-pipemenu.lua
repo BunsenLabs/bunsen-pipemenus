@@ -19,7 +19,7 @@ local function quote(s)
 end
 
 local function printf(f, ...)
-  print(string.format(f, ...))
+  io.stderr:write(string.format(f, ...) .. '\n')
 end
 
 local function decode_url(s)
