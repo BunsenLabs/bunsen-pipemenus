@@ -24,13 +24,16 @@ end
 
 local function decode_url(s)
   local s = s
+
   local i,j = s:find("_", 1, true)
   if i then
     s = s:sub(1, i) .. '_' .. s:sub(j+1, -1)
   end
+
   if s:find("%", 1, true) then
     s = url.unescape(s)
   end
+
   return s
 end
 
@@ -71,13 +74,6 @@ local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
     local i = mk_item_tag(decode_url(posix.basename(file)), {
         mk_action_tag("Execute", mk_command_tag(override_cmd or clean_executable_name(prop.exec), file))
       })
-    if cnt then
-      if c == cnt then
-        break
-      else
-        c = c + 1
-      end
-    end
     if reverse_output then
       table.insert(buf, 1, i)
     else
@@ -85,8 +81,11 @@ local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
     end
   end
 
-  for _,i in ipairs(buf) do
-    m:add_direct_child(i)
+  local i, j = 1, #buf
+  while i <= j do
+    if cnt and i > cnt then break end
+    m:add_direct_child(buf[i])
+    i = i + 1
   end
 end
 
