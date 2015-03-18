@@ -81,11 +81,9 @@ local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
     end
   end
 
-  local i, j = 1, #buf
-  while i <= j do
+  for i,v in ipairs(buf) do
     if cnt and i > cnt then break end
-    m:add_direct_child(buf[i])
-    i = i + 1
+    m:add_direct_child(v)
   end
 end
 
