@@ -67,7 +67,8 @@ local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
 
   for bookmark in x:childtags() do
     local file = bookmark:get_attribs().href
-    local prop = bookmark:get_elements_with_name("bookmark:application")[1]:get_attribs()
+    local apps = bookmark:get_elements_with_name("bookmark:application")
+    local prop = apps[#apps]:get_attribs()
     local i = mk_item_tag(decode_url(posix.basename(file)), {
         mk_action_tag("Execute", mk_command_tag(override_cmd or clean_executable_name(prop.exec), file))
       })
