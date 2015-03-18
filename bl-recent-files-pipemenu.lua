@@ -25,10 +25,7 @@ end
 local function decode_url(s)
   local s = s
 
-  local i,j = s:find("_", 1, true)
-  if i then
-    s = s:sub(1, i) .. '_' .. s:sub(j+1, -1)
-  end
+  s = s:gsub("_", "__")
 
   if s:find("%", 1, true) then
     s = url.unescape(s)
