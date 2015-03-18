@@ -1,5 +1,21 @@
 #!/usr/bin/env lua5.2
 
+-- bl-recent-files-pipemenu - Openbox recent-files pipemenu
+-- Copyright (C) 2015 Jens John <dev@2ion.de>
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+-- 
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+-- 
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 local posix = require 'posix'
 local url = require 'socket.url'
 local xml = require 'pl.xml'
@@ -8,6 +24,7 @@ if _VERSION == "Lua 5.1" then
   table.unpack = unpack
 end
 
+-- Menu root
 local M = xml.new("openbox_pipe_menu")
 
 local function swap(a, b)
@@ -22,12 +39,15 @@ local function printf(f, ...)
   io.stderr:write(string.format(f, ...) .. '\n')
 end
 
+--- Sanitizes a file URL for use in a menu label
+-- @param s (string) Input string
+-- @return sanitized string
 local function decode_url(s)
   local s = s
 
-  s = s:gsub("_", "__")
+  s = s:gsub("_", "__")           -- prevent underscores from becoming shortcuts
 
-  if s:find("%", 1, true) then
+  if s:find("%", 1, true) then    -- decode %-style URL escape sequences
     s = url.unescape(s)
   end
 
@@ -53,15 +73,25 @@ local function add_executable_item(m, label, cmd, args)
     }))
 end
 
+--- Creates a recently-used-files menu from the contents of a XBEL-file
+-- by appending to the given menu. On click, the file will be opened.
+-- @param m (XML object) The menu to append the items to
+-- @param path (string) XBEL filepath
+-- @param reverse_output (boolean) true: most recent menu entry appears at the
+-- menu's top, false: oldest menu entry appears at the top
+-- @param cnt (numbe) Limit menu entries to $cnt items
+-- @param override_cmd (string) Open all files using this command
+-- instead of the originally assigned application
+-- @return XML object if successful, otherwise nil
 local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
-  if not posix.access(path) then return false end
+  if not posix.access(path) then return nil end
 
   local function clean_executable_name(s)
     return s:sub(2, -5)
   end
 
   local x = xml.parse(path, true)
-  if not x then return false end
+  if not x then return nil end
 
   local buf, c = {}, 0
 
@@ -85,6 +115,9 @@ local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
   end
 end
 
+--- Appends a menu item toggling a truncate-file action
+-- @param m (XML object) menu
+-- @param path (string) path to execute the action on
 local function add_remove_file_item(m, path)
   m:add_direct_child(xml.elem("separator"))
   m:add_direct_child(
@@ -93,16 +126,22 @@ local function add_remove_file_item(m, path)
     )
 end
 
+--- Appends an action-less item saying that there are no recent files
+-- @param m (XML object) menu
 local function add_is_empty_message(m)
   m:add_direct_child(
     mk_item_tag("No recently used files.", {})
   )
 end
 
+--- Prints the XML Openbox menu to stdout
+-- @path m (XML object) menu
 local function print_menu(m)
   print(xml.tostring(m, "", "  "))
 end
 
+--- Look for the recently-used.xbel file in XDG standard locations
+-- @return file path as a string if successful, otherwise nil
 local function detect_xbel_path()
   local hp = os.getenv("HOME")
   local xh = os.getenv("XDG_DATA_HOME")
