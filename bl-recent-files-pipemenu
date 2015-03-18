@@ -1,217 +1,171 @@
-#!/bin/dash
+#!/usr/bin/env lua5.2
 
-# bl-recent-files-pipemenu - an openbox pipemenu for recent files
-# Copyright (C) 2015 Jens John <dev@2ion.de>
-# 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+local posix = require 'posix'
+local url = require 'socket.url'
+local xml = require 'pl.xml'
+-- compatibility with Lua 5.1/LuaJIT
+if _VERSION == "Lua 5.1" then
+  table.unpack = unpack
+end
 
-BOOKMARKS_FILE=
-COMMON_NAME=recently-used.xbel
-MAXIMUM_ENTRIES=999
-OPEN_COMMAND=xdg-open
-ORIGINAL_HANDLER=0
-INCL_CLEAR_BOOKMARKS=0
-REVERSE_BUFFER=
+local M = xml.new("openbox_pipe_menu")
 
-FILE_COLUMN_PROGNAME=$(mktemp)
-FILE_COLUMN_EXECNAME=$(mktemp)
-FILE_COLUMN_FILENAME=$(mktemp)
-FILE_COLUMNS=$(mktemp)
+local function swap(a, b)
+  return b, a
+end
 
-_TEMPLATE_ITEM='
-  <item label="%s">
-    <action name="Execute">
-      <command>
-        %s "%s"
-      </command>
-    </action>
-  </item>'
+local function quote(s)
+  return string.format("%q", s)
+end
 
-_TEMPLATE_BEGIN='
-<openbox_pipe_menu>'
+local function printf(f, ...)
+  io.stderr:write(string.format(f, ...) .. '\n')
+end
 
-_TEMPLATE_END='
-</openbox_pipe_menu>'
+local function decode_url(s)
+  local s = s
 
-_TEMPLATE_CLEANBOOKMARKS='
-  <separator />
-  <item label="Clear recent files">
-    <action name="Execute">
-      <command>
-        rm --one-file-system -- "%s"
-      </command>
-    </action>
-  </item>'
+  s = s:gsub("_", "__")
 
-log () {
-  echo "$@" >&2
-}
+  if s:find("%", 1, true) then
+    s = url.unescape(s)
+  end
 
-die () {
-  log "$@"
-  exit 1
-}
+  return s
+end
 
-detect_bookmarks_file () {
-  local SUFFIX=$1
-  for CANDIDATE in                        \
-      "${XDG_DATA_HOME}/${SUFFIX}"        \
-      "${HOME}/.local/share/${SUFFIX}"    \
-      "${HOME}/.${SUFFIX}" ; do
-    if test -r "$CANDIDATE" ; then
-      echo "$CANDIDATE"
+local function mk_item_tag(label, actions)
+  return xml.elem("item", { label = label, table.unpack(actions)})
+end
+
+local function mk_action_tag(name, command_tag)
+  return xml.elem("action", { name = name, command_tag })
+end
+
+local function mk_command_tag(cmd, args)
+  return xml.elem("command"):text(quote(cmd) .. ' ' .. quote(args))
+end
+
+local function add_executable_item(m, label, cmd, args)
+  m:add_direct_child(
+    mk_item_tag(label, {
+      mk_action_tag("Execute", mk_command_tag(cmd, args))
+    }))
+end
+
+local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
+  if not posix.access(path) then return false end
+
+  local function clean_executable_name(s)
+    return s:sub(2, -5)
+  end
+
+  local x = xml.parse(path, true)
+  if not x then return false end
+
+  local buf, c = {}, 0
+
+  for bookmark in x:childtags() do
+    local file = bookmark:get_attribs().href
+    local apps = bookmark:get_elements_with_name("bookmark:application")
+    local prop = apps[#apps]:get_attribs()
+    local i = mk_item_tag(decode_url(posix.basename(file)), {
+        mk_action_tag("Execute", mk_command_tag(override_cmd or clean_executable_name(prop.exec), file))
+      })
+    if reverse_output then
+      table.insert(buf, 1, i)
+    else
+      table.insert(buf, i)
+    end
+  end
+
+  for i,v in ipairs(buf) do
+    if cnt and i > cnt then break end
+    m:add_direct_child(v)
+  end
+end
+
+local function add_remove_file_item(m, path)
+  m:add_direct_child(xml.elem("separator"))
+  m:add_direct_child(
+    mk_item_tag("Clear recent files",
+      mk_action_tag("Execute", mk_command_tag("/bin/bash", "-c '> " .. path .. "'")))
+    )
+end
+
+local function add_is_empty_message(m)
+  m:add_direct_child(
+    mk_item_tag("No recently used files.", {})
+  )
+end
+
+local function print_menu(m)
+  print(xml.tostring(m, "", "  "))
+end
+
+local function detect_xbel_path()
+  local hp = os.getenv("HOME")
+  local xh = os.getenv("XDG_DATA_HOME")
+  local fn = "recently-used.xbel"
+  local function check_path(t)
+    for _,p in ipairs(t) do
+      if posix.access(p) then return p end
+    end
+    return nil
+  end
+  return check_path{
+    string.format("%s/%s", xf, fn),
+    string.format("%s/.local/share/%s", hp, fn),
+    string.format("%s/.%s", hp, fn)
+  }
+end
+
+local function main()
+  local xbel_path, reverse, cnt, override = detect_xbel_path(), false, false, false
+  for o, optarg, opterr in posix.getopt(arg, "hf:l:o:r", {
+    { "limit",    "required", 'l' },
+    { "help",     "none",     'h' },
+    { "file",     "required", 'f' },
+    { "reverse",  "none",     'r' },
+    { "open-cmd", "required", 'o' }}) do
+    if o == '?' then
+      printf("Invalid option or missing argument: %s", arg[opterr-1])
+      return 1
+    elseif o == 'h' then
+      printf([[Usage: %s [-h|--help] [-f|--file XBEL] [-l|--limit NUM] [-o|--open-cmd CMD] [-r|--reverse]
+Where: -h, --help       Show this message and exit.
+       -f, --file       XBEL. Path to a 'recently-used.xbel' file.
+                        Omit in order to attempt to auto-detect the path.
+       -l, --limit      NUM. Include up to NUM items in the menu.
+       -o, --open-cmd   CMD. Open files using CMD. By default, files will be
+                        opened in the application they were being used with.
+       -r, --reverse    Put the most-recently used items at the top of the menu.]], arg[0])
       return 0
-    fi
-  done
-  return 1
-}
+    elseif o == 'f' then
+      xbel_path = optarg
+      if not posix.access(xbel_path) then
+        printf("Warning: User-specified XBEL file doesn't exist.", xbel_path)
+      end
+    elseif o == 'l' then
+      cnt = tonumber(optarg)
+    elseif o == 'o' then
+      override = optarg
+    elseif o == 'r' then
+      reverse = true
+    end
+  end
 
-mk_application_name_column () {
-  local infile=$1
-  local outfile=$2
-  xmllint \
-    --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@name" \
-    "$infile" 2>/dev/null \
-    | sed 's_ name=_\nname=_g' \
-    > "$outfile"
-}
+  add_items_from_xbel(M, xbel_path, reverse, cnt, override)
 
-mk_application_exec_column () {
-  local infile=$1
-  local outfile=$2
-  xmllint \
-    --xpath "/xbel/bookmark/info/metadata/*[local-name()='applications']/*[local-name()='application']/@exec" \
-    "$infile" 2>/dev/null \
-    | sed 's_ exec=_\nexec=_g' \
-    > "$outfile"
-}
-
-mk_application_file_column () {
-  local infile=$1
-  local outfile=$2
-  xmllint \
-    --xpath "/xbel/bookmark/@href" \
-    "$infile" 2>/dev/null \
-    | sed 's_ href=_\nhref=_g' \
-    > "$outfile"
-}
-
-decode_label () {
-  local url=$1
-  if test "${url##*%}" != "$url" ; then
-    perl -MURI::Escape -e 'print uri_unescape($ARGV[0]);' "$url"
+  if #M == 0 then
+    add_is_empty_message(M)
   else
-    echo "$url"
-  fi
-}
+    add_remove_file_item(M, xbel_path)
+  end
 
-mk_list_item () {
-  local label=$1
-  local command=$2
-  local arg=$3
-  printf "$_TEMPLATE_ITEM" "$(decode_label "$label")" "$command" "$arg"
-}
+  print_menu(M)
 
-mk_list_item_with_handler () {
-  local label=$1
-  local executor="$2"
-  local arg=$3
-  local appname=$4
-  executor=$(echo "$executor" | tr -d "'%u")
-  printf "$_TEMPLATE_ITEM" "$appname: $(decode_label "$label")" "$executor" "$arg"
-}
+  return 0
+end
 
-mk_cleanbookmarks_item () {
-  local bookmarksfile="$1"
-  printf "$_TEMPLATE_CLEANBOOKMARKS" "$bookmarksfile"
-}
-
-cleanup () {
-  rm -f "$FILE_COLUMNS" "$FILE_COLUMN_PROGNAME" "$FILE_COLUMN_FILENAME" "$FILE_COLUMN_EXECNAME"
-}
-
-usage () {
-  echo "Usage:  ${0##*/} [-Hch] [-f FILE] [-m MAX-ENTRIES] [-o OPEN-CMD]
-        Where:  -H              Open recent files with their associated application.
-                -c              Include a menu entry for clearing the recently used files.
-                -f FILE         Use the .xbel file from the specified location instead of
-                                trying to auto-detect it.
-                -h              Print this message and exit.
-                -m MAX-ENTRIES  Set the number of menu items to include, ignore the rest.
-                -o OPEN-CMD     When not using -H, use OPEN-CMD to open any recent files.
-                                Defaults to xdg-open."
-}
-
-# main ()
-
-trap cleanup EXIT
-
-# process command line options
-
-while getopts Hcf:hm:o: OPT ; do
-  case "$OPT" in
-    H)  ORIGINAL_HANDLER=1                        ;;
-    c)  INCL_CLEAR_BOOKMARKS=1                    ;;
-    f)  BOOKMARKS_FILE=$OPTARG                    ;;
-    h)  usage ; exit 0                            ;;
-    m)  MAXIMUM_ENTRIES=$OPTARG                   ;;
-    o)  OPEN_COMMAND=$OPTARG ; ORIGINAL_HANDLER=0 ;;
-    *)  exit 1                                    ;; 
-  esac
-done
-
-# probe for the user-provided file, or try to auto-detect a file
-
-if test -n "$BOOKMARKS_FILE" ; then
-  test -r "$BOOKMARKS_FILE" || die "cannot read file: $BOOKMARKS_FILE"
-else
-  BOOKMARKS_FILE=$(detect_bookmarks_file "$COMMON_NAME") || die "failed to detect a $COMMON_NAME file"
-fi
-
-mk_application_file_column "$BOOKMARKS_FILE" "$FILE_COLUMN_FILENAME"
-mk_application_exec_column "$BOOKMARKS_FILE" "$FILE_COLUMN_EXECNAME"
-mk_application_name_column "$BOOKMARKS_FILE" "$FILE_COLUMN_PROGNAME"
-paste "$FILE_COLUMN_PROGNAME" "$FILE_COLUMN_EXECNAME" "$FILE_COLUMN_FILENAME" > "$FILE_COLUMNS"
-
-COUNT=0 ; while read LINE ; do
-  if test -z "$LINE" ; then continue ; fi
-
-  # $name := application name
-  # $exec := command
-  # $href := file argument
-  eval "$LINE" || continue
-
-  if test $ORIGINAL_HANDLER -eq 1 ; then
-    REVERSE_BUFFER="$(mk_list_item_with_handler "$(basename "$href")" "$exec" "$href" "$name") ${REVERSE_BUFFER}"
-  else
-    REVERSE_BUFFER="$(mk_list_item "$(basename "$href")" "$OPEN_COMMAND" "$href") ${REVERSE_BUFFER}"
-  fi
-
-  COUNT=$(( COUNT + 1 ))
-  if test $COUNT -eq $MAXIMUM_ENTRIES ; then break ; fi
-done < "$FILE_COLUMNS"
-
-# output
-
-echo "$_TEMPLATE_BEGIN"
-
-echo "$REVERSE_BUFFER"
-
-if test $INCL_CLEAR_BOOKMARKS -eq 1 ; then
-  mk_cleanbookmarks_item "$BOOKMARKS_FILE"
-fi
-
-echo "$_TEMPLATE_END"
-
-exit 0
+os.exit(main())
