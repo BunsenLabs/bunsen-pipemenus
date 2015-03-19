@@ -44,13 +44,13 @@ screenshooterExists() {
 }
 
 writeScrot() {					# Write scrot submenu items
-			menuSubmenu 'scrot' 'scrot Screenshooter'
-				menuItem 'scrot Now' 'scrot ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
-				menuItem 'scrot In 5 secs...' 'scrot -d -5 ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
-				menuItem 'scrot In 10 secs...' 'scrot -d -10 ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
-				menuItem 'scrot Select Area..' 'scrot -s ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
-				menuItem 'scrot multi-monitor' 'scrot -m ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
-			menuSubmenuEnd
+	menuSubmenu 'scrot' 'scrot Screenshooter'
+		menuItem 'scrot Now' 'scrot ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
+		menuItem 'scrot In 5 secs...' 'scrot -d -5 ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
+		menuItem 'scrot In 10 secs...' 'scrot -d -10 ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
+		menuItem 'scrot Select Area..' 'scrot -s ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
+		menuItem 'scrot multi-monitor' 'scrot -m ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
+	menuSubmenuEnd
 }
 
 if [[ $1 && ! $1 = --install-* ]]; then
