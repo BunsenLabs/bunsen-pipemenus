@@ -80,13 +80,11 @@ elif [[ $1 = --install-* ]]; then
 	fi
 
 else # pipemenu
-	INSTALLED=false
 	menuStart
 	for curTool in "${TOOLS[@]}"; do
 		read -ra words <<< "${curTool//-/ }"
 		curToolName=${words[*]^}
 		if type "$curTool" &> /dev/null; then
-			INSTALLED=true
 			menuItem "$curToolName" "$curTool"
 		else
 			menuItem "Install $curToolName" "$0 --$curTool"
@@ -98,7 +96,6 @@ else # pipemenu
 		read -ra words <<< "${curScrot//-/ }"
 		curScrotName=${words[*]^}
 		if type "$curScrot" &> /dev/null; then
-			INSTALLED=true
 			if [[ "$curScrot" = scrot ]];then
 				writeScrot
 			else
