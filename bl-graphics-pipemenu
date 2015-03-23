@@ -11,11 +11,13 @@
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 # In order to add another APP, add the package name to this array:
-TOOLS=('blender' 'gimp' 'inkscape' 'mirage' 'mandelbulber')
+TOOLS=('blender' 'gimp' 'inkscape' 'mirage' 'mandelbulber' 'viewnior')
 SCROTS=('xfce4-screenshooter' 'scrot')
 
 # Get $USER images directory
-if test -f "/usr/bin/xdg-user-dir";then
+#if test -f "/usr/bin/xdg-user-dir";then
+
+if type xdg-user-dir &>/dev/null; then
 	IMGDIR=$(xdg-user-dir PICTURES)
 else
 	IMGDIR="~/Pictures"
@@ -52,7 +54,7 @@ screenshooterExists() {
 
 writeScrot() {					# Write scrot submenu items
 	IMG="$IMGDIR/%F-%H-%M_scrot.png"
-	VIEW="'viewnior $IMG'"
+	VIEW="'mirage $IMG'"
 	menuSubmenu 'scrot' 'scrot Screenshooter'
 		menuItem "scrot Now" "scrot $IMG -e $VIEW"
 		menuItem "scrot In 5 secs..." "scrot -d 5 $IMG -e $VIEW"
