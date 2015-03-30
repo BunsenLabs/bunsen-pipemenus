@@ -11,8 +11,17 @@
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 # In order to add another APP, add the package name to this array:
-TOOLS=('blender' 'gimp' 'inkscape' 'mirage' 'mandelbulber')
+TOOLS=('blender' 'gimp' 'inkscape' 'mirage' 'mandelbulber' 'viewnior')
 SCROTS=('xfce4-screenshooter' 'scrot')
+
+# Get $USER images directory
+#if test -f "/usr/bin/xdg-user-dir";then
+
+if type xdg-user-dir &>/dev/null; then
+	IMGDIR=$(xdg-user-dir PICTURES)
+else
+	IMGDIR="~/Pictures"
+fi
 
 # If the package needs additional configuration before installation
 # create a function called setupappName, it will be called automatically.
@@ -44,12 +53,15 @@ screenshooterExists() {
 }
 
 writeScrot() {					# Write scrot submenu items
+	IMG="$IMGDIR/%F-%H-%M_scrot.png"
+	VIEW="'mirage $IMG'"
 	menuSubmenu 'scrot' 'scrot Screenshooter'
-		menuItem 'scrot Now' 'scrot ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
-		menuItem 'scrot In 5 secs...' 'scrot -d -5 ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
-		menuItem 'scrot In 10 secs...' 'scrot -d -10 ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
-		menuItem 'scrot Select Area..' 'scrot -s ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
-		menuItem 'scrot multi-monitor' 'scrot -m ~/images/screenshots/"%F-%H-%M_scrot.png" -e "viewnior ~/images/screenshots/%F-%H-%M_scrot.png"'
+		menuItem "scrot Now" "scrot $IMG -e $VIEW"
+		menuItem "scrot In 5 secs..." "scrot -d 5 $IMG -e $VIEW"
+		menuItem "scrot In 10 secs" "scrot -d 10 $IMG -e $VIEW"
+		menuItem "scrot Select Area.." "scrot -s $IMG -e $VIEW"
+		menuItem "scrot Current Focus.." "scrot -u $IMG -e $VIEW"
+		menuItem "scrot multi-monitor" "scrot -m $IMG -e $VIEW"
 	menuSubmenuEnd
 }
 
@@ -69,7 +81,7 @@ elif [[ $1 = --install-* ]]; then
 	read -ra words <<< "$appName"
 	appName=${words[*]^}
 	appNameUpper=${appName^^}
-	
+
 	setupFunctionName="setup${appName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupBlender'
 	if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
 		promptInstall --setup "$setupFunctionName" "${appNameUpper% APP} APP" "$appName" "$packageName"

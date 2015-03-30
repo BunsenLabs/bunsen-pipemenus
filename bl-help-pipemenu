@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+#	bl-help-pipemenu
+#	Prepared for BunsenLabs Linux by <damo> March 2015
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
@@ -14,6 +17,8 @@ menuItem 'Forum Help & Support' 'x-www-browser "http://crunchbang.org/forums/vie
 menuItem 'Tips, Tricks & Scripts' 'x-www-browser "http://crunchbang.org/forums/viewforum.php?id=8"'
 menuSubmenu 'DebianWWW' 'Debian'
 menuItem 'Debian Documentation' 'x-www-browser "https://www.debian.org/doc/"'
+menuItem 'Wiki' 'x-www-browser "https://wiki.debian.org/"'
+menuItem 'Forum' 'x-www-browser "http://forums.debian.net/"'
 menuItem 'Package Search' 'x-www-browser "https://www.debian.org/distrib/packages"'
 menuItem 'Package Tracker' 'x-www-browser "https://tracker.debian.org/"'
 menuItem 'Security Tracker' 'x-www-browser "https://security-tracker.debian.org/tracker/"'
