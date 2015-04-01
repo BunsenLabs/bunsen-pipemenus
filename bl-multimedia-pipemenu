@@ -87,20 +87,20 @@ else # pipemenu
     menuSeparator
 	menuSeparator 'Editors'
     # get editors pipemenu
-	if ! type "$BL_INCLUDE/bl-MMeditors-pipemenu" &> /dev/null; then
+	if ! type "$BL_INCLUDE/bl-mmeditors-pipemenu" &> /dev/null; then
 		echo $"Error: Failed to locate pipemenu in $BL_INCLUDE" >&2
 		exit 1
 	else
-		echo $($BL_INCLUDE/bl-MMeditors-pipemenu)
+		echo $($BL_INCLUDE/bl-mmeditors-pipemenu)
 	fi
     menuSeparator
 	menuSeparator 'Utilities'
     # get utilities pipemenu
-	if ! type "$BL_INCLUDE/bl-MMutils-pipemenu" &> /dev/null; then
+	if ! type "$BL_INCLUDE/bl-mmutils-pipemenu" &> /dev/null; then
 		echo $"Error: Failed to locate pipemenu in $BL_INCLUDE" >&2
 		exit 1
 	else
-		echo $($BL_INCLUDE/bl-MMutils-pipemenu)
+		echo $($BL_INCLUDE/bl-mmutils-pipemenu)
 	fi
 	menuEnd
 fi
