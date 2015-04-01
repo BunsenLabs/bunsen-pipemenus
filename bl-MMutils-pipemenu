@@ -12,7 +12,7 @@
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 # In order to add another UTIL, add the package name to this array:
-UTILS=('xfburn' 'gtk-recordmydesktop''volti')
+UTILS=('xfburn' 'gtk-recordmydesktop' 'volti')
 
 # If the package needs additional configuration before installation
 # create a function called setuputilName, it will be called automatically.
