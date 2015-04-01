@@ -7,12 +7,10 @@
 #
 # Modified by <damo> for BunsenLabs Linux, March 2015
 # ---------------------------------------------------------------------
-#
 # Applications to display in the editors and utilities sections can be 
 # changed by editing the "TOOLS" arrays in:
 #           $BL_INCLUDE/bl-MMeditors-pipemenu
 #           $BL_INCLUDE/bl-MMutils-pipemenu 
-#
 # ---------------------------------------------------------------------
 
 
