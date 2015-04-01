@@ -67,14 +67,14 @@ else # pipemenu
 		curAppName=${words[*]^}
 		if type "$curApp" &> /dev/null; then
 			# change name of smplayer (gui frontend for mplayer2)
-			if [[ "$curApp" = "smplayer2" ]];then
+			if [[ "$curApp" = "smplayer" ]];then
 				menuItem "Gnome mplayer" "$curApp"
 				curAppName=${words[*]^}
 			else
 				menuItem "$curAppName" "$curApp"
 			fi
 		else
-			if [[ "$curAppName" == "Smplayer2" ]]; then
+			if [[ "$curAppName" == "Smplayer" ]]; then
 				menuItem "Install Gnome mplayer" "$0 --$curApp"
 			else
 				menuItem "Install $curAppName" "$0 --$curApp"
