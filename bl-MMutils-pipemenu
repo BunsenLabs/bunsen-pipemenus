@@ -1,0 +1,74 @@
+#!/bin/bash
+# ---------------------------------------------------------------------
+# An Openbox pipemenu for Multimedia utilities
+# It is used by bl-multimedia-pipemenu to populate the MM utils menu
+#
+# Originally written for CrunchBang Linux <http://crunchbang.org/>
+# by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
+#
+# Modified by <damo> for BunsenLabs Linux, March 2015
+# ---------------------------------------------------------------------
+
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+
+# In order to add another UTIL, add the package name to this array:
+UTILS=('xfburn' 'volti')
+
+# If the package needs additional configuration before installation
+# create a function called setuputilName, it will be called automatically.
+
+
+if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
+	echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+	exit 1
+fi
+
+utilExists() {
+	for curUtil in "${UTILS[@]}"; do # if $packageName exists in UTILS array
+		[[ $curUtil = "$1" ]] &&
+			return 0
+	done
+	say "Unable to install $1. There is no such application that I know of." 1 >&2
+	say "You can try one of these: ${UTILS[*]}" 2 >&2
+	return 1
+}
+
+
+if [[ $1 && ! $1 = --install-* ]]; then
+	packageName=${1#--}
+	read -ra words <<< "${packageName//-/ }"
+	x-terminal-emulator --title "Install ${words[*]^}" -e "$0" "--install-$packageName"
+
+elif [[ $1 = --install-* ]]; then
+	packageName=${1#--install-}
+	utilExists "$packageName" || exit 1
+	utilName=${packageName//-/ }
+	read -ra words <<< "$utilName"
+	utilName=${words[*]^}
+	utilNameUpper=${utilName^^}
+
+	setupFunctionName="setup${utilName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupBlender'
+	if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
+		promptInstall --setup "$setupFunctionName" "${utilNameUpper% UTIL} UTIL" "$utilName" "$packageName"
+	else
+		promptInstall "${utilNameUpper% UTIL} UTIL" "$utilName" "$packageName"
+	fi
+
+else # output for bl-multimedia-pipemenu
+	for curUtil in "${UTILS[@]}"; do
+		read -ra words <<< "${curUtil//-/ }"
+		curUtilName=${words[*]^}
+		if type "$curUtil" &> /dev/null; then
+		# change volti to volti-mixer
+			if [[ "$curUtil" = "volti" ]];then
+				menuItem "$curUtilName volume control" "$curUtil-mixer"
+			else
+				menuItem "$curUtilName" "$curUtil"
+			fi
+		else
+			menuItem "Install $curUtilName" "$0 --$curUtil"
+		fi
+	done
+
+fi
+exit 0
