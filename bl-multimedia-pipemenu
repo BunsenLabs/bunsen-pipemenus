@@ -5,14 +5,22 @@
 # Originally written for CrunchBang Linux <http://crunchbang.org/>
 # by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
 #
-# Modified by damo for BunsenLabs Linux
+# Modified by <damo> for BunsenLabs Linux, March 2015
+# ---------------------------------------------------------------------
+#
+# Applications to display in the editors and utilities sections can be 
+# changed by editing the "TOOLS" arrays in:
+#           $BL_INCLUDE/bl-MMeditors-pipemenu
+#           $BL_INCLUDE/bl-MMutils-pipemenu 
+#
 # ---------------------------------------------------------------------
 
+
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
-BL_INCLUDE='/usr/bin'
+BL_INCLUDE='/usr/bin'   # used for editor and utility pipemenus
 
 # In order to add another APP, add the package name to this array:
-APPS=( 'vlc' 'deadbeef' 'smplayer2' )
+APPS=( 'vlc' 'deadbeef' 'audacious' 'smplayer2' )
 
 # If the package needs additional configuration before installation
 # create a function called setupappName, it will be called automatically.
@@ -60,7 +68,7 @@ else # pipemenu
 		read -ra words <<< "${curApp//-/ }"
 		curAppName=${words[*]^}
 		if type "$curApp" &> /dev/null; then
-			# change name of smplayer2
+			# change name of smplayer2 (gui frontend for mplayer2)
 			if [[ "$curApp" = "smplayer2" ]];then
 				menuItem "Gnome mplayer" "$curApp"
 				curAppName=${words[*]^}
@@ -75,21 +83,23 @@ else # pipemenu
 			fi
 		fi
 	done
-
+    menuSeparator
 	menuSeparator 'Editors'
-	if ! type "$BL_INCLUDE/bl-media1-pipemenu" &> /dev/null; then
-		echo $"Error: Failed to locate submenu in $BL_INCLUDE" >&2
+    # get editors pipemenu
+	if ! type "$BL_INCLUDE/bl-MMeditors-pipemenu" &> /dev/null; then
+		echo $"Error: Failed to locate pipemenu in $BL_INCLUDE" >&2
 		exit 1
 	else
-		echo $(/usr/bin/bl-media1-pipemenu)
+		echo $($BL_INCLUDE/bl-MMeditors-pipemenu)
 	fi
-
+    menuSeparator
 	menuSeparator 'Utilities'
-	if ! type "$BL_INCLUDE/bl-media2-pipemenu" &> /dev/null; then
-		echo $"Error: Failed to locate submenu in $BL_INCLUDE" >&2
+    # get utilities pipemenu
+	if ! type "$BL_INCLUDE/bl-MMutils-pipemenu" &> /dev/null; then
+		echo $"Error: Failed to locate pipemenu in $BL_INCLUDE" >&2
 		exit 1
 	else
-		echo $(/usr/bin/bl-media2-pipemenu)
+		echo $($BL_INCLUDE/bl-MMutils-pipemenu)
 	fi
 	menuEnd
 fi
