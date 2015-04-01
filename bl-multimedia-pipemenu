@@ -7,10 +7,10 @@
 #
 # Modified by <damo> for BunsenLabs Linux, March 2015
 # ---------------------------------------------------------------------
-# Applications to display in the editors and utilities sections can be 
+# Applications to display in the editors and utilities sections can be
 # changed by editing the "TOOLS" arrays in:
 #           $BL_INCLUDE/bl-MMeditors-pipemenu
-#           $BL_INCLUDE/bl-MMutils-pipemenu 
+#           $BL_INCLUDE/bl-MMutils-pipemenu
 # ---------------------------------------------------------------------
 
 
@@ -18,7 +18,7 @@ BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 BL_INCLUDE='/usr/bin'   # used for editor and utility pipemenus
 
 # In order to add another APP, add the package name to this array:
-APPS=( 'vlc' 'deadbeef' 'audacious' 'smplayer' )
+APPS=( 'vlc' 'deadbeef' 'mpv' 'audacious' 'smplayer' )
 
 # If the package needs additional configuration before installation
 # create a function called setupappName, it will be called automatically.
@@ -64,12 +64,15 @@ else # pipemenu
 	menuStart
 	for curApp in "${APPS[@]}"; do
 		read -ra words <<< "${curApp//-/ }"
+		echo "$curApp"
 		curAppName=${words[*]^}
 		if type "$curApp" &> /dev/null; then
-			# change name of smplayer (gui frontend for mplayer2)
+			# change name of smplayer (gui frontend for mplayer)
 			if [[ "$curApp" = "smplayer" ]];then
 				menuItem "Gnome mplayer" "$curApp"
 				curAppName=${words[*]^}
+			elif [[ "$curApp" = "mpv" ]];then # set mpv to start with gui window
+				menuItem "$curAppName" "$curApp --force-window --idle"
 			else
 				menuItem "$curAppName" "$curApp"
 			fi
