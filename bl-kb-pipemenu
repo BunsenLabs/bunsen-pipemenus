@@ -6,9 +6,8 @@
 # Written by <damo> for BunsenLabs Linux,  April 2015
 # ---------------------------------------------------------------------
 #
-# NB The keybinds in the menu are just for display - clicking on an item
-# just closes the menu on screen
-#
+# NB The keybinds in the menu are clickable, except for the Openbox
+# commands, which just exit the menu
 #-----------------------------------------------------------------------
 BL_COMMON_LIBDIR="/usr/lib/bunsen/bunsen-common"
 KBSCRIPT="obkb-pipemenu.py"
@@ -23,8 +22,8 @@ fi
 if ! [ -e "$KBTEXT" ];then # write keybinds to textfile, if it doesn't exist
 	# test if obkb-pipemenu.py exists in path
 	if type "$KBSCRIPT" &> /dev/null;then
-		# run script to write kbinds.txt
-		"$KBSCRIPT"
+		# run script to write kbinds.txt, suppress terminal output
+		"$KBSCRIPT" > /dev/null
 	else
 		echo $"ERROR: obkb-pipemenu.py not found" >&2
 		exit 1
@@ -46,9 +45,14 @@ menuItem "Backup and Edit rc.xml" "bl-kb-pipemenu --rcedit"
 menuSeparator
 
 # read in lines from textfile, write menu entries
-while read -r a b;do
-	curItem=$(printf "%-20s %s" "$a" "$b")
-	menuItem "$curItem" "echo >/dev/null 2>&1" #<command> closes menu on screen
+while read -r a b c;do
+	curItem=$(printf "%-20s %s" "$b" "$c")
+	# read flag produced by obkb-pipemenu.py
+	if [[ "$a" = "x" ]];then
+		menuItem "$curItem" "$c" #<action name=Execute>
+	else
+		menuItem "$curItem" "echo >/dev/null 2>&1" # No <action name=Execute>
+	fi
 done < "$KBTEXT"
 
 menuEnd
