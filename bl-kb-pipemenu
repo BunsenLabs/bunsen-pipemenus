@@ -42,6 +42,7 @@ fi
 # pipemenu
 menuStart
 menuItem "Backup and Edit rc.xml" "bl-kb-pipemenu --rcedit"
+menuItem "Refesh keybinds list" "obkb-pipemenu.py"
 menuSeparator
 
 # read in lines from textfile, write menu entries
