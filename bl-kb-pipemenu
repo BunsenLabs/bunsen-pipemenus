@@ -1,7 +1,7 @@
 #!/bin/bash
 # ---------------------------------------------------------------------
 # An Openbox pipemenu for displaying keybinds.
-# obkb-pipemenu.py is used to parse rc.xml and send the output to a textfile
+# bl-kb.py is used to parse rc.xml and send the output to a textfile
 #
 # Written by <damo> for BunsenLabs Linux,  April 2015
 # ---------------------------------------------------------------------
@@ -10,7 +10,7 @@
 # commands, which just exit the menu
 #-----------------------------------------------------------------------
 BL_COMMON_LIBDIR="/usr/lib/bunsen/bunsen-common"
-KBSCRIPT="obkb-pipemenu.py"
+KBSCRIPT="bl-kb.py"
 RCPATH=".config/openbox/rc.xml"
 KBTEXT=".config/openbox/kbinds.txt"
 
@@ -20,12 +20,12 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
 fi
 
 if ! [ -e "$KBTEXT" ];then # write keybinds to textfile, if it doesn't exist
-	# test if obkb-pipemenu.py exists in path
+	# test if bl-kb.py exists in path
 	if type "$KBSCRIPT" &> /dev/null;then
 		# run script to write kbinds.txt, suppress terminal output
 		"$KBSCRIPT" > /dev/null
 	else
-		echo $"ERROR: obkb-pipemenu.py not found" >&2
+		echo $"ERROR: bl-kb.py not found" >&2
 		exit 1
 	fi
 fi
@@ -36,23 +36,28 @@ if [[ $1 = '--rcedit' ]];then # "Backup & Edit rc.xml" is chosen in menu
 	RCBKP="$RCPATH.$NOW"
 	cp "$RCPATH" "$RCBKP"
 	geany "$RCPATH"		# open rc.xml in editor
-#	<x-text-editor> "$RCPATH"
+#	<x-texteditor> "$RCPATH"
 fi
 
 # pipemenu
 menuStart
 menuItem "Backup and Edit rc.xml" "bl-kb-pipemenu --rcedit"
-menuItem "Refesh keybinds list" "obkb-pipemenu.py"
+menuItem "Refesh keybinds list" "bl-kb.py" # use if rc.xml has been edited
 menuSeparator
+menuSeparator "Openbox window commands"
+while read -r a b c;do		# write out Openbox commands (not clickable)
+	if [[ "$a" = "o" ]];then
+		curItem=$(printf "%-20s %s" "$b" "$c")
+		menuItem "$curItem" "echo >/dev/null 2>&1"
+	fi
+done < "$KBTEXT"
 
-# read in lines from textfile, write menu entries
-while read -r a b c;do
-	curItem=$(printf "%-20s %s" "$b" "$c")
-	# read flag produced by obkb-pipemenu.py
+menuSeparator
+menuSeparator "'Run' commands"
+while read -r a b c;do		# write out 'Run' commands (clickable)
 	if [[ "$a" = "x" ]];then
-		menuItem "$curItem" "$c" #<action name=Execute>
-	else
-		menuItem "$curItem" "echo >/dev/null 2>&1" # No <action name=Execute>
+		curItem=$(printf "%-20s %s" "$b" "$c")
+		menuItem "$curItem" "$c"
 	fi
 done < "$KBTEXT"
 
