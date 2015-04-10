@@ -35,8 +35,8 @@ if [[ $1 = '--rcedit' ]];then # "Backup & Edit rc.xml" is chosen in menu
 	NOW=$(date +"%Y%m%d-%H%M")
 	RCBKP="$RCPATH.$NOW"
 	cp "$RCPATH" "$RCBKP"
-	geany "$RCPATH"		# open rc.xml in editor
-#	<x-texteditor> "$RCPATH"
+	xdg-open "$RCPATH"		# open rc.xml in default editor
+
 fi
 
 # pipemenu
