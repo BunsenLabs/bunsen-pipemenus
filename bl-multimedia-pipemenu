@@ -43,7 +43,7 @@ appExists() {
 if [[ $1 && ! $1 = --install-* ]]; then
 	packageName=${1#--}
 	read -ra words <<< "${packageName//-/ }"
-	x-terminal-emulator --title "Install ${words[*]^}" -e "$0" "--install-$packageName"
+	x-terminal-emulator -T "Install ${words[*]^}" -e "$0" "--install-$packageName"
 
 elif [[ $1 = --install-* ]]; then
 	packageName=${1#--install-}
