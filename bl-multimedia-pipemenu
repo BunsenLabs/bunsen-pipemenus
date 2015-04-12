@@ -7,15 +7,16 @@
 #
 # Modified by <damo> for BunsenLabs Linux, March 2015
 # ---------------------------------------------------------------------
-# Applications to display in the editors and utilities sections can be
-# changed by editing the "TOOLS" arrays in:
-#           $BL_INCLUDE/bl-mmeditors-pipemenu
-#           $BL_INCLUDE/bl-mmutils-pipemenu
+#	To change the entries shown in the Multimedia pipemenu
+#	edit ".config/openbox/menu-graphics.cfg"
 # ---------------------------------------------------------------------
 
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 BL_INCLUDE='/usr/bin'   # used for editor and utility pipemenus
+USR_CFG='.config/openbox/menu-multimedia.cfg'
+
+source $USR_CFG
 
 # In order to add another APP, add the package name to this array:
 APPS=( 'vlc' 'mpv' 'audacious' 'smplayer' )
@@ -26,6 +27,9 @@ APPS=( 'vlc' 'mpv' 'audacious' 'smplayer' )
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
 	echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+	exit 1
+elif ! . "$USR_CFG" 2> /dev/null; then
+	echo $"Error: Failed to locate menu-multimedia.cfg in $BL_COMMON_LIBDIR" >&2
 	exit 1
 fi
 

@@ -4,11 +4,15 @@
 # Originally written for CrunchBang Linux <http://crunchbang.org/>
 # by Philip Newborough (aka corenominal) <corenominal@corenominal.org>
 # ---------------------------------------------------------------------
+#	To change the entries shown in the Browsers pipemenu
+#	edit ".config/openbox/menu-browsers.cfg"
+#----------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+USR_CFG='.config/openbox/menu-browsers.cfg'
 
-# In order to add another browser, add the package name to this array:
-TOOLS=('chromium' 'iceweasel' 'google-chrome-stable' 'opera')
+source $USR_CFG
+
 # If the package needs additional configuration before installation
 # create a function called setupBrowserName, it will be called automatically.
 
@@ -18,6 +22,9 @@ KEY_URLS_OPERA=('http://deb.opera.com/archive.key' 'http://packages.crunchbang.o
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
+elif ! . "$USR_CFG" 2> /dev/null; then
+	echo $"Error: Failed to locate menu-multimedia.cfg in $BL_COMMON_LIBDIR" >&2
+	exit 1
 fi
 
 browserExists() {
@@ -80,10 +87,12 @@ elif [[ $1 = --install-* ]]; then
 
     setupFunctionName="setup${browserName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-        promptInstall --setup "$setupFunctionName" "${browserNameUpper% BROWSER} BROWSER" "$browserName" "$packageName"
+        export setupFunctionName
     else
-        promptInstall "${browserNameUpper% BROWSER} BROWSER" "$browserName" "$packageName"
+        unset setupFunctionName
     fi
+
+    promptInstall "${browserNameUpper% BROWSER} BROWSER" "$browserName" "$packageName"
 
 else # pipemenu
     INSTALLED=false
@@ -94,7 +103,7 @@ else # pipemenu
         if type "$curTool" &> /dev/null; then
             INSTALLED=true
             menuItem "$curToolName" "$curTool"
-            [[ $curTool = 'chromium' || $curTool = google-chrome-* ]] &&
+            [[ $curTool = chrom* ]] &&
                 menuItem "$curToolName (Private Mode)" "$curTool --incognito" # Incognito mode for chrome and chromium
         else
             menuItem "Install $curToolName" "$0 --$curTool"

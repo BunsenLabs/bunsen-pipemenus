@@ -5,14 +5,17 @@
 # Originally written for CrunchBang Linux <http://crunchbang.org/>
 # by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
 #
-# Modified by damo for BunsenLabs Linux
+# Modified by <damo> for BunsenLabs Linux   April 2015
+#
+# 	To change the entries shown in the Graphics pipemenu:
+# 	edit ".config/openbox/menu-graphics.cfg"
+#
 # ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+USR_CFG='.config/openbox/menu-graphics.cfg'
 
-# In order to add another APP, add the package name to this array:
-TOOLS=( 'mirage' 'gimp' 'blender' 'inkscape' 'mandelbulber' 'viewnior')
-SCROTS=('xfce4-screenshooter' 'scrot')
+source $USR_CFG
 
 # Get $USER images directory
 #if test -f "/usr/bin/xdg-user-dir";then
@@ -31,13 +34,16 @@ fi
 # If the package needs additional configuration before installation
 # create a function called setupappName, it will be called automatically.
 
-
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
 	echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+	exit 1
+elif ! . "$USR_CFG" 2> /dev/null; then
+	echo $"Error: Failed to locate menu-graphics.cfg in $BL_COMMON_LIBDIR" >&2
 	exit 1
 fi
 
 appExists() {
+
 	for curTool in "${TOOLS[@]}"; do # if $packageName exists in tools array
 		[[ $curTool = "$1" ]] &&
 			return 0

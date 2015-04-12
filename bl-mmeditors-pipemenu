@@ -6,13 +6,13 @@
 # Originally written for CrunchBang Linux <http://crunchbang.org/>
 # by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
 #
-# Modified by <damo> for BunsenLabs Linux, March 2015
+# Modified by <damo> for BunsenLabs Linux, April 2015
 # ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+USR_CFG='.config/openbox/menu-multimedia.cfg'
 
-# In order to add another TOOL, add the package name to this array:
-TOOLS=('mhwaveedit' 'audacity' 'openshot')
+source $USR_CFG
 
 # If the package needs additional configuration before installation
 # create a function called setuptoolName, it will be called automatically.
@@ -20,6 +20,9 @@ TOOLS=('mhwaveedit' 'audacity' 'openshot')
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
 	echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+	exit 1
+elif ! . "$USR_CFG" 2> /dev/null; then
+	echo $"Error: Failed to locate menu-multimedia.cfg in $BL_COMMON_LIBDIR" >&2
 	exit 1
 fi
 
