@@ -11,15 +11,11 @@
 #	edit ".config/openbox/menu-graphics.cfg"
 # ---------------------------------------------------------------------
 
-
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 BL_INCLUDE='/usr/bin'   # used for editor and utility pipemenus
 USR_CFG='.config/openbox/menu-multimedia.cfg'
 
 source $USR_CFG
-
-# In order to add another APP, add the package name to this array:
-APPS=( 'vlc' 'mpv' 'audacious' 'smplayer' )
 
 # If the package needs additional configuration before installation
 # create a function called setupappName, it will be called automatically.
