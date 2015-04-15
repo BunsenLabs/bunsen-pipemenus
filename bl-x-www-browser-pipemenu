@@ -9,7 +9,7 @@
 #----------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
-USR_CFG='.config/openbox/menu-browsers.cfg'
+USR_CFG='.config/openbox/pipemenus.rc'
 
 source $USR_CFG
 
@@ -23,17 +23,17 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 elif ! . "$USR_CFG" 2> /dev/null; then
-	echo $"Error: Failed to locate menu-multimedia.cfg in $BL_COMMON_LIBDIR" >&2
+	echo $"Error: Failed to locate pipemenus.rc in $USR_CFG" >&2
 	exit 1
 fi
 
 browserExists() {
-    for curTool in "${TOOLS[@]}"; do # if $packageName exists in tools array
-        [[ $curTool = "$1" ]] &&
+    for curBrowser in "${BROWSERS[@]}"; do # if $packageName exists in BROWSERS array
+        [[ $curBrowser = "$1" ]] &&
             return 0
     done
     say "Unable to install $1. There is no such browser that I know of." 1 >&2
-    say "You can try one of these: ${TOOLS[*]}" 2 >&2
+    say "You can try one of these: ${BROWSERS[*]}" 2 >&2
     return 1
 }
 
@@ -97,16 +97,16 @@ elif [[ $1 = --install-* ]]; then
 else # pipemenu
     INSTALLED=false
     menuStart
-    for curTool in "${TOOLS[@]}"; do
-        read -ra words <<< "${curTool//-/ }"
-        curToolName=${words[*]^}
-        if type "$curTool" &> /dev/null; then
+    for curBrowser in "${BROWSERS[@]}"; do
+        read -ra words <<< "${curBrowser//-/ }"
+        curBrowserName=${words[*]^}
+        if type "$curBrowser" &> /dev/null; then
             INSTALLED=true
-            menuItem "$curToolName" "$curTool"
-            [[ $curTool = chrom* ]] &&
-                menuItem "$curToolName (Private Mode)" "$curTool --incognito" # Incognito mode for chrome and chromium
+            menuItem "$curBrowserName" "$curBrowser"
+            [[ $curBrowser = chrom* ]] &&
+                menuItem "$curBrowserName (Private Mode)" "$curBrowser --incognito" # Incognito mode for chrome and chromium
         else
-            menuItem "Install $curToolName" "$0 --$curTool"
+            menuItem "Install $curBrowserName" "$0 --$curBrowser"
         fi
     done
 
