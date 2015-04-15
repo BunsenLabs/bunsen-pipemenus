@@ -3,10 +3,13 @@
 # A pipemenu to install a browser on Bunsen Labs Linux.
 # Originally written for CrunchBang Linux <http://crunchbang.org/>
 # by Philip Newborough (aka corenominal) <corenominal@corenominal.org>
+#
+# Modified by <damo> for BunsenLabs Linux   April 2015
+#
+# 	To change the entries shown in the Browsers pipemenu:
+# 	edit ".config/openbox/pipemenus.rc"
+#
 # ---------------------------------------------------------------------
-#	To change the entries shown in the Browsers pipemenu
-#	edit ".config/openbox/menu-browsers.cfg"
-#----------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 USR_CFG='.config/openbox/pipemenus.rc'

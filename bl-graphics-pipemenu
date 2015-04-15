@@ -8,7 +8,7 @@
 # Modified by <damo> for BunsenLabs Linux   April 2015
 #
 # 	To change the entries shown in the Graphics pipemenu:
-# 	edit ".config/openbox/menu-graphics.cfg"
+# 	edit ".config/openbox/pipemenus.rc"
 #
 # ---------------------------------------------------------------------
 

@@ -5,10 +5,11 @@
 # Originally written for CrunchBang Linux <http://crunchbang.org/>
 # by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
 #
-# Modified by <damo> for BunsenLabs Linux, March 2015
-# ---------------------------------------------------------------------
-#	To change the entries shown in the Multimedia pipemenu
-#	edit ".config/openbox/menu-graphics.cfg"
+# Modified by <damo> for BunsenLabs Linux   April 2015
+#
+# 	To change the entries shown in the Multimedia pipemenu:
+# 	edit ".config/openbox/pipemenus.rc"
+#
 # ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
