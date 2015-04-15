@@ -5,14 +5,17 @@
 # Originally written for CrunchBang Linux <http://crunchbang.org/>
 # by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
 #
-# Modified by damo for BunsenLabs Linux
+# Modified by <damo> for BunsenLabs Linux   April 2015
+#
+# 	To change the entries shown in the Graphics pipemenu:
+# 	edit ".config/openbox/pipemenus.rc"
+#
 # ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+USR_CFG='.config/openbox/pipemenus.rc'
 
-# In order to add another APP, add the package name to this array:
-TOOLS=( 'mirage' 'gimp' 'blender' 'inkscape' 'mandelbulber' 'viewnior')
-SCROTS=('xfce4-screenshooter' 'scrot')
+source $USR_CFG
 
 # Get $USER images directory
 #if test -f "/usr/bin/xdg-user-dir";then
@@ -31,29 +34,32 @@ fi
 # If the package needs additional configuration before installation
 # create a function called setupappName, it will be called automatically.
 
-
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
 	echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+	exit 1
+elif ! . "$USR_CFG" 2> /dev/null; then
+	echo $"Error: Failed to locate pipemenus.rc in $USR_CFG" >&2
 	exit 1
 fi
 
 appExists() {
-	for curTool in "${TOOLS[@]}"; do # if $packageName exists in tools array
-		[[ $curTool = "$1" ]] &&
+
+	for curApp in "${GRAPHICS_APPS[@]}"; do # if $packageName exists in tools array
+		[[ $curApp = "$1" ]] &&
 			return 0
 	done
 	say "Unable to install $1. There is no such application that I know of." 1 >&2
-	say "You can try one of these: ${TOOLS[*]}" 2 >&2
+	say "You can try one of these: ${GRAPHICS_APPS[*]}" 2 >&2
 	return 1
 }
 
 screenshooterExists() {
-	for curScrot in "${SCROTS[@]}"; do # if $packageName exists in scrots array
+	for curScrot in "${GRAPHICS_SCROTS[@]}"; do # if $packageName exists in scrots array
 		[[ $curScrot = "$1" ]] &&
 			return 0
 	done
 	say "Unable to install $1. There is no such application that I know of." 1 >&2
-	say "You can try one of these: ${SCROTS[*]}" 2 >&2
+	say "You can try one of these: ${GRAPHICS_SCROTS[*]}" 2 >&2
 	return 1
 }
 
@@ -96,18 +102,18 @@ elif [[ $1 = --install-* ]]; then
 
 else # pipemenu
 	menuStart
-	for curTool in "${TOOLS[@]}"; do
-		read -ra words <<< "${curTool//-/ }"
-		curToolName=${words[*]^}
-		if type "$curTool" &> /dev/null; then
-			menuItem "$curToolName" "$curTool"
+	for curApp in "${GRAPHICS_APPS[@]}"; do
+		read -ra words <<< "${curApp//-/ }"
+		curAppName=${words[*]^}
+		if type "$curApp" &> /dev/null; then
+			menuItem "$curAppName" "$curApp"
 		else
-			menuItem "Install $curToolName" "$0 --$curTool"
+			menuItem "Install $curAppName" "$0 --$curApp"
 		fi
 	done
 	menuSeparator 'Screenshots'
 
-	for curScrot in "${SCROTS[@]}"; do
+	for curScrot in "${GRAPHICS_SCROTS[@]}"; do
 		read -ra words <<< "${curScrot//-/ }"
 		curScrotName=${words[*]^}
 		if type "$curScrot" &> /dev/null; then

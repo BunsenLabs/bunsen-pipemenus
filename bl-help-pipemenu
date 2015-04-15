@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-#	bl-help-pipemenu
-#	Prepared for BunsenLabs Linux by <damo> March 2015
+# bl-help-pipemenu
+# Prepared for BunsenLabs Linux by <damo> March 2015
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
@@ -58,4 +58,13 @@ menuItem 'gnome-look.org' 'x-www-browser "http://gnome-look.org/"'
 menuItem 'DeviantArt' 'x-www-browser "http://www.deviantart.com/browse/all/"'
 menuSubmenuEnd
 menuSeparator
+menuSeparator "man pages"
+menuItem "Conky" "x-terminal-emulator -T 'Conky man page' -e man conky"
+menuItem "Compositor" "x-terminal-emulator -T 'Compositor man page' -e man compton"
+menuItem "dmenu" "x-terminal-emulator -T 'dmenu man page' -e man dmenu"
+menuItem "gmrun" "x-terminal-emulator -T 'gmrun man page' -e man gmrun"
+menuItem "Tint2" "x-terminal-emulator -T 'Tint2 man page' -e man tint2"
+menuItem "xrandr" "x-terminal-emulator -T 'xrandr man page' -e man xrandr"
+
+
 menuEnd
