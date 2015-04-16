@@ -15,7 +15,7 @@
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 USR_CFG='.config/openbox/pipemenus.rc'
 
-source $USR_CFG
+#source $USR_CFG
 
 # Get $USER images directory
 #if test -f "/usr/bin/xdg-user-dir";then
