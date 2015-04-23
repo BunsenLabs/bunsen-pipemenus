@@ -65,7 +65,7 @@ screenshooterExists() {
 
 writeScrot() {					# Write scrot submenu items
 	IMG="$SCROTSDIR/%F-%H-%M-%S_scrot.png"
-	VIEW="'mirage $IMG'"
+	VIEW="'bl-image-viewer $IMG'"
 	menuSubmenu 'scrot' 'scrot Screenshooter'
 		menuItem "scrot Now" "scrot $IMG -e $VIEW"
 		menuItem "scrot In 5 secs..." "scrot -d 5 $IMG -e $VIEW"

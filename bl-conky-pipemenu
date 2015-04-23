@@ -27,7 +27,7 @@ getSessions(){  # read any saved sessions from save-sessions file
 menuStart "Conkymenu" "Conky"
 menuItem "Conky Chooser" "$CZEN"
 menuItem "Reload Conkys" "$CSESSION"
-menuItem "Edit default Conky" "xdg-open $CONKYDEFAULT"
+menuItem "Edit default Conky" "bl-text-editor $CONKYDEFAULT"
 menuSeparator 
 menuSubmenu "Sessions" "Saved sessions"
 getSessions

@@ -19,7 +19,7 @@ fi
 menuStart "Tintmenu" "Tint2"
 menuItem "Tint2 Chooser" "$TZEN"
 menuItem "Reload Tint2" "$TSESSION"
-menuItem "Edit default Tint2" "xdg-open $TINT2RC"
+menuItem "Edit default Tint2" "bl-text-editor $TINT2RC"
 menuEnd
 
 

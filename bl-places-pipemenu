@@ -28,11 +28,11 @@
 recent_script=/usr/bin/bl-recent-files-pipemenu
 
 # Command to open folders at "Browse here..." - any file manager
-open_folder_cmd=xdg-open
+open_folder_cmd=bl-file-manager
 # Default command to open files with - others might be xdg-open, gnome-open, thunar, pcmanfm...
 default_open_cmd=xdg-open  # exo-open comes with thunar
 # Text editor of choice
-text_editor=geany
+text_editor=bl-text-editor
 
 # function to open files with default open command, or alternative command for certain files
 # - add other conditions to choice
