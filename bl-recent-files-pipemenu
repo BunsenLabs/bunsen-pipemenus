@@ -119,11 +119,12 @@ end
 -- @param m (XML object) menu
 -- @param path (string) path to execute the action on
 local function add_remove_file_item(m, path)
-  m:add_direct_child(xml.elem("separator"))
+--  m:add_direct_child(xml.elem("separator"))
   m:add_direct_child(
     mk_item_tag("Clear recent files",
       mk_action_tag("Execute", mk_command_tag("/bin/bash", "-c '> " .. path .. "'")))
     )
+  m:add_direct_child(xml.elem("separator"))
 end
 
 --- Appends an action-less item saying that there are no recent files
@@ -194,13 +195,15 @@ Where: -h, --help       Show this message and exit.
     end
   end
 
+  add_remove_file_item(M, xbel_path)
   add_items_from_xbel(M, xbel_path, reverse, cnt, override)
 
   if #M == 0 then
     add_is_empty_message(M)
-  else
-    add_remove_file_item(M, xbel_path)
+--  else
+--    add_remove_file_item(M, xbel_path)
   end
+
 
   print_menu(M)
 
