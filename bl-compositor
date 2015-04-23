@@ -25,7 +25,9 @@ if [[ $1 = '--edit' ]]; then
     [[ ! -f $HOME/.config/compton.conf ]] &&
         cp '/etc/xdg/compton.conf' "$HOME/.config/compton.conf"
 
-    if ! bl-text-editor "$HOME/.config/compton.conf"; then
+    if type bl-text-editor >/dev/null;then
+        bl-text-editor "$HOME/.config/compton.conf"
+    else
         x-terminal-emulator -e nano "$HOME/.config/compton.conf"
     fi
 elif [[ $1 = '--toggle' || $1 = '--start' ]]; then # Toggle compositing with compton.
