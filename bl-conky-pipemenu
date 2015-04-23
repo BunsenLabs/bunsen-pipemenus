@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# bl-conky-pipemenu
+# Written for BunsenLabs Linux by <damo> April 2015
+
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+
+CONKYDEFAULT="$HOME/.conkyrc"
+CONKYPATH="$HOME/.conky"
+SESSIONFILE="$CONKYPATH/conky-session"
+SESSIONS="$CONKYPATH/saved-sessions"
+CZEN="bl-conkyzen"
+CSESSION="bl-conky-session"
+
+if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
+    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+    exit 1
+fi
+
+getSessions(){  # read any saved sessions from save-sessions file
+    menuItem "Default" "$CSESSION $SESSIONFILE"
+    while read session ;do
+        menuItem "$session" "$CSESSION $session"
+    done < "$SESSIONS"
+}
+
+menuStart "Conkymenu" "Conky"
+menuItem "Conky Chooser" "$CZEN"
+menuItem "Reload Conkys" "$CSESSION"
+menuItem "Edit default Conky" "xdg-open $CONKYDEFAULT"
+menuSeparator 
+menuSubmenu "Sessions" "Saved sessions"
+getSessions
+menuSubmenuEnd
+menuEnd
+
+
