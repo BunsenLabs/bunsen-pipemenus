@@ -13,10 +13,7 @@
 # ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
-BL_INCLUDE='/usr/bin'   # used for editor and utility pipemenus
-USR_CFG='.config/openbox/pipemenus.rc'
-
-source $USR_CFG
+USR_CFG_DIR="$HOME/.config/openbox"
 
 # If the package needs additional configuration before installation
 # create a function called setupappName, it will be called automatically.
@@ -24,8 +21,8 @@ source $USR_CFG
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
-elif ! . "$USR_CFG" 2> /dev/null; then
-    echo $"Error: Failed to locate pipemenu.rc in $USR_CFG" >&2
+elif ! . "$USR_CFG_DIR/pipemenus.rc" 2> /dev/null; then
+    echo $"Error: Failed to locate pipemenus.rc in $USR_CFG_DIR" >&2
     exit 1
 fi
 
@@ -87,7 +84,7 @@ else # pipemenu
     menuSeparator 'Editors'
     # get editors pipemenu
     if ! type "bl-mmeditors-pipemenu" &> /dev/null; then
-        echo $"Error: Failed to locate bl-mmeditors-pipemenu in $BL_INCLUDE" >&2
+        echo $"Error: Failed to locate bl-mmeditors-pipemenu" >&2
         exit 1
     else
         echo $(bl-mmeditors-pipemenu)
@@ -96,7 +93,7 @@ else # pipemenu
     menuSeparator 'Utilities'
     # get utilities pipemenu
     if ! type "bl-mmutils-pipemenu" &> /dev/null; then
-        echo $"Error: Failed to locate bl-mmutils-pipemenu in $BL_INCLUDE" >&2
+        echo $"Error: Failed to locate bl-mmutils-pipemenu" >&2
         exit 1
     else
         echo $(bl-mmutils-pipemenu)

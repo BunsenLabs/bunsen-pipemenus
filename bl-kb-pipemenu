@@ -10,9 +10,10 @@
 # commands, which just exit the menu
 #-----------------------------------------------------------------------
 BL_COMMON_LIBDIR="/usr/lib/bunsen/bunsen-common"
+USR_CFG_DIR="$HOME/.config/openbox"
 KBSCRIPT="bl-kb.py"
-RCPATH=".config/openbox/rc.xml"
-KBTEXT=".config/openbox/kbinds.txt"
+RCPATH="$USR_CFG_DIR/rc.xml"
+KBTEXT="$USR_CFG_DIR/kbinds.txt"
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
@@ -25,7 +26,7 @@ if ! [ -e "$KBTEXT" ];then # write keybinds to textfile, if it doesn't exist
         # run script to write kbinds.txt, suppress terminal output
         "$KBSCRIPT" > /dev/null
     else
-        echo $"ERROR: bl-kb.py not found" >&2
+        echo $"ERROR: $KBSCRIPT not found" >&2
         exit 1
     fi
 fi
@@ -41,8 +42,8 @@ fi
 
 # pipemenu
 menuStart
-menuItem "Backup and Edit rc.xml" "bl-kb-pipemenu --rcedit"
-menuItem "Refesh keybinds list" "bl-kb.py" # use if rc.xml has been edited
+menuItem "Backup and Edit rc.xml" "$@ --rcedit"
+menuItem "Refesh keybinds list" "$KBSCRIPT" # use if rc.xml has been edited
 menuSeparator
 menuSeparator "Openbox window commands"
 while read -r a b c;do      # write out Openbox commands (not clickable)

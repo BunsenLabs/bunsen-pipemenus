@@ -13,13 +13,9 @@
 # ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
-USR_CFG='.config/openbox/pipemenus.rc'
-
-#source $USR_CFG
+USR_CFG_DIR="$HOME/.config/openbox"
 
 # Get $USER images directory
-#if test -f "/usr/bin/xdg-user-dir";then
-
 if type xdg-user-dir &>/dev/null; then
     IMGDIR=$(xdg-user-dir PICTURES)
 else
@@ -37,8 +33,8 @@ fi
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
-elif ! . "$USR_CFG" 2> /dev/null; then
-    echo $"Error: Failed to locate pipemenus.rc in $USR_CFG" >&2
+elif ! . "$USR_CFG_DIR/pipemenus.rc" 2> /dev/null; then
+    echo $"Error: Failed to locate pipemenus.rc in $USR_CFG_DIR" >&2
     exit 1
 fi
 

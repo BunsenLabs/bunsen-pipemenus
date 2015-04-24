@@ -10,61 +10,59 @@
 # ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
-USR_CFG='.config/openbox/pipemenus.rc'
-
-source $USR_CFG
+USR_CFG_DIR="$HOME/.config/openbox"
 
 # If the package needs additional configuration before installation
 # create a function called setuptoolName, it will be called automatically.
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-	echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
-	exit 1
-elif ! . "$USR_CFG" 2> /dev/null; then
-	echo $"Error: Failed to locate pipemenus.rc in $USR_CFG" >&2
-	exit 1
+    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+    exit 1
+elif ! . "$USR_CFG_DIR/pipemenus.rc" 2> /dev/null; then
+    echo $"Error: Failed to locate pipemenus.rc in $USR_CFG_DIR" >&2
+    exit 1
 fi
 
 utilExists() {
-	for curUtil in "${MM_UTILS[@]}"; do # if $packageName exists in TOOLS array
-		[[ $curUtil = "$1" ]] &&
-			return 0
-	done
-	say "Unable to install $1. There is no such application that I know of." 1 >&2
-	say "You can try one of these: ${MM_UTILS[*]}" 2 >&2
-	return 1
+    for curUtil in "${MM_UTILS[@]}"; do # if $packageName exists in TOOLS array
+        [[ $curUtil = "$1" ]] &&
+            return 0
+    done
+    say "Unable to install $1. There is no such application that I know of." 1 >&2
+    say "You can try one of these: ${MM_UTILS[*]}" 2 >&2
+    return 1
 }
 
 if [[ $1 && ! $1 = --install-* ]]; then
-	packageName=${1#--}
-	read -ra words <<< "${packageName//-/ }"
-	x-terminal-emulator -T "Install ${words[*]^}" -e "$0" "--install-$packageName"
+    packageName=${1#--}
+    read -ra words <<< "${packageName//-/ }"
+    x-terminal-emulator -T "Install ${words[*]^}" -e "$0" "--install-$packageName"
 
 elif [[ $1 = --install-* ]]; then
-	packageName=${1#--install-}
-	utilExists "$packageName" || exit 1
-	toolName=${packageName//-/ }
-	read -ra words <<< "$toolName"
-	toolName=${words[*]^}
-	toolNameUpper=${toolName^^}
+    packageName=${1#--install-}
+    utilExists "$packageName" || exit 1
+    toolName=${packageName//-/ }
+    read -ra words <<< "$toolName"
+    toolName=${words[*]^}
+    toolNameUpper=${toolName^^}
 
-	setupFunctionName="setup${toolName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupBlender'
-	if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-		promptInstall --setup "$setupFunctionName" "${toolNameUpper% TOOL} TOOL" "$toolName" "$packageName"
-	else
-		promptInstall "${toolNameUpper% TOOL} TOOL" "$toolName" "$packageName"
-	fi
+    setupFunctionName="setup${toolName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupBlender'
+    if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
+        promptInstall --setup "$setupFunctionName" "${toolNameUpper% TOOL} TOOL" "$toolName" "$packageName"
+    else
+        promptInstall "${toolNameUpper% TOOL} TOOL" "$toolName" "$packageName"
+    fi
 
 else # output for bl-multimedia-pipemenu
-	for curUtil in "${MM_UTILS[@]}"; do
-		read -ra words <<< "${curUtil//-/ }"
-		curUtilName=${words[*]^}
-		if type "$curUtil" &> /dev/null; then
-			menuItem "$curUtilName" "$curUtil"
-		else
-			menuItem "Install $curUtilName" "$0 --$curUtil"
-		fi
-	done
+    for curUtil in "${MM_UTILS[@]}"; do
+        read -ra words <<< "${curUtil//-/ }"
+        curUtilName=${words[*]^}
+        if type "$curUtil" &> /dev/null; then
+            menuItem "$curUtilName" "$curUtil"
+        else
+            menuItem "Install $curUtilName" "$0 --$curUtil"
+        fi
+    done
 
 fi
 exit 0
