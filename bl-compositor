@@ -25,8 +25,8 @@ if [[ $1 = '--edit' ]]; then
     [[ ! -f $HOME/.config/compton.conf ]] &&
         cp '/etc/xdg/compton.conf' "$HOME/.config/compton.conf"
 
-    if [[ -x /usr/bin/geany ]]; then
-        geany "$HOME/.config/compton.conf" &
+    if type bl-text-editor >/dev/null;then
+        bl-text-editor "$HOME/.config/compton.conf"
     else
         x-terminal-emulator -e nano "$HOME/.config/compton.conf"
     fi

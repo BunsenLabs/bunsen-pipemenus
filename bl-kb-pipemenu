@@ -10,55 +10,56 @@
 # commands, which just exit the menu
 #-----------------------------------------------------------------------
 BL_COMMON_LIBDIR="/usr/lib/bunsen/bunsen-common"
+USR_CFG_DIR="$HOME/.config/openbox"
 KBSCRIPT="bl-kb.py"
-RCPATH=".config/openbox/rc.xml"
-KBTEXT=".config/openbox/kbinds.txt"
+RCPATH="$USR_CFG_DIR/rc.xml"
+KBTEXT="$USR_CFG_DIR/kbinds.txt"
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-	echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
-	exit 1
+    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+    exit 1
 fi
 
 if ! [ -e "$KBTEXT" ];then # write keybinds to textfile, if it doesn't exist
-	# test if bl-kb.py exists in path
-	if type "$KBSCRIPT" &> /dev/null;then
-		# run script to write kbinds.txt, suppress terminal output
-		"$KBSCRIPT" > /dev/null
-	else
-		echo $"ERROR: bl-kb.py not found" >&2
-		exit 1
-	fi
+    # test if bl-kb.py exists in path
+    if type "$KBSCRIPT" &> /dev/null;then
+        # run script to write kbinds.txt, suppress terminal output
+        "$KBSCRIPT" > /dev/null
+    else
+        echo $"ERROR: $KBSCRIPT not found" >&2
+        exit 1
+    fi
 fi
 
 if [[ $1 = '--rcedit' ]];then # "Backup & Edit rc.xml" is chosen in menu
-	# backup rc.xml first
-	NOW=$(date +"%Y%m%d-%H%M")
-	RCBKP="$RCPATH.$NOW"
-	cp "$RCPATH" "$RCBKP"
-	xdg-open "$RCPATH"		# open rc.xml in default editor
+    # backup rc.xml first
+    NOW=$(date +"%Y%m%d-%H%M")
+    RCBKP="$RCPATH.$NOW"
+    cp "$RCPATH" "$RCBKP"
+    bl-text-editor "$RCPATH"        # open rc.xml in default editor
 
 fi
 
 # pipemenu
 menuStart
-menuItem "Backup and Edit rc.xml" "bl-kb-pipemenu --rcedit"
-menuItem "Refesh keybinds list" "bl-kb.py" # use if rc.xml has been edited
+menuItem "Backup and Edit rc.xml" "$@ --rcedit"
+menuItem "Refesh keybinds list" "$KBSCRIPT" # use if rc.xml has been edited
 menuSeparator
 menuSeparator "Openbox window commands"
-while read -r a b c;do		# write out Openbox commands (not clickable)
-	if [[ "$a" = "o" ]];then
-		curItem=$(printf "%-20s %s" "$b" "$c")
-		menuItem "$curItem" "echo >/dev/null 2>&1"
-	fi
+while read -r a b c;do      # write out Openbox commands (not clickable)
+    if [[ "$a" = "o" ]];then
+        curItem=$(printf "%-20s %s" "$b" "$c")
+        menuItem "$curItem" "echo >/dev/null 2>&1"
+    fi
 done < "$KBTEXT"
 
 menuSeparator
 menuSeparator "'Run' commands"
-while read -r a b c;do		# write out 'Run' commands (clickable)
-	if [[ "$a" = "x" ]];then
-		curItem=$(printf "%-20s %s" "$b" "$c")
-		menuItem "$curItem" "$c"
-	fi
+while read -r a b c;do      # write out 'Run' commands (clickable)
+    if [[ "$a" = "x" ]];then
+        curItem=$(printf "%-20s %s" "$b" "$c")
+        menuItem "$curItem" "$c"
+    fi
 done < "$KBTEXT"
 
 menuEnd
