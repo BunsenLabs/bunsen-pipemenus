@@ -23,9 +23,7 @@ else
 fi
 # test for screenshots dir, create if it doesn't exist
 SCROTSDIR="$IMGDIR/screenshots"
-if ! [[ -d $SCROTSDIR ]];then
-    mkdir "$SCROTSDIR"
-fi
+mkdir -p "$SCROTSDIR"
 
 # If the package needs additional configuration before installation
 # create a function called setupappName, it will be called automatically.
