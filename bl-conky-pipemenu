@@ -6,8 +6,8 @@
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 CONKYDEFAULT="$HOME/.conkyrc"
-CONKYPATH="$HOME/.conky"
-SESSIONFILE="$CONKYPATH/conky-session"
+CONKYPATH="$HOME/.config/conky"
+SESSIONFILE="$CONKYPATH/conky-sessionfile"
 SESSIONS="$CONKYPATH/saved-sessions"
 CZEN="bl-conkyzen"
 CSESSION="bl-conky-session"
@@ -15,6 +15,12 @@ CSESSION="bl-conky-session"
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
+fi
+if [ ! -e "$SESSIONFILE" ] 2> /dev/null ; then
+    echo $"Error: Failed to locate conky-sessionfile in $CONKYPATH" >&2
+fi
+if [ ! -e "$SESSIONS" ] 2> /dev/null ; then
+    echo $"Error: Failed to locate saved-sessions in $CONKYPATH" >&2
 fi
 
 getSessions(){  # read any saved sessions from save-sessions file
