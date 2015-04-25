@@ -1,3 +1,9 @@
+bunsen-pipemenus (0.15-1) UNRELEASED; urgency=low
+
+  * Add many new pipemenus.
+
+ -- John Crawley <john@rafflesnagoya.com>  Sat, 25 Apr 2015 16:23:18 +0900
+
 bunsen-pipemenus (0.14-7) unstable; urgency=low
 
   * Change references to terminator to x-terminal-emulator.
