@@ -42,7 +42,7 @@ fi
 
 # pipemenu
 menuStart
-menuItem "Backup and Edit rc.xml" "$@ --rcedit"
+menuItem "Backup and Edit rc.xml" "$0 --rcedit"
 menuItem "Refesh keybinds list" "$KBSCRIPT" # use if rc.xml has been edited
 menuSeparator
 menuSeparator "Openbox window commands"
