@@ -11,7 +11,7 @@ CSESSIONFILE="$CONKYPATH/conky-sessionfile"
 SESSIONS="$CONKYPATH/saved-sessions"
 CZEN="bl-conkyzen"
 CSESSION="bl-conky-session"
-
+HELPFILE="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt"
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
@@ -63,6 +63,13 @@ getConkys(){
     menuSubmenuEnd
 }
 
+checkHelpfile(){
+    echo "Helpfile= $HELPFILE"
+    if [ -e "$HELPFILE" ];then
+        menuItem "Conkyzen Help" 'zenity --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt" --width=650 --height=700'
+    fi
+}
+
 menuStart "Conkymenu" "Conky"
 menuItem "Conky Chooser" "$CZEN"
 menuItem "Reload Conkys" "$CSESSION"
@@ -71,7 +78,9 @@ menuSeparator
 menuItem "New Conky session" "bl-conkyzen -z"
 menuSubmenu "Sessions" "Saved sessions"
 getSessions
-menuSubmenuEnd 
+menuSubmenuEnd
+menuSeparator 
+checkHelpfile
 menuEnd
 
 
