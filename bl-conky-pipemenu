@@ -35,6 +35,7 @@ menuItem "Conky Chooser" "$CZEN"
 menuItem "Reload Conkys" "$CSESSION"
 menuItem "Edit default Conky" "bl-text-editor $CONKYDEFAULT"
 menuSeparator 
+menuItem "New Conky session" "bl-conkyzen -z"
 menuSubmenu "Sessions" "Saved sessions"
 getSessions
 menuSubmenuEnd
