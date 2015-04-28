@@ -6,8 +6,8 @@
 #
 # Modified by <damo> for BunsenLabs Linux   April 2015
 #
-# 	To change the entries shown in the Browsers pipemenu:
-# 	edit ".config/openbox/pipemenus.rc"
+#   To change the entries shown in the Browsers pipemenu:
+#   edit ".config/openbox/pipemenus.rc"
 #
 # ---------------------------------------------------------------------
 
@@ -26,8 +26,8 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 elif ! . "$USR_CFG" 2> /dev/null; then
-	echo $"Error: Failed to locate pipemenus.rc in $USR_CFG" >&2
-	exit 1
+    echo $"Error: Failed to locate pipemenus.rc in $USR_CFG" >&2
+    exit 1
 fi
 
 browserExists() {
@@ -115,7 +115,7 @@ else # pipemenu
 
     if $INSTALLED ; then
         menuSeparator
-        menuItem 'Select default browser' 'x-terminal-emulator -e sudo update-alternatives --config x-www-browser'
+        menuItem 'Select default browser' "x-terminal-emulator -T 'Select default browser' -e sudo update-alternatives --config x-www-browser"
     fi
     menuEnd
 fi
