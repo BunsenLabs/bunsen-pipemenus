@@ -1,4 +1,10 @@
-bunsen-pipemenus (0.15-1) UNRELEASED; urgency=low
+bunsen-pipemenus (0.15-2) unstable; urgency=low
+
+  * Add conky and tint2 config editing.
+
+ -- John Crawley <john@rafflesnagoya.com>  Wed, 29 Apr 2015 11:41:41 +0900
+
+bunsen-pipemenus (0.15-1) unstable; urgency=low
 
   * Add many new pipemenus.
 
