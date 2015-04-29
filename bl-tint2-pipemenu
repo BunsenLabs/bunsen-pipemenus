@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# bl-conky-pipemenu
+# bl-tint2-pipemenu
 # Written for BunsenLabs Linux by <damo> April 2015
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 TINT2PATH="$HOME/.config/tint2"
 TINT2RC="$TINT2PATH/tint2rc"
-SESSIONFILE="$TINT2PATH/tint2-session"
+TSESSIONFILE="$TINT2PATH/tint2-sessionfile"
 TZEN="bl-tint2zen"
 TSESSION="bl-tint2-session"
 
@@ -15,11 +15,47 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
+if [ ! -e "$TSESSIONFILE" ] 2> /dev/null ; then
+    echo $"Error: Failed to locate tint2-sessionfile in $TINT2PATH" >&2
+fi
+
+tintRunning(){    # find running tint2s
+    if [ "$(pidof tint2)" ];then
+        ps aux | grep [t]tint2" -c" |  awk  '{print $NF}'
+    fi
+}
+
+loadTEditmenu(){
+    menuSeparator 
+    menuItem "Default tint2rc" "bl-text-editor $TINT2RC"
+    menuSubmenu "RunningTint2" "Running Tint2s"
+    if [ "$(pidof tint2)" ];then
+        while read tsession ;do  # get running tint2s from sessionfile
+            TPATH=$(echo "$tsession" | awk '{print $3}')
+            TINT2=$(echo "$TPATH" | awk -F"/" '{print $(NF-1)"/"$NF }')
+            menuItem "$TINT2" "bl-text-editor $TPATH"
+        done < "$TSESSIONFILE"
+    else 
+        menuItem "No tint2s running" 
+    fi
+    menuSubmenuEnd
+}
+
+getTint2s(){
+    menuSubmenu "EditTint2" "Edit Tint2s"
+        if type bl-tint2edit;then  # bl-tint2edit script found
+            menuItem "Tint2 Editor" "bl-tint2edit"
+            loadTEditmenu
+        else
+            loadTEditmenu
+        fi
+    menuSubmenuEnd
+}
 
 menuStart "Tintmenu" "Tint2"
 menuItem "Tint2 Chooser" "$TZEN"
 menuItem "Reload Tint2" "$TSESSION"
-menuItem "Edit default Tint2" "bl-text-editor $TINT2RC"
+getTint2s
 menuEnd
 
 
