@@ -27,6 +27,7 @@ fi
 getSessions(){  # read any saved sessions from save-sessions file
     menuItem "Default" "$CSESSION $CSESSIONFILE"
     while read session ;do
+        [ -z "$session" ] && continue   # skip if line is blank
         menuItem "$session" "$CSESSION $session"
     done < "$SESSIONS"
 }
