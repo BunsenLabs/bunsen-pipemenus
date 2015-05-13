@@ -46,14 +46,14 @@ if len(hosts) >= 2:
             print '    <item label="Start terminal session">'
             print '        <action name="Execute">'
             print '            <command>'
-            print '                x-terminal-emulator -e ssh '+user+port[0]+h['hostname']
+            print '                x-terminal-emulator -T ssh '+user+port[0]+h['hostname']
             print '            </command>'
             print '        </action>'
             print '    </item>\n'
-            print '    <item label="Browse with Thunar">'
+            print '    <item label="Browse with File Manager">'
             print '        <action name="Execute">'
             print '            <command>'
-            print '                thunar ssh://'+h['hostname']+port[1]
+            print '                bl-file-manager ssh://'+h['hostname']+port[1]
             print '            </command>'
             print '        </action>'
             print '    </item>\n'
@@ -63,7 +63,7 @@ if len(hosts) >= 2:
 print '<item label="Edit ~/.ssh/config">'
 print '    <action name="Execute">'
 print '        <command>'
-print '            geany ~/.ssh/config'
+print '            bl-text-editor ~/.ssh/config'
 print '        </command>'
 print '    </action>'
 print '</item>\n'

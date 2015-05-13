@@ -1,0 +1,87 @@
+#!/bin/bash
+#
+# bl-conky-pipemenu
+# Written for BunsenLabs Linux by <damo> April 2015
+
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+
+CONKYDEFAULT="$HOME/.conkyrc"
+CONKYPATH="$HOME/.config/conky"
+CSESSIONFILE="$CONKYPATH/conky-sessionfile"
+SESSIONS="$CONKYPATH/saved-sessions"
+CZEN="bl-conkyzen"
+CSESSION="bl-conky-session"
+HELPFILE="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt"
+
+if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
+    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+    exit 1
+fi
+if [ ! -e "$CSESSIONFILE" ] 2> /dev/null ; then
+    echo $"Error: Failed to locate conky-sessionfile in $CONKYPATH" >&2
+fi
+if [ ! -e "$SESSIONS" ] 2> /dev/null ; then
+    echo $"Error: Failed to locate saved-sessions in $CONKYPATH" >&2
+fi
+
+getSessions(){  # read any saved sessions from save-sessions file
+    menuItem "Default" "$CSESSION $CSESSIONFILE"
+    while read session ;do
+        [ -z "$session" ] && continue   # skip if line is blank
+        menuItem "$session" "$CSESSION $session"
+    done < "$SESSIONS"
+}
+
+conkyRunning(){    # find running conkys
+    if [ "$(pidof conky)" ];then
+        ps aux | grep [c]onky" -c" |  awk  '{print $NF}'
+    fi
+}
+
+loadEditmenu(){
+    menuItem "Default conkyrc" "bl-text-editor $CONKYDEFAULT"
+    menuSubmenu "RunningConky" "Running Conkys"
+    if [ "$(pidof conky)" ];then
+        while read session ;do  # get running conkys from sessionfile
+            CPATH=$(echo "$session" | awk '{print $3}')
+            CONKY=$(echo "$CPATH" | awk -F"/" '{print $(NF-1)"/"$NF }')
+            menuItem "$CONKY" "bl-text-editor $CPATH"
+        done < "$CSESSIONFILE"
+    else 
+        menuItem "No conkys running" 
+    fi
+    menuSubmenuEnd
+}
+
+getConkys(){
+    menuSubmenu "EditConky" "Edit Conkys"
+        if type bl-conkyedit;then  # bl-conkyedit script found
+            menuItem "Conky Editor" "bl-conkyedit"
+            loadEditmenu
+        else
+            loadEditmenu
+        fi
+    menuSubmenuEnd
+}
+
+checkHelpfile(){
+    echo "Helpfile= $HELPFILE"
+    if [ -e "$HELPFILE" ];then
+        menuItem "Conkyzen Help" 'zenity --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt" --width=650 --height=700'
+    fi
+}
+
+menuStart "Conkymenu" "Conky"
+menuItem "Conky Chooser" "$CZEN"
+menuItem "Reload Conkys" "$CSESSION"
+getConkys
+menuSeparator 
+menuItem "New Conky session" "bl-conkyzen -z"
+menuSubmenu "Sessions" "Saved sessions"
+getSessions
+menuSubmenuEnd
+menuSeparator 
+checkHelpfile
+menuEnd
+
+

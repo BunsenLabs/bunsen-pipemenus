@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# bl-help-pipemenu
+# Prepared for BunsenLabs Linux by <damo> March 2015
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
@@ -14,6 +17,8 @@ menuItem 'Forum Help & Support' 'x-www-browser "http://crunchbang.org/forums/vie
 menuItem 'Tips, Tricks & Scripts' 'x-www-browser "http://crunchbang.org/forums/viewforum.php?id=8"'
 menuSubmenu 'DebianWWW' 'Debian'
 menuItem 'Debian Documentation' 'x-www-browser "https://www.debian.org/doc/"'
+menuItem 'Wiki' 'x-www-browser "https://wiki.debian.org/"'
+menuItem 'Forum' 'x-www-browser "http://forums.debian.net/"'
 menuItem 'Package Search' 'x-www-browser "https://www.debian.org/distrib/packages"'
 menuItem 'Package Tracker' 'x-www-browser "https://tracker.debian.org/"'
 menuItem 'Security Tracker' 'x-www-browser "https://security-tracker.debian.org/tracker/"'
@@ -34,16 +39,18 @@ menuItem 'Debian Wiki Openbox guide' 'x-www-browser "https://wiki.debian.org/Ope
 menuItem 'Urukramas Openbox Guide' 'x-www-browser "https://urukrama.wordpress.com/openbox-faq/"'
 menuSubmenuEnd
 
-menuSubmenu 'Tint2WWW' 'Tint2 panel'
+menuSubmenu 'Tint2WWW' 'Tint2'
 menuItem 'Tint2 wiki: FAQ' 'x-www-browser "https://code.google.com/p/tint2/wiki/FAQ"'
 menuItem 'Tint2 Documentation' 'x-www-browser "https://code.google.com/p/tint2/wiki/Configure"'
 menuItem 'Tint2 forum thread' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?id=3232"'
+menuItem 'Tint2 man page' 'x-terminal-emulator -T "Tint2 man page" -e man tint2'
 menuSubmenuEnd
 
 menuSubmenu 'ConkyWWW' 'Conky'
 menuItem 'Conky Configuration settings' 'x-www-browser "http://conky.sourceforge.net/config_settings.html"'
 menuItem 'Conky Variables' 'x-www-browser "http://conky.sourceforge.net/variables.html"'
 menuItem 'Conky Archive' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?pid=371424"'
+menuItem 'Conky man pages' 'x-terminal-emulator -T "Conky man page" -e man conky'
 menuSubmenuEnd
 menuSeparator
 
@@ -53,4 +60,11 @@ menuItem 'gnome-look.org' 'x-www-browser "http://gnome-look.org/"'
 menuItem 'DeviantArt' 'x-www-browser "http://www.deviantart.com/browse/all/"'
 menuSubmenuEnd
 menuSeparator
+menuSeparator 'man pages'
+menuItem 'Compositor' 'x-terminal-emulator -T "Compositor man page" -e man compton'
+menuItem 'dmenu' 'x-terminal-emulator -T "dmenu man page" -e man dmenu'
+menuItem 'gmrun' 'x-terminal-emulator -T "gmrun man page" -e man gmrun'
+menuItem 'xrandr' 'x-terminal-emulator -T "xrandr man page" -e man xrandr'
+
+
 menuEnd

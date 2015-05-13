@@ -60,7 +60,7 @@ elif [[ $1 = '--install-dropbox' ]]; then
 
         #if [ $RESPONSE -ne "200" ]; then
 #        if [[ RESPONSE != 302 ]]; then
-        if  ! grep -q 'Remote file exists' <<<$(wget --spider "$DROPBOXURL" 2>&1) then
+        if  ! grep -q 'Remote file exists' <<<$(wget --spider "$DROPBOXURL" 2>&1); then
             zenity --warning --title='Dropbox Installation' --text 'Error, failed to contact server. Please try again later.'
             exit 1
         else
@@ -107,7 +107,7 @@ else
         menuItem 'Find out more about Dropbox' 'x-www-browser http://db.tt/5mJg9lb'
     else
         [[ -d $HOME/Dropbox ]] &&
-            menuItem 'Open Dropbox Folder' 'thunar $HOME/Dropbox'
+            menuItem 'Open Dropbox Folder' 'bl-file-manager $HOME/Dropbox'
 
         if ! pidof dropbox > /dev/null; then
             menuItem 'Start Dropbox' "$0 --start-dropbox"
