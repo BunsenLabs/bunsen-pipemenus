@@ -84,6 +84,7 @@ end
 -- instead of the originally assigned application
 -- @return XML object if successful, otherwise nil
 local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
+  if not path then return end
   if not posix.access(path) then return nil end
 
   local function clean_executable_name(s)
@@ -119,6 +120,7 @@ end
 -- @param m (XML object) menu
 -- @param path (string) path to execute the action on
 local function add_remove_file_item(m, path)
+  if not path then return end
   m:add_direct_child(xml.elem("separator"))
   m:add_direct_child(
     mk_item_tag("Clear recent files",
