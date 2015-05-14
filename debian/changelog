@@ -1,3 +1,9 @@
+bunsen-pipemenus (0.15-5) unstable; urgency=low
+
+  * Fix bugs in tint2, conky and recent-files pipemenus.
+
+ -- John Crawley <john@rafflesnagoya.com>  Thu, 14 May 2015 10:37:49 +0900
+
 bunsen-pipemenus (0.15-4) unstable; urgency=low
 
   * Fix bug in bl-x-www-browser pipemenu.
