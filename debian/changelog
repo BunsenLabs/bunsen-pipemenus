@@ -1,3 +1,9 @@
+bunsen-pipemenus (0.15-7) unstable; urgency=low
+
+  * bl-recent-files-pipemenu: Add missing format to printf() call
+
+ -- Jens Oliver John <dev@2ion.de>  Sat, 16 Feb May 2015 13:44:59 +0200
+
 bunsen-pipemenus (0.15-6) unstable; urgency=low
 
   * Fix bug in bl-recent-files-pipemenu.
