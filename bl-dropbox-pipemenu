@@ -3,7 +3,17 @@
 # An Openbox pipemenu for use with Dropbox and Bunsen Labs Linux.
 # Originally written for CrunchBang Linux <http://crunchbanglinux.org/>
 # by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
+# Rewritten by Aleks-Daniel Jakimenko in 2013 and
+# John Crawley <john@rafflesnagoya.com> in 2015 to use dropbox.py.
 # --------------------------------------------------------------------
+
+# Directory to install the dropbox cli interface, dropbox.py.
+# If dropbox.py is in user's $PATH they can use that command
+# to control dropbox. Otherwise, the absolute path /path/to/dropbox.py
+USER_DBPY_DIR="$HOME/bin"
+USER_DBPY="$USER_DBPY_DIR/dropbox.py"
+
+USERDBDIR="$HOME/.dropbox-dist/"
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
@@ -14,94 +24,86 @@ Select the number of seconds to delay Dropbox autostarting.
 Click "Cancel" if you do not want to add a delay.'
 PROMPT_DELAY_VARIANTS=(FALSE 10 FALSE 20 FALSE 30 FALSE 40 FALSE 50 TRUE 60)
 
-USERDBDIR="$HOME/.dropbox-dist/"
-
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
+
+dropbox_is_installed() {
+    [[ -x "$USERDBDIR/dropboxd" ]] || return 1
+    return 0
+}
+
+get_dropbox.py() {
+    [[ -e "$USER_DBPY" ]] && {
+        if [[ -x "$USER_DBPY" ]]; then
+            return 0
+        else
+            { echo "$0: $USER_DBPY exists but is not executable." >&2; return 1;}
+        fi
+    }
+    mkdir -p "$USER_DBPY_DIR"
+    notify-send -i dialog-information 'Dropbox Installation' 'Fetching Dropbox frontend dropbox.py...'
+    wget -O "$USER_DBPY" 'https://www.dropbox.com/download?dl=packages/dropbox.py' || { echo "$0: dropbox.py download failed." >&2; return 1;}
+    [[ -f "$USER_DBPY" ]] || { echo "$0: $USER_DBPY does not exist." >&2; return 1;}
+    chmod 755 "$USER_DBPY" || { echo "$0: failed to set permissions on $USER_DBPY" >&2; return 1;}
+    return 0
+}
 
 # --------------------------------------------------------------------
 # manipulation
 # --------------------------------------------------------------------
 
 if [[ $1 = '--start-dropbox' ]]; then
-    "$USERDBDIR/dropboxd" &
+    "$USER_DBPY" start
 
 elif [[ $1 = '--stop-dropbox' ]]; then
-    killall dropbox
+    "$USER_DBPY" stop
 
 elif [[ $1 = '--install-dropbox' ]]; then
-    zenity --question --title='Dropbox Installation' --text 'This script will install Dropbox.\nDo you want to proceed?' || exit 0
+    zenity --question --title='Dropbox Installation' --text='This script will install Dropbox.\nDo you want to proceed?' || exit 0
 
-    if ! cd "$HOME"; then # TODO Change directory? What for? Better use absolute paths
-        echo "Unable to change directory to $HOME"
-        exit 1
-    fi
-
-    platform=$(uname -m)
-    platform=${platform,,}
-
-    case $platform in
-    'x86_64')
-        #DROPBOXURL='http://packages.crunchbang.org/waldorf-files/dropbox/64/dropbox.tar.gz'
-        DROPBOXURL='http://www.dropbox.com/download?plat=lnx.x86_64'
-        ;;
-    *)
-        #DROPBOXURL='http://packages.crunchbang.org/waldorf-files/dropbox/32/dropbox.tar.gz'
-        DROPBOXURL='http://www.dropbox.com/download?plat=lnx.x86'
-        ;;
-    esac
-
-#    shitTemp=$(mktemp -u)
-#    curl -s -I "$DROPBOXURL" > "$shitTemp"
-#    if [[ $? = 0 ]]; then # TODO this check is just wrong. It doesn't even make sure if it is possible to download a file or not.
-#        read _ RESPONSE _ <<< $(head -n 1 "$shitTemp")
-
-        #if [ $RESPONSE -ne "200" ]; then
-#        if [[ RESPONSE != 302 ]]; then
-        if  ! grep -q 'Remote file exists' <<<$(wget --spider "$DROPBOXURL" 2>&1); then
-            zenity --warning --title='Dropbox Installation' --text 'Error, failed to contact server. Please try again later.'
+    # use dropbox.py to install dropbox
+    [[ -x "$USER_DBPY" ]] || {
+        get_dropbox.py || {
+            echo "$0: failed to fetch dropbox.py" >&2
+            notify-send -i dialog-error 'Dropbox Installation' 'Failed to fetch dropbox.py'
             exit 1
-        else
-            dropboxFile=$(mktemp -u)
-            wget "$DROPBOXURL" -O "$dropboxFile" 2>&1 | \
-             sed -u 's/^.* \+\([0-9]\+%\) \+\([0-9.]\+[GMKB]\) \+\([0-9hms.]\+\).*$/\1\n# Downloading... \2 (\3)/' | \
-             zenity --progress --title='Installing Dropbox' --auto-kill --auto-close
-        fi
-#    else
-#        zenity --warning --title='Dropbox Installation' --text 'Error, failed to contact server. Please try again later.'
-#        exit 1
-#    fi
-
-    #extract binary
-    tar -xf "$dropboxFile"
-    #delete binary archive
-    rm "$dropboxFile"
-
-    #quick sanity check
-    if [[ ! -x $USERDBDIR/dropboxd ]]; then
-        zenity --warning --title='Dropbox Installation' --text 'Oops! There was an error, Dropbox could not be installed. Sorry.'
+        }
+    }
+    [[ $(dpkg-query --show --showformat='${db:Status-Abbrev}' python-gpgme) = 'ii' ]] || {
+        zenity --question --title='Dropbox Installation' --text='We need to install the package python-gpgme (~125k)\nDo you want to proceed?' || exit 0
+        gksu apt-get install python-gpgme
+    }
+    "$USER_DBPY" start -i
+    dropbox_is_installed || {
+        zenity --error --title='Dropbox Installation' --text="Dropbox installation failed."
         exit 1
-    fi
-    zenity --info --title='Dropbox Installation' --text "Dropbox has been installed to:\n$USERDBDIR"
-    zenity --question --title='Dropbox Installation' --text 'Dropbox can be started automatically when you start your session. Would you like to autostart Dropbox when you login?'
-    if [[ $? = 0 ]]; then # add to autostart!
-        ans=$(zenity  --title='Dropbox Installation' --list --text  "$PROMPT_DELAY_TEXT" --radiolist  --column 'Pick' --column 'Seconds:' "${PROMPT_DELAY_VARIANTS[@]}")
+    }
+    notify-send -i dialog-information 'Dropbox Installation' 'Dropbox has been installed.'
+    zenity --info --title='Dropbox Installation' --text="Dropbox CLI frontend dropbox.py has been installed in $USER_DBPY_DIR.
+Run '$USER_DBPY help' to view options.
+(If $USER_DBPY_DIR is in your PATH, then the path $USER_DBPY_DIR can be omitted.)"
+
+    zenity --question --title='Dropbox Installation' --text='Dropbox can be started automatically when you start your session. Would you like to autostart Dropbox when you login?'
+    if [[ $? = 0 ]]; then # add to autostart
+        ans=$(zenity  --title='Dropbox Installation' --list --text="$PROMPT_DELAY_TEXT" --radiolist  --column 'Pick' --column 'Seconds:' "${PROMPT_DELAY_VARIANTS[@]}")
         if [[ $? = 0 ]]; then
-            echo >> "$HOME/.config/openbox/autostart"
-            echo '# Autostart the Dropbox daemon' >> "$HOME/.config/openbox/autostart"
-            echo "(sleep ${ans}s && \"\$HOME/.dropbox-dist/dropboxd\") &" >> "$HOME/.config/openbox/autostart"
-            echo >> "$HOME/.config/openbox/autostart"
+            cat <<DRBX >> "$HOME/.config/openbox/autostart"
+
+# Autostart the Dropbox daemon
+(sleep ${ans}s; $USER_DBPY start) &
+
+DRBX
         fi
     fi
-    zenity --question --title='Dropbox Installation' --text 'Do you wish to start the Dropbox client now?' || exit 0
+    zenity --question --title='Dropbox Installation' --text='Do you wish to start the Dropbox client now?' || exit 0
+    "$USER_DBPY" start
 
-    "$USERDBDIR/dropboxd" &
 else
     # pipemenu stuff
     menuStart
-    if [[ ! -d $USERDBDIR ]]; then
+    if ! dropbox_is_installed; then
         menuItem 'Install Dropbox' "$0 --install-dropbox"
         menuSeparator
         menuItem 'Find out more about Dropbox' 'x-www-browser http://db.tt/5mJg9lb'

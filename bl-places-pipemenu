@@ -45,7 +45,7 @@ open_file() {
 
 # extra dotfiles to display in HOME folder (dotfiles are hidden by default)
 # edit the list (space separated, surrounded by single quotes) or comment this line out, to taste:
-shown_dotfiles='.config .local .Xdefaults .bash_aliases .bashrc .fonts.conf .gtkrc-2.0.mine .profile .xsession-errors'
+shown_dotfiles='.config .local .Xresources .Xdefaults .bash_aliases .bashrc .gtkrc-2.0.mine .profile .xsession-errors'
 
 # By default, this script will display directories separately, before files.
 # To change this behaviour, see NOTE1, NOTE2 and NOTE3 below, near end of page.
