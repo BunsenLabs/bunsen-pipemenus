@@ -19,8 +19,8 @@ source $USR_CFG
 # If the package needs additional configuration before installation
 # create a function called setupBrowserName, it will be called automatically.
 
-KEY_URLS_GOOGLE=('https://dl-ssl.google.com/linux/linux_signing_key.pub' 'http://packages.crunchbang.org/waldorf-files/apt-keys/google-chrome.key')
-KEY_URLS_OPERA=('http://deb.opera.com/archive.key' 'http://packages.crunchbang.org/waldorf-files/apt-keys/opera.key')
+KEY_URLS_GOOGLE=('https://dl-ssl.google.com/linux/linux_signing_key.pub')
+KEY_URLS_OPERA=('http://deb.opera.com/archive.key')
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
