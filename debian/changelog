@@ -1,3 +1,9 @@
+bunsen-pipemenus (0.15-9) unstable; urgency=low
+
+  * bl-recent-files-pipemenu: Remove unused swap() function
+
+ -- Jens John <dev@2ion.de>  Thu, 28 May 2015 23:59:39 +0200
+
 bunsen-pipemenus (0.15-8) unstable; urgency=low
 
   * bl-x-www-browser-pipemenu: Remove superfluous apt-key urls.

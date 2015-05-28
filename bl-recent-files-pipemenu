@@ -27,10 +27,6 @@ end
 -- Menu root
 local M = xml.new("openbox_pipe_menu")
 
-local function swap(a, b)
-  return b, a
-end
-
 local function quote(s)
   return string.format("%q", s)
 end
@@ -79,7 +75,7 @@ end
 -- @param path (string) XBEL filepath
 -- @param reverse_output (boolean) true: most recent menu entry appears at the
 -- menu's top, false: oldest menu entry appears at the top
--- @param cnt (numbe) Limit menu entries to $cnt items
+-- @param cnt (number) Limit menu entries to $cnt items
 -- @param override_cmd (string) Open all files using this command
 -- instead of the originally assigned application
 -- @return XML object if successful, otherwise nil
