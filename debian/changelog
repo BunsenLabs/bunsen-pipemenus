@@ -1,6 +1,7 @@
 bunsen-pipemenus (0.15-9) unstable; urgency=low
 
   * bl-recent-files-pipemenu: Remove unused swap() function
+  * bl-recent-files-pipemenu: Remove superfluous posix.access() call
 
  -- Jens John <dev@2ion.de>  Thu, 28 May 2015 23:59:39 +0200
 

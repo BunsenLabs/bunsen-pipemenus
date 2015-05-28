@@ -80,8 +80,6 @@ end
 -- instead of the originally assigned application
 -- @return XML object if successful, otherwise nil
 local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
-  if not posix.access(path) then return nil end
-
   local function clean_executable_name(s)
     return s:sub(2, -5)
   end
