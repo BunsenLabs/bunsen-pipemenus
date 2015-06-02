@@ -7,43 +7,32 @@ BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 TINT2PATH="$HOME/.config/tint2"
 TINT2RC="$TINT2PATH/tint2rc"
-TSESSIONFILE="$TINT2PATH/tint2-sessionfile"
 TZEN="bl-tint2zen"
-TSESSION="bl-tint2-session"
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
-if [ ! -e "$TSESSIONFILE" ] 2> /dev/null ; then
-    echo $"Error: Failed to locate tint2-sessionfile in $TINT2PATH" >&2
-fi
 
 loadTEditmenu(){
     menuSeparator 
     menuItem "Default tint2rc" "bl-text-editor $TINT2RC"
-    menuSubmenu "RunningTint2" "Running Tint2s"
     if [ "$(pidof tint2)" ];then
-        # test if default tint2 was started (exclude this script from list)
-        for FIELD in $(ps aux | grep -v 'zenity\|bl-tint2' | grep  [t]int2 | awk '{print $NF}');do
-            if [[ $FIELD = "tint2" ]]; then
-                TINT2=$(echo "Default tint2rc") # 'tint2' command was used
-                TPATH="$TINT2PATH/tint2rc"
-            else
-                TINT2=$(echo $FIELD | awk -F"/" '{print $(NF-1)"/"$NF }')
-                TPATH="$FIELD"
+        menuSubmenu "RunningTint2" "Running Tint2s"
+        pgrep -a tint2 | while read pid cmd; do 
+            if [[ ${cmd%% *} = tint2 ]]; then
+                TINT2=$(echo $cmd | awk -F"/" '{print $(NF-1)"/"$NF}')
+                TINT=$(echo $cmd | awk '{print $NF}')
+                menuItem "$TINT2" "bl-text-editor $TINT"
             fi
-            menuItem "$TINT2" "bl-text-editor $TPATH"
         done
-    else 
-        menuItem "No tint2s running" 
+        menuSubmenuEnd
     fi
-    menuSubmenuEnd
 }
 
 getTint2s(){
     menuSubmenu "EditTint2" "Edit Tint2s"
-        if type bl-tint2edit;then  # bl-tint2edit script found
+        if type bl-tint2edit &>/dev/null;then  # bl-tint2edit script found
             menuItem "Tint2 Editor" "bl-tint2edit"
             loadTEditmenu
         else
@@ -52,9 +41,17 @@ getTint2s(){
     menuSubmenuEnd
 }
 
+loadRestartmenu(){
+    if [ "$(pidof tint2)" ];then
+        if type bl-tint2restart &>/dev/null;then  # bl-tint2restart script found
+            menuItem "Restart Tint2" "bl-tint2restart"
+        fi
+    fi
+}
+
 menuStart "Tintmenu" "Tint2"
 menuItem "Tint2 Chooser" "$TZEN"
-menuItem "Reload Tint2" "$TSESSION"
+loadRestartmenu
 getTint2s
 menuEnd
 
