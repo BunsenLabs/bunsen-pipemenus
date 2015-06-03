@@ -1,3 +1,9 @@
+bunsen-pipemenus (0.15-10) unstable; urgency=low
+
+  * bl-tint2-pipemenu: add bugfixes and improvements.
+
+ -- John Crawley <john@rafflesnagoya.com>  Wed, 03 Jun 2015 14:24:08 +0900
+
 bunsen-pipemenus (0.15-9) unstable; urgency=low
 
   * bl-recent-files-pipemenu: Remove unused swap() function
