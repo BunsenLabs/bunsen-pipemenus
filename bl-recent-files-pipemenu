@@ -166,13 +166,11 @@ local function main()
       return 1
     elseif o == 'h' then
       printf([[Usage: %s [-h|--help] [-f|--file XBEL] [-l|--limit NUM] [-o|--open-cmd CMD] [-r|--reverse]
-Where: -h, --help       Show this message and exit.
-       -f, --file       XBEL. Path to a 'recently-used.xbel' file.
-                        Omit in order to attempt to auto-detect the path.
-       -l, --limit      NUM. Include up to NUM items in the menu.
-       -o, --open-cmd   CMD. Open files using CMD. By default, files will be
-                        opened in the application they were being used with.
-       -r, --reverse    Put the most-recently used items at the top of the menu.]], arg[0])
+Where: -h, --help       Show this message and exit
+       -f, --file       Specify the path to a 'recently-used.xbel' file, omit in order to auto-detect
+       -l, --limit      Include up to NUM items in the menu
+       -o, --open-cmd   Open files using CMD, by default files will be opened in their original application
+       -r, --reverse    Put the most-recently used items at the top of the menu]], arg[0])
       return 0
     elseif o == 'f' then
       xbel_path = optarg

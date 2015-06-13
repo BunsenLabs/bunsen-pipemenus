@@ -1,3 +1,9 @@
+bunsen-pipemenus (0.15-11) unstable; urgency=low
+
+  * bl-recent-files-pipemenu: Improve help text
+
+ -- Jens John <dev@2ion.de>  Sat, 13 Jun 2015 13:57:30 +0200
+
 bunsen-pipemenus (0.15-10) unstable; urgency=low
 
   * bl-tint2-pipemenu: add bugfixes and improvements.
