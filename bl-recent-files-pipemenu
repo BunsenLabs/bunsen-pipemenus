@@ -147,7 +147,7 @@ local function detect_xbel_path()
     return nil
   end
   return check_path{
-    string.format("%s/%s", xf, fn),
+    string.format("%s/%s", xh, fn),
     string.format("%s/.local/share/%s", hp, fn),
     string.format("%s/.%s", hp, fn)
   }

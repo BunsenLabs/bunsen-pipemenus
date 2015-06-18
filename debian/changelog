@@ -1,3 +1,10 @@
+bunsen-pipemenus (0.15-12) unstable; urgency=low
+
+  * bl-recent-files-pipemenu: Fix typo in variable name preventing the correct
+    detection of recently-used.xbel in XDG_DATA_HOME
+
+ -- Jens John <dev@2ion.de>  Thu, 18 Jun 17:37:51 +0200
+
 bunsen-pipemenus (0.15-11) unstable; urgency=low
 
   * bl-recent-files-pipemenu: Improve help text
