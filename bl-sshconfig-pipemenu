@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import os, warnings
+import os
+import warnings
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     from paramiko.config import SSHConfig
@@ -12,8 +13,8 @@ try:
     config_file = file(cfgfile)
 except IOError:
     if not os.path.exists(cfgdir):
-            os.makedirs(cfgdir,0700)
-    f = open(cfgfile,'w')
+        os.makedirs(cfgdir, 0700)
+    f = open(cfgfile, 'w')
     o = '# SSH config file, \'man ssh_config\' for more details.\n\n'
     o += '#Host example\n'
     o += '#    hostname example.com\n'
@@ -34,26 +35,27 @@ print '<openbox_pipe_menu>\n'
 
 if len(hosts) >= 2:
     for h in hosts[1:]:
-        if h.has_key('host') and h.has_key('hostname'):
+        if 'host' in h and 'hostname' in h['config']:
+            conf = h['config']
             user = ''
-            if h.has_key('user'):
-                user = '-l '+h['user']+ ' '
-            port = ['','']
-            if h.has_key('port'):
-                port[0] = '-p '+h['port']+ ' '
-                port[1] = ':'+h['port']
-            print '<menu id="ssh-'+h['host']+'" label="'+h['host']+'">'
+            if 'user' in conf:
+                user = '-l ' + conf['user'] + ' '
+            port = ['', '']
+            if 'port' in conf:
+                port[0] = '-p ' + conf['port'] + ' '
+                port[1] = ':' + conf['port']
+            print '<menu id="ssh-'+h['host'][0]+'" label="'+h['host'][0]+'">'
             print '    <item label="Start terminal session">'
             print '        <action name="Execute">'
             print '            <command>'
-            print '                x-terminal-emulator -T ssh '+user+port[0]+h['hostname']
+            print '                x-terminal-emulator --command=&quot;ssh ' + user + port[0] + conf['hostname'] + '&quot;'
             print '            </command>'
             print '        </action>'
             print '    </item>\n'
             print '    <item label="Browse with File Manager">'
             print '        <action name="Execute">'
             print '            <command>'
-            print '                bl-file-manager ssh://'+h['hostname']+port[1]
+            print '                bl-file-manager ssh://' + conf['hostname'] + port[1]
             print '            </command>'
             print '        </action>'
             print '    </item>\n'
@@ -69,5 +71,3 @@ print '    </action>'
 print '</item>\n'
 
 print '</openbox_pipe_menu>'
-
-
