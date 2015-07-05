@@ -21,8 +21,12 @@ loadTEditmenu(){
         menuSubmenu "RunningTint2" "Running Tint2s"
         pgrep -a tint2 | while read pid cmd; do 
             if [[ ${cmd%% *} = tint2 ]]; then
-                TINT2=$(echo $cmd | awk -F"/" '{print $(NF-1)"/"$NF}')
-                TINT=$(echo $cmd | awk '{print $NF}')
+                TINT=${cmd##* }
+                TINT2=${TINT#$HOME/.config/}
+                if [[ $TINT = tint2 ]];then
+                    TINT="$TINT2RC"
+                    TINT2="Default tint2rc"
+                fi
                 menuItem "$TINT2" "bl-text-editor $TINT"
             fi
         done
