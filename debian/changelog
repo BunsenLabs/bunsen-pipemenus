@@ -1,3 +1,10 @@
+bunsen-pipemenus (0.15-14) unstable; urgency=low
+
+  * bl-sshconfig-pipemenu: Reflect changes in libparamiko in order to get the
+    defunct script to work again
+
+ -- Jens John <dev@2ion.de>  Mon, 06 Jul 2015 19:06:20 +0200
+
 bunsen-pipemenus (0.15-13) unstable; urgency=low
 
   * bl-tint2-pipemenu: loadTEditmenu() test for default tint2rc running.
