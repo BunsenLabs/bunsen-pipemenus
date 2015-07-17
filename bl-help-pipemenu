@@ -23,31 +23,31 @@ menuItem 'Package Search' 'x-www-browser "https://www.debian.org/distrib/package
 menuItem 'Package Tracker' 'x-www-browser "https://tracker.debian.org/"'
 menuItem 'Security Tracker' 'x-www-browser "https://security-tracker.debian.org/tracker/"'
 menuSubmenuEnd
-menuItem 'Arch wiki' 'x-www-browser "https://wiki.archlinux.org/index.php/Table_of_contents"'
+menuItem 'Arch Wiki' 'x-www-browser "https://wiki.archlinux.org/index.php/Table_of_contents"'
 
 menuSeparator
 
 menuSubmenu 'OpenboxWWW' 'Openbox'
-menuSubmenu 'ObWWW' 'Openbox website'
+menuSubmenu 'ObWWW' 'Openbox Website'
 menuItem 'Openbox Homepage' 'x-www-browser "http://openbox.org/"'
 menuItem 'Openbox Getting Started' 'x-www-browser "http://openbox.org/wiki/Help:Getting_started"'
 menuItem 'Openbox Documentation' 'x-www-browser "http://openbox.org/wiki/Help:Contents"'
 menuItem 'Openbox FAQs' 'x-www-browser "http://openbox.org/wiki/Help:FAQ"'
 menuSubmenuEnd
-menuItem 'ArchWiki Openbox guide' 'x-www-browser "http://wiki.archlinux.org/index.php/Openbox"'
-menuItem 'Debian Wiki Openbox guide' 'x-www-browser "https://wiki.debian.org/Openbox"'
+menuItem 'ArchWiki Openbox Guide' 'x-www-browser "http://wiki.archlinux.org/index.php/Openbox"'
+menuItem 'Debian Wiki Openbox Guide' 'x-www-browser "https://wiki.debian.org/Openbox"'
 menuItem 'Urukramas Openbox Guide' 'x-www-browser "https://urukrama.wordpress.com/openbox-faq/"'
 menuSubmenuEnd
 
 menuSubmenu 'Tint2WWW' 'Tint2'
-menuItem 'Tint2 wiki: FAQ' 'x-www-browser "https://code.google.com/p/tint2/wiki/FAQ"'
+menuItem 'Tint2 Wiki: FAQ' 'x-www-browser "https://code.google.com/p/tint2/wiki/FAQ"'
 menuItem 'Tint2 Documentation' 'x-www-browser "https://code.google.com/p/tint2/wiki/Configure"'
-menuItem 'Tint2 forum thread' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?id=3232"'
+menuItem 'Tint2 Forum Thread' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?id=3232"'
 menuItem 'Tint2 man page' 'x-terminal-emulator -T "Tint2 man page" -e man tint2'
 menuSubmenuEnd
 
 menuSubmenu 'ConkyWWW' 'Conky'
-menuItem 'Conky Configuration settings' 'x-www-browser "http://conky.sourceforge.net/config_settings.html"'
+menuItem 'Conky Configuration Settings' 'x-www-browser "http://conky.sourceforge.net/config_settings.html"'
 menuItem 'Conky Variables' 'x-www-browser "http://conky.sourceforge.net/variables.html"'
 menuItem 'Conky Archive' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?pid=371424"'
 menuItem 'Conky man pages' 'x-terminal-emulator -T "Conky man page" -e man conky'

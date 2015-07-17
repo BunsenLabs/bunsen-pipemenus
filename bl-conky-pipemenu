@@ -76,8 +76,8 @@ menuItem "Conky Chooser" "$CZEN"
 menuItem "Reload Conkys" "$CSESSION"
 getConkys
 menuSeparator 
-menuItem "New Conky session" "bl-conkyzen -z"
-menuSubmenu "Sessions" "Saved sessions"
+menuItem "New Conky Session" "bl-conkyzen -z"
+menuSubmenu "Sessions" "Saved Sessions"
 getSessions
 menuSubmenuEnd
 menuSeparator 
