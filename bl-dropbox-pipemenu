@@ -73,7 +73,10 @@ elif [[ $1 = '--install-dropbox' ]]; then
     }
     [[ $(dpkg-query --show --showformat='${db:Status-Abbrev}' python-gpgme) = 'ii' ]] || {
         zenity --question --title='Dropbox Installation' --text='We need to install the package python-gpgme (~125k)\nDo you want to proceed?' || exit 0
-        gksu apt-get install python-gpgme
+        gksu 'apt-get install -y python-gpgme' || {
+            zenity --error --title='Dropbox Installation' --text="Failed to install python-gpgme."
+            exit 1
+        }
     }
     "$USER_DBPY" start -i
     dropbox_is_installed || {
