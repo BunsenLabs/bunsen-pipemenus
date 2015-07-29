@@ -1,3 +1,10 @@
+bunsen-pipemenus (8.1-2) bunsen-hydrogen; urgency=medium
+
+  * debian/changelog: Fix lintian warning about a wrongly formatted
+    trailer line
+
+ -- Jens John <dev@2ion.de>  Wed, 29 Jul 2015 20:13:29 +0200
+
 bunsen-pipemenus (8.1-1) bunsen-hydrogen; urgency=medium
 
   * Non-maintainer upload.
@@ -233,7 +240,7 @@ cb-pipemenus (0.05) unstable; urgency=low
     fallback to packages.crunchbang.org if primary sources fail. This
     concerns Opera and Google Chrome options.
 
- -- Giorgi Tavkelishvili <gtavkelishvili@linuxpg.org> Sat, 19 May 2012 14:03:30 +0400
+ -- Giorgi Tavkelishvili <gtavkelishvili@linuxpg.org>  Sat, 19 May 2012 14:03:30 +0400
 
 cb-pipemenus (0.04) unstable; urgency=low
 
