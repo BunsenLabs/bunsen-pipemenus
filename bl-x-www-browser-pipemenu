@@ -113,7 +113,7 @@ else # pipemenu
 
     if $INSTALLED ; then
         menuSeparator
-        menuItem 'Select default browser' "x-terminal-emulator -T 'Select default browser' -e sudo update-alternatives --config x-www-browser"
+        menuItem 'Select Default Browser' "x-terminal-emulator -T 'Select Default Browser' -e sudo update-alternatives --config x-www-browser"
     fi
     menuEnd
 fi

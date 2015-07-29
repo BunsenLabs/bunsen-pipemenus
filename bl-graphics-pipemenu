@@ -63,10 +63,10 @@ writeScrot() {                  # Write scrot submenu items
     menuSubmenu 'scrot' 'scrot Screenshooter'
         menuItem "scrot Now" "scrot $IMG -e $VIEW"
         menuItem "scrot In 5 secs..." "scrot -d 5 $IMG -e $VIEW"
-        menuItem "scrot In 10 secs" "scrot -d 10 $IMG -e $VIEW"
-        menuItem "scrot Select Area.." "scrot -s $IMG -e $VIEW"
-        menuItem "scrot Current Focus.." "scrot -u $IMG -e $VIEW"
-        menuItem "scrot multi-monitor" "scrot -m $IMG -e $VIEW"
+        menuItem "scrot In 10 secs..." "scrot -d 10 $IMG -e $VIEW"
+        menuItem "scrot Select Area" "scrot -s $IMG -e $VIEW"
+        menuItem "scrot Current Focus" "scrot -u $IMG -e $VIEW"
+        menuItem "scrot Multi-Monitor" "scrot -m $IMG -e $VIEW"
     menuSubmenuEnd
 }
 
