@@ -1,3 +1,11 @@
+bunsen-pipemenus (8.1-1) bunsen-hydrogen; urgency=medium
+
+  * Non-maintainer upload.
+  * bl-graphics-pipemenu, bl-x-www-browser-pipemenu: Correct spelling and
+    wording in menu entries
+
+ -- Jens John <dev@2ion.de>  Wed, 29 Jul 2015 20:04:55 +0200
+
 bunsen-pipemenus (8.0-1) unstable; urgency=low
 
   * bl-dropbox-pipemenu: fix bug with evocation of apt-get from gksu.
