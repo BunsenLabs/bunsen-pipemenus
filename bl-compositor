@@ -5,7 +5,7 @@
 # by Philip Newborough <corenominal@corenominal.org>
 # Adapted for Bunsen Labs Linux.
 
-RESTART_ATTEMPTS=20
+RESTART_ATTEMPTS=20 # times to try killall before reverting to -s KILL
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
@@ -14,30 +14,13 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     exit 1
 fi
 
-# ------------- Set xcompmgr command options -----------------------------------
+# ------------- Set compton command options -----------------------------------
 EXECXCOMP='compton'
 if glxinfo | egrep -iq 'direct rendering: yes'; then
     EXECXCOMP+=' --vsync opengl'
 fi
 
-# Edit xcompmgr settings
-if [[ $1 = '--edit' ]]; then
-    [[ ! -f $HOME/.config/compton.conf ]] &&
-        cp '/etc/xdg/compton.conf' "$HOME/.config/compton.conf"
-
-    if type bl-text-editor >/dev/null;then
-        bl-text-editor "$HOME/.config/compton.conf"
-    else
-        x-terminal-emulator -T 'edit compton.conf' -e nano "$HOME/.config/compton.conf"
-    fi
-elif [[ $1 = '--toggle' || $1 = '--start' ]]; then # Toggle compositing with compton.
-    # TODO why --toggle and --start act exactly the same?
-    if ! pidof compton > /dev/null; then
-        $EXECXCOMP &
-    else
-        killall compton
-    fi
-elif [[ $1 = '--restart' ]]; then
+forcekill_compton() {
     killall -q compton
     for (( i=0; i < RESTART_ATTEMPTS; i++ )); do
         pidof compton > /dev/null || # no process found! Safe to start again
@@ -48,7 +31,33 @@ elif [[ $1 = '--restart' ]]; then
 
         sleep 0.25
     done
-    "$0" --start
+}
+
+
+if [[ $1 = '--edit' ]]; then # Edit compton settings
+    [[ ! -f $HOME/.config/compton.conf ]] &&
+        cp '/etc/xdg/compton.conf' "$HOME/.config/compton.conf"
+
+    if type bl-text-editor >/dev/null;then
+        bl-text-editor "$HOME/.config/compton.conf"
+    else
+        x-terminal-emulator -T 'edit compton.conf' -e nano "$HOME/.config/compton.conf"
+    fi
+elif [[ $1 = '--start' ]]; then
+    if ! pidof compton > /dev/null; then
+        $EXECXCOMP &
+    else
+        echo "$0 --start: compton already running" >&2
+    fi
+elif [[ $1 = '--stop' ]]; then
+    forcekill_compton
+elif [[ $1 = '--restart' ]]; then
+    if pidof compton > /dev/null; then
+        forcekill_compton
+        "$0" --start
+    else # nothing to restart
+        echo "$0 --restart: compton is not running" >&2
+    fi
 elif [[ $1 = '--watch' ]]; then
     while inotifywait -e modify "$HOME/.config/compton.conf"; do
         "$0" --restart # TODO move this to function?
@@ -60,7 +69,7 @@ else
         menuItem 'Enable Compositing' "$0 --start"
     else
         menuItem 'Restart Compositing' "$0 --restart"
-        menuItem 'Disable Compositing' "$0 --toggle"
+        menuItem 'Disable Compositing' "$0 --stop"
         menuSeparator
     fi
     menuItem 'Edit Compositing Settings' "$0 --edit"
