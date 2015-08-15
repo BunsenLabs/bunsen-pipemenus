@@ -1,3 +1,10 @@
+bunsen-pipemenus (8.2-2) bunsen-hydrogen; urgency=low
+
+  * Add path to GPL file in debian/copyright.
+  * Move compton from Depends: to Recommends: in debian/control.
+
+ -- John Crawley <john@rafflesnagoya.com>  Sat, 15 Aug 2015 11:34:04 +0900
+
 bunsen-pipemenus (8.2-1) bunsen-hydrogen; urgency=medium
 
   * bl-compositor --restart, do not start compton if not running.
