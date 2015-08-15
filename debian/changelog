@@ -1,3 +1,10 @@
+bunsen-pipemenus (8.2-1) bunsen-hydrogen; urgency=medium
+
+  * bl-compositor --restart, do not start compton if not running.
+  * bl-compositor replace option --toggle with --stop.
+
+ -- John Crawley <john@rafflesnagoya.com>  Sat, 15 Aug 2015 10:50:10 +0900
+
 bunsen-pipemenus (8.1-2) bunsen-hydrogen; urgency=medium
 
   * debian/changelog: Fix lintian warning about a wrongly formatted
