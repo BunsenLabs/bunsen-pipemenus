@@ -8,9 +8,9 @@ Homepage: https://github.com/BunsenLabs/bunsen-pipemenus
 
 Package: bunsen-pipemenus
 Architecture: all
-Depends: ${misc:Depends}, bunsen-common, xterm | x-terminal-emulator, openbox, zenity, wget, curl, python, python-paramiko, mesa-utils, lua5.2, lua-expat, lua-penlight, lua-posix, lua-socket
+Depends: ${misc:Depends}, bunsen-common, xterm | x-terminal-emulator, openbox, zenity, wget, python, python-paramiko, mesa-utils, lua5.2, lua-expat, lua-penlight, lua-posix, lua-socket
 Recommends: compton
-Description: Experimental - various Openbox pipemenus
+Description: Various Openbox pipemenus
  Contains various Openbox pipemenus for use with
  Bunsen Linux. 
  Adapted from cb-pipemenus by Philip Newborough
