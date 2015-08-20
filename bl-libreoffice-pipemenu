@@ -16,7 +16,7 @@ if [[ $1 = '--install' ]]; then
     x-terminal-emulator -T 'Install LibreOffice' -e "$0" --install-lo
 
 elif [[ $1 = '--install-lo' ]]; then
-    promptInstall 'LIBREOFFICE' 'LibreOffice' 'bl-meta-libreoffice'
+    promptInstall 'LIBREOFFICE' 'LibreOffice' 'bunsen-meta-libreoffice'
 
 else
     # Pipemenu
