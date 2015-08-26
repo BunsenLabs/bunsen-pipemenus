@@ -67,8 +67,8 @@ else # pipemenu
             if [[ "$curApp" = "smplayer" ]];then
                 menuItem "Gnome mplayer" "$curApp"
                 curAppName=${words[*]^}
-            elif [[ "$curApp" = "mpv" ]];then # set mpv to start with gui window
-                menuItem "$curAppName" "$curApp --force-window --idle"
+            elif [[ "$curApp" = "mpv" ]];then # notify user that mpv is a cli application
+                menuItem "mpv (cli)" "notify-send -t 3000 'mpv is a commandline application'"
             else
                 menuItem "$curAppName" "$curApp"
             fi
