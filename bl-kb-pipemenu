@@ -1,7 +1,7 @@
 #!/bin/bash
 # ---------------------------------------------------------------------
 # An Openbox pipemenu for displaying keybinds.
-# bl-kb.py is used to parse rc.xml and send the output to a textfile
+# bl-kb is used to parse rc.xml and send the output to a textfile
 #
 # Written by <damo> for BunsenLabs Linux,  April 2015
 # ---------------------------------------------------------------------
@@ -11,7 +11,7 @@
 #-----------------------------------------------------------------------
 BL_COMMON_LIBDIR="/usr/lib/bunsen/bunsen-common"
 USR_CFG_DIR="$HOME/.config/openbox"
-KBSCRIPT="bl-kb.py"
+KBSCRIPT="bl-kb"
 RCPATH="$USR_CFG_DIR/rc.xml"
 KBTEXT="$USR_CFG_DIR/kbinds.txt"
 
@@ -21,7 +21,7 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
 fi
 
 if ! [ -e "$KBTEXT" ];then # write keybinds to textfile, if it doesn't exist
-    # test if bl-kb.py exists in path
+    # test if bl-kb exists in path
     if type "$KBSCRIPT" &> /dev/null;then
         # run script to write kbinds.txt, suppress terminal output
         "$KBSCRIPT" > /dev/null
