@@ -1,3 +1,10 @@
+bunsen-pipemenus (8.4-1) bunsen-hydrogen; urgency=low
+
+  * bl-kb-pipemenu change references to bl-kb.py to bl-kb.
+  * bl-multimedia-pipemenu do not attempt to launch mpv from menu.
+
+ -- John Crawley <john@rafflesnagoya.com>  Fri, 28 Aug 2015 17:54:23 +0900
+
 bunsen-pipemenus (8.3-1) bunsen-hydrogen; urgency=low
 
   * Bugfix in bl-libreoffice-pipemenu.
