@@ -60,24 +60,15 @@ else # pipemenu
     menuStart
     for curApp in "${MM_APPS[@]}"; do
         read -ra words <<< "${curApp//-/ }"
-        echo "$curApp"
         curAppName=${words[*]^}
         if type "$curApp" &> /dev/null; then
-            # change name of smplayer (gui frontend for mplayer)
-            if [[ "$curApp" = "smplayer" ]];then
-                menuItem "Gnome mplayer" "$curApp"
-                curAppName=${words[*]^}
-            elif [[ "$curApp" = "mpv" ]];then # notify user that mpv is a cli application
+            if [[ "$curApp" = "mpv" ]];then # notify user that mpv is a cli application
                 menuItem "mpv (cli)" "notify-send -t 3000 'mpv is a commandline application'"
             else
                 menuItem "$curAppName" "$curApp"
             fi
         else
-            if [[ "$curAppName" == "Smplayer" ]]; then
-                menuItem "Install Gnome mplayer" "$0 --$curApp"
-            else
-                menuItem "Install $curAppName" "$0 --$curApp"
-            fi
+            menuItem "Install $curAppName" "$0 --$curApp"
         fi
     done
     menuSeparator
@@ -87,7 +78,7 @@ else # pipemenu
         echo $"Error: Failed to locate bl-mmeditors-pipemenu" >&2
         exit 1
     else
-        echo $(bl-mmeditors-pipemenu)
+        echo "$(bl-mmeditors-pipemenu)"
     fi
     menuSeparator
     menuSeparator 'Utilities'
@@ -96,7 +87,7 @@ else # pipemenu
         echo $"Error: Failed to locate bl-mmutils-pipemenu" >&2
         exit 1
     else
-        echo $(bl-mmutils-pipemenu)
+        echo "$(bl-mmutils-pipemenu)"
     fi
     menuEnd
 fi
