@@ -26,69 +26,96 @@ elif ! . "$USR_CFG_DIR/pipemenus.rc" 2> /dev/null; then
     exit 1
 fi
 
+declare -A AppName AppStatus # AppName: split on hyphens, first letter uppercase
+for curApp in "${MM_APPS[@]}" "${MM_EDITORS[@]}" "${MM_UTILS[@]}"; do
+    words=(${curApp//-/ })
+    AppName[$curApp]="${words[*]^}"
+    type "$curApp" >/dev/null 2>&1 && AppStatus[$curApp]=installed
+done
+
 appExists() {
-    for curApp in "${MM_APPS[@]}"; do # if $packageName exists in MM_APPS array
+    for curApp in "${!AppName[@]}"; do # if $packageName exists in MM_APPS MM_EDITORS MM_UTILS arrays
         [[ $curApp = "$1" ]] &&
             return 0
     done
     say "Unable to install $1. There is no such application that I know of." 1 >&2
-    say "You can try one of these: ${MM_APPS[*]}" 2 >&2
+    say "You can try one of these: ${MM_APPS[*]} ${MM_EDITORS[*]} ${MM_UTILS[*]}" 2 >&2
     return 1
 }
 
 if [[ $1 && ! $1 = --install-* ]]; then
     packageName=${1#--}
-    read -ra words <<< "${packageName//-/ }"
-    x-terminal-emulator -T "Install ${words[*]^}" -e "$0" "--install-$packageName"
+    x-terminal-emulator -T "Install ${AppName[$packageName]}" -e "$0" "--install-$packageName"
 
 elif [[ $1 = --install-* ]]; then
     packageName=${1#--install-}
     appExists "$packageName" || exit 1
-    appName=${packageName//-/ }
-    read -ra words <<< "$appName"
-    appName=${words[*]^}
+    appName=${AppName[$packageName]}
     appNameUpper=${appName^^}
 
     setupFunctionName="setup${appName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupBlender'
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-        promptInstall --setup "$setupFunctionName" "${appNameUpper% APP} APP" "$appName" "$packageName"
+        promptInstall --setup "$setupFunctionName" "$appNameUpper" "$appName" "$packageName"
     else
-        promptInstall "${appNameUpper% APP} APP" "$appName" "$packageName"
+        promptInstall "$appNameUpper" "$appName" "$packageName"
     fi
 
 else # pipemenu
     menuStart
+
     for curApp in "${MM_APPS[@]}"; do
-        read -ra words <<< "${curApp//-/ }"
-        curAppName=${words[*]^}
-        if type "$curApp" &> /dev/null; then
+        if [[ ${AppStatus[$curApp]} = installed ]]; then
             if [[ "$curApp" = "mpv" ]];then # notify user that mpv is a cli application
                 menuItem "mpv (cli)" "notify-send -t 3000 'mpv is a commandline application'"
             else
-                menuItem "$curAppName" "$curApp"
+                menuItem "${AppName[$curApp]}" "$curApp"
             fi
-        else
-            menuItem "Install $curAppName" "$0 --$curApp"
         fi
     done
+    menu_started=false
+    for curApp in "${MM_APPS[@]}"; do
+        if ! [[ ${AppStatus[$curApp]} = installed ]]; then
+            $menu_started || menuSubmenu "mm-apps-install-submenu" "Install"
+            menu_started=true
+            menuItem "Install ${AppName[$curApp]}" "$0 --$curApp"
+        fi
+    done
+    $menu_started && menuSubmenuEnd
+
     menuSeparator
     menuSeparator 'Editors'
-    # get editors pipemenu
-    if ! type "bl-mmeditors-pipemenu" &> /dev/null; then
-        echo $"Error: Failed to locate bl-mmeditors-pipemenu" >&2
-        exit 1
-    else
-        echo "$(bl-mmeditors-pipemenu)"
-    fi
+    for curApp in "${MM_EDITORS[@]}"; do
+        if [[ ${AppStatus[$curApp]} = installed ]]; then
+            menuItem "${AppName[$curApp]}" "$curApp"
+        fi
+    done
+    menu_started=false
+    for curApp in "${MM_EDITORS[@]}"; do
+        if ! [[ ${AppStatus[$curApp]} = installed ]]; then
+            $menu_started || menuSubmenu "mm-editors-install-submenu" "Install"
+            menu_started=true
+            menuItem "Install ${AppName[$curApp]}" "$0 --$curApp"
+        fi
+    done
+    $menu_started && menuSubmenuEnd
+
     menuSeparator
     menuSeparator 'Utilities'
-    # get utilities pipemenu
-    if ! type "bl-mmutils-pipemenu" &> /dev/null; then
-        echo $"Error: Failed to locate bl-mmutils-pipemenu" >&2
-        exit 1
-    else
-        echo "$(bl-mmutils-pipemenu)"
-    fi
+    for curApp in "${MM_UTILS[@]}"; do
+        if [[ ${AppStatus[$curApp]} = installed ]]; then
+            menuItem "${AppName[$curApp]}" "$curApp"
+        fi
+    done
+    menu_started=false
+    for curApp in "${MM_UTILS[@]}"; do
+        if ! [[ ${AppStatus[$curApp]} = installed ]]; then
+            $menu_started || menuSubmenu "mm-utils-install-submenu" "Install"
+            menu_started=true
+            menuItem "Install ${AppName[$curApp]}" "$0 --$curApp"
+        fi
+    done
+    $menu_started && menuSubmenuEnd
+
     menuEnd
 fi
 exit 0
