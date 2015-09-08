@@ -1,3 +1,9 @@
+bunsen-pipemenus (8.6-1) bunsen-hydrogen; urgency=low
+
+  * bl-multimedia-pipemenu move install options to submenus.
+
+ -- John Crawley <john@rafflesnagoya.com>  Tue, 08 Sep 2015 17:08:05 +0900
+
 bunsen-pipemenus (8.5-1) bunsen-hydrogen; urgency=low
 
   * bl-multimedia-pipemenu remove special treatment for smplayer.
