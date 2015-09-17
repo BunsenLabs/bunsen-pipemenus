@@ -4,7 +4,7 @@
 # Originally written for CrunchBang Linux <http://crunchbanglinux.org/>
 # by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
 # Rewritten by Aleks-Daniel Jakimenko in 2013 and
-# John Crawley <john@rafflesnagoya.com> in 2015 to use dropbox.py.
+# John Crawley <john@bunsenlabs.org> in 2015 to use dropbox.py.
 # --------------------------------------------------------------------
 
 # Directory to install the dropbox cli interface, dropbox.py.

@@ -5,7 +5,7 @@
 # Originally written for CrunchBang Linux <http://crunchbang.org/>
 # by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
 #
-# Modified by <damo> for BunsenLabs Linux   April 2015
+# Modified by damo <damo@bunsenlabs.org> for BunsenLabs Linux   April 2015
 #
 #   To change the entries shown in the Graphics pipemenu:
 #   edit ".config/openbox/pipemenus.rc"

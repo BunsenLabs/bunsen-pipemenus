@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # bl-help-pipemenu
-# Prepared for BunsenLabs Linux by <damo> March 2015
+# Prepared for BunsenLabs Linux by damo <damo@bunsenlabs.org> March 2015
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 

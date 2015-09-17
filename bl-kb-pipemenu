@@ -3,7 +3,7 @@
 # An Openbox pipemenu for displaying keybinds.
 # bl-kb is used to parse rc.xml and send the output to a textfile
 #
-# Written by <damo> for BunsenLabs Linux,  April 2015
+# Written by damo <damo@bunsenlabs.org> for BunsenLabs Linux,  April 2015
 # ---------------------------------------------------------------------
 #
 # NB The keybinds in the menu are clickable, except for the Openbox
