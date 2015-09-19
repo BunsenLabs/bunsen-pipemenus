@@ -2,52 +2,52 @@ bunsen-pipemenus (8.6.1-1) bunsen-hydrogen; urgency=low
 
   * Rearrange bl-libreoffice-pipemenu and bl-graphics-pipemenu.
 
- -- John Crawley <john@rafflesnagoya.com>  Mon, 14 Sep 2015 15:57:15 +0900
+ -- John Crawley <john@bunsenlabs.org>  Mon, 14 Sep 2015 15:57:15 +0900
 
 bunsen-pipemenus (8.6-1) bunsen-hydrogen; urgency=low
 
   * bl-multimedia-pipemenu move install options to submenus.
 
- -- John Crawley <john@rafflesnagoya.com>  Tue, 08 Sep 2015 17:08:05 +0900
+ -- John Crawley <john@bunsenlabs.org>  Tue, 08 Sep 2015 17:08:05 +0900
 
 bunsen-pipemenus (8.5-1) bunsen-hydrogen; urgency=low
 
   * bl-multimedia-pipemenu remove special treatment for smplayer.
 
- -- John Crawley <john@rafflesnagoya.com>  Sat, 29 Aug 2015 17:36:38 +0900
+ -- John Crawley <john@bunsenlabs.org>  Sat, 29 Aug 2015 17:36:38 +0900
 
 bunsen-pipemenus (8.4-1) bunsen-hydrogen; urgency=low
 
   * bl-kb-pipemenu change references to bl-kb.py to bl-kb.
   * bl-multimedia-pipemenu do not attempt to launch mpv from menu.
 
- -- John Crawley <john@rafflesnagoya.com>  Fri, 28 Aug 2015 17:54:23 +0900
+ -- John Crawley <john@bunsenlabs.org>  Fri, 28 Aug 2015 17:54:23 +0900
 
 bunsen-pipemenus (8.3-1) bunsen-hydrogen; urgency=low
 
   * Bugfix in bl-libreoffice-pipemenu.
 
- -- John Crawley <john@rafflesnagoya.com>  Thu, 20 Aug 2015 10:37:01 +0900
+ -- John Crawley <john@bunsenlabs.org>  Thu, 20 Aug 2015 10:37:01 +0900
 
 bunsen-pipemenus (8.2-3) bunsen-hydrogen; urgency=low
 
   * Remove curl from dependencies in debian/control.
 
- -- John Crawley <john@rafflesnagoya.com>  Wed, 19 Aug 2015 10:53:24 +0900
+ -- John Crawley <john@bunsenlabs.org>  Wed, 19 Aug 2015 10:53:24 +0900
 
 bunsen-pipemenus (8.2-2) bunsen-hydrogen; urgency=low
 
   * Add path to GPL file in debian/copyright.
   * Move compton from Depends: to Recommends: in debian/control.
 
- -- John Crawley <john@rafflesnagoya.com>  Sat, 15 Aug 2015 11:34:04 +0900
+ -- John Crawley <john@bunsenlabs.org>  Sat, 15 Aug 2015 11:34:04 +0900
 
 bunsen-pipemenus (8.2-1) bunsen-hydrogen; urgency=medium
 
   * bl-compositor --restart, do not start compton if not running.
   * bl-compositor replace option --toggle with --stop.
 
- -- John Crawley <john@rafflesnagoya.com>  Sat, 15 Aug 2015 10:50:10 +0900
+ -- John Crawley <john@bunsenlabs.org>  Sat, 15 Aug 2015 10:50:10 +0900
 
 bunsen-pipemenus (8.1-2) bunsen-hydrogen; urgency=medium
 
@@ -68,7 +68,7 @@ bunsen-pipemenus (8.0-1) unstable; urgency=low
 
   * bl-dropbox-pipemenu: fix bug with evocation of apt-get from gksu.
 
- -- John Crawley <john@rafflesnagoya.com>  Thu, 23 Jul 2015 19:12:10 +0900
+ -- John Crawley <john@bunsenlabs.org>  Thu, 23 Jul 2015 19:12:10 +0900
 
 bunsen-pipemenus (0.15-14) unstable; urgency=low
 
@@ -81,7 +81,7 @@ bunsen-pipemenus (0.15-13) unstable; urgency=low
 
   * bl-tint2-pipemenu: loadTEditmenu() test for default tint2rc running.
 
- -- John Crawley <john@rafflesnagoya.com>  Mon, 06 Jul 2015 12:43:46 +0900
+ -- John Crawley <john@bunsenlabs.org>  Mon, 06 Jul 2015 12:43:46 +0900
 
 bunsen-pipemenus (0.15-12) unstable; urgency=low
 
@@ -100,7 +100,7 @@ bunsen-pipemenus (0.15-10) unstable; urgency=low
 
   * bl-tint2-pipemenu: add bugfixes and improvements.
 
- -- John Crawley <john@rafflesnagoya.com>  Wed, 03 Jun 2015 14:24:08 +0900
+ -- John Crawley <john@bunsenlabs.org>  Wed, 03 Jun 2015 14:24:08 +0900
 
 bunsen-pipemenus (0.15-9) unstable; urgency=low
 
@@ -114,7 +114,7 @@ bunsen-pipemenus (0.15-8) unstable; urgency=low
   * bl-x-www-browser-pipemenu: Remove superfluous apt-key urls.
   * bl-dropbox-menu: Rewrite to use dropbox.py frontend script.
 
- -- John Crawley <john@rafflesnagoya.com>  Sun, 17 May 2015 16:44:39 +0900
+ -- John Crawley <john@bunsenlabs.org>  Sun, 17 May 2015 16:44:39 +0900
 
 bunsen-pipemenus (0.15-7) unstable; urgency=low
 
@@ -126,44 +126,44 @@ bunsen-pipemenus (0.15-6) unstable; urgency=low
 
   * Fix bug in bl-recent-files-pipemenu.
 
- -- John Crawley <john@rafflesnagoya.com>  Fri, 15 May 2015 15:39:24 +0900
+ -- John Crawley <john@bunsenlabs.org>  Fri, 15 May 2015 15:39:24 +0900
 
 bunsen-pipemenus (0.15-5) unstable; urgency=low
 
   * Fix bugs in tint2, conky and recent-files pipemenus.
 
- -- John Crawley <john@rafflesnagoya.com>  Thu, 14 May 2015 10:37:49 +0900
+ -- John Crawley <john@bunsenlabs.org>  Thu, 14 May 2015 10:37:49 +0900
 
 bunsen-pipemenus (0.15-4) unstable; urgency=low
 
   * Fix bug in bl-x-www-browser pipemenu.
 
- -- John Crawley <john@rafflesnagoya.com>  Mon, 11 May 2015 11:12:42 +0900
+ -- John Crawley <john@bunsenlabs.org>  Mon, 11 May 2015 11:12:42 +0900
 
 bunsen-pipemenus (0.15-3) unstable; urgency=low
 
   * Remove blank lines from saved-sessions file.
 
- -- John Crawley <john@rafflesnagoya.com>  Thu, 07 May 2015 12:51:57 +0900
+ -- John Crawley <john@bunsenlabs.org>  Thu, 07 May 2015 12:51:57 +0900
 
 bunsen-pipemenus (0.15-2) unstable; urgency=low
 
   * Add conky and tint2 config editing.
 
- -- John Crawley <john@rafflesnagoya.com>  Wed, 29 Apr 2015 11:41:41 +0900
+ -- John Crawley <john@bunsenlabs.org>  Wed, 29 Apr 2015 11:41:41 +0900
 
 bunsen-pipemenus (0.15-1) unstable; urgency=low
 
   * Add many new pipemenus.
 
- -- John Crawley <john@rafflesnagoya.com>  Sat, 25 Apr 2015 16:23:18 +0900
+ -- John Crawley <john@bunsenlabs.org>  Sat, 25 Apr 2015 16:23:18 +0900
 
 bunsen-pipemenus (0.14-7) unstable; urgency=low
 
   * Change references to terminator to x-terminal-emulator.
   * Fix some bugs in bl-x-www-browser-pipemenu.
 
- -- John Crawley <john@rafflesnagoya.com>  Sun, 08 Mar 2015 14:18:22 +0900
+ -- John Crawley <john@bunsenlabs.org>  Sun, 08 Mar 2015 14:18:22 +0900
 
 bunsen-pipemenus (0.14-6) unstable; urgency=low
 
@@ -171,7 +171,7 @@ bunsen-pipemenus (0.14-6) unstable; urgency=low
   * Rewrite file paths to new location of bl-include.cfg
   * Add dependency on bunsen-common
 
- -- John Crawley <john@rafflesnagoya.com>  Fri, 06 Mar 2015 22:07:46 +0900
+ -- John Crawley <john@bunsenlabs.org>  Fri, 06 Mar 2015 22:07:46 +0900
 
 bunsen-pipemenus (0.14-5) unstable; urgency=medium
 
@@ -193,19 +193,19 @@ bunsen-pipemenus (0.14-3) unstable; urgency=low
 
   * Change references to chromium-browser to chromium.
 
- -- John Crawley <john@rafflesnagoya.com>  Sun, 22 Feb 2015 12:04:20 +0900
+ -- John Crawley <john@bunsenlabs.org>  Sun, 22 Feb 2015 12:04:20 +0900
 
 bunsen-pipemenus (0.14-2) unstable; urgency=low
 
   * Import refactored code by Alex Daniel
 
- -- John Crawley <john@rafflesnagoya.com>  Wed, 18 Feb 2015 16:34:00 +0900
+ -- John Crawley <john@bunsenlabs.org>  Wed, 18 Feb 2015 16:34:00 +0900
 
 bunsen-pipemenus (0.14-1) unstable; urgency=low
 
   * Adjust dependencies, minor tweaks
 
- -- John Crawley <john@rafflesnagoya.com>  Tue, 17 Feb 2015 23:05:24 +0900
+ -- John Crawley <john@bunsenlabs.org>  Tue, 17 Feb 2015 23:05:24 +0900
 
 cb-pipemenus (0.14) unstable; urgency=low
 

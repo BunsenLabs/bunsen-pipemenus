@@ -1,7 +1,7 @@
 Source: bunsen-pipemenus
 Section: misc
 Priority: extra
-Maintainer: John Crawley <john@rafflesnagoya.com>
+Maintainer: John Crawley <john@bunsenlabs.org>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.5
 Homepage: https://github.com/BunsenLabs/bunsen-pipemenus
@@ -12,5 +12,5 @@ Depends: ${misc:Depends}, bunsen-common (>= 8.2-1), xterm | x-terminal-emulator,
 Recommends: compton
 Description: Various Openbox pipemenus
  Contains various Openbox pipemenus for use with
- Bunsen Linux. 
+ Bunsen Linux.
  Adapted from cb-pipemenus by Philip Newborough
