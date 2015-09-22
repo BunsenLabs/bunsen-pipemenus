@@ -1,3 +1,9 @@
+bunsen-pipemenus (8.6.2-1) bunsen-hydrogen; urgency=low
+
+  * Refactor and simplify code.
+
+ -- John Crawley <john@bunsenlabs.org>  Tue, 22 Sep 2015 15:41:24 +0900
+
 bunsen-pipemenus (8.6.1-1) bunsen-hydrogen; urgency=low
 
   * Rearrange bl-libreoffice-pipemenu and bl-graphics-pipemenu.

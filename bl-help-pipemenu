@@ -12,7 +12,9 @@ fi
 
 menuStart
 menuSeparator 'Online Help'
+
 menuSeparator
+
 menuItem 'Forum Help & Support' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?id=38737"'
 menuItem 'Tips, Tricks & Scripts' 'x-www-browser "http://crunchbang.org/forums/viewforum.php?id=8"'
 menuSubmenu 'DebianWWW' 'Debian'
@@ -59,12 +61,21 @@ menuItem 'Box-Look.org' 'x-www-browser "http://www.box-look.org"'
 menuItem 'gnome-look.org' 'x-www-browser "http://gnome-look.org/"'
 menuItem 'DeviantArt' 'x-www-browser "http://www.deviantart.com/browse/all/"'
 menuSubmenuEnd
+
 menuSeparator
+
 menuSeparator 'man pages'
 menuItem 'Compositor' 'x-terminal-emulator -T "Compositor man page" -e man compton'
 menuItem 'dmenu' 'x-terminal-emulator -T "dmenu man page" -e man dmenu'
 menuItem 'gmrun' 'x-terminal-emulator -T "gmrun man page" -e man gmrun'
 menuItem 'xrandr' 'x-terminal-emulator -T "xrandr man page" -e man xrandr'
 
+menuSeparator
+
+menuSubmenu 'BL help' 'Bunsen Help Files'
+menuItem 'How to Edit Menu' 'zenity --text-info --title="How to Edit the Menu" --filename="/usr/share/bunsen/bunsen-docs/helpfile-menu.txt" --width=900 --height=700'
+menuItem 'About Bunsen Alternatives' 'zenity --text-info --title="About Bunsen Alternatives" --filename="/usr/share/bunsen/bunsen-docs/helpfile-bl-alternatives.txt" --width=900 --height=700'
+menuItem 'Conkyzen Help' 'zenity --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt" --width=900 --height=700'
+menuSubmenuEnd
 
 menuEnd

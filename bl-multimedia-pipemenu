@@ -43,22 +43,24 @@ appExists() {
     return 1
 }
 
-if [[ $1 && ! $1 = --install-* ]]; then
-    packageName=${1#--}
-    x-terminal-emulator -T "Install ${AppName[$packageName]}" -e "$0" "--install-$packageName"
-
-elif [[ $1 = --install-* ]]; then
-    packageName=${1#--install-}
-    appExists "$packageName" || exit 1
+if [[ $1 = --install ]]; then
+    packageName=$2
     appName=${AppName[$packageName]}
-    appNameUpper=${appName^^}
+    appExists "$packageName" || exit 1
 
-    setupFunctionName="setup${appName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupBlender'
+    terminalCheck -T "Install $appName" "$@"
+
+    desc="This script will install $appName."
+    setupFunctionName="setup${appName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-        promptInstall --setup "$setupFunctionName" "$appNameUpper" "$appName" "$packageName"
+        promptInstall --setup "$setupFunctionName" "$appName" "$desc" "$packageName"
     else
-        promptInstall "$appNameUpper" "$appName" "$packageName"
+        promptInstall "$appName" "$desc" "$packageName"
     fi
+
+elif [[ $1 ]]; then
+    echo "$0: no such option $*" >&2
+    exit 1
 
 else # pipemenu
     menuStart
@@ -77,7 +79,7 @@ else # pipemenu
         if ! [[ ${AppStatus[$curApp]} = installed ]]; then
             $menu_started || menuSubmenu "mm-apps-install-submenu" "Install"
             menu_started=true
-            menuItem "Install ${AppName[$curApp]}" "$0 --$curApp"
+            menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
         fi
     done
     $menu_started && menuSubmenuEnd
@@ -94,7 +96,7 @@ else # pipemenu
         if ! [[ ${AppStatus[$curApp]} = installed ]]; then
             $menu_started || menuSubmenu "mm-editors-install-submenu" "Install"
             menu_started=true
-            menuItem "Install ${AppName[$curApp]}" "$0 --$curApp"
+            menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
         fi
     done
     $menu_started && menuSubmenuEnd
@@ -111,7 +113,7 @@ else # pipemenu
         if ! [[ ${AppStatus[$curApp]} = installed ]]; then
             $menu_started || menuSubmenu "mm-utils-install-submenu" "Install"
             menu_started=true
-            menuItem "Install ${AppName[$curApp]}" "$0 --$curApp"
+            menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
         fi
     done
     $menu_started && menuSubmenuEnd

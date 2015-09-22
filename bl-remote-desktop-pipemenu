@@ -11,17 +11,25 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     exit 1
 fi
 
-if [[ $1 = '--viewer' ]]; then
-    x-terminal-emulator -T 'Install VNC Viewer' -e "$0" --install-viewer
+if [[ $1 = --install ]]; then
+    case $2 in
+    viewer)
+        terminalCheck -T "Install VNC Viewer" "$@"
+        promptInstall 'REMOTE DESKTOP CLIENT' 'This script will install TightVNC Viewer.' 'xtightvncviewer'
+        ;;
+    server)
+        terminalCheck -T "Install VNC Server" "$@"
+        promptInstall  'REMOTE DESKTOP SERVER' 'This script will install Vino VNC server.' 'vino'
+        ;;
+    *)
+        echo "$0: no such install option $2"
+        exit 1
+        ;;
+    esac
 
-elif [[ $1 = '--server' ]]; then
-    x-terminal-emulator -T 'Install VNC Server' -e "$0" --install-server
-
-elif [[ $1 = '--install-viewer' ]]; then
-    promptInstall 'REMOTE DESKTOP CLIENT' 'TightVNC Viewer' 'xtightvncviewer'
-
-elif [[ $1 = '--install-server' ]]; then
-    promptInstall  'REMOTE DESKTOP SERVER' 'Vino VNC server' 'vino'
+elif [[ $1 ]]; then
+    echo "$0: no such option $*" >&2
+    exit 1
 
 else
     # Pipemenu
@@ -31,7 +39,7 @@ else
     if type 'xtightvncviewer' &> /dev/null; then
         menuItem 'Viewer' 'vncviewer'
     else
-        menuItem 'Install Viewer' "$0 --viewer"
+        menuItem 'Install Viewer' "$0 --install viewer"
     fi
 
     menuSeparator
@@ -45,7 +53,7 @@ else
         fi
         menuItem 'VNC Server Preferences' 'vino-preferences'
     else
-        menuItem 'Install VNC Server' "$0 --server"
+        menuItem 'Install VNC Server' "$0 --install server"
     fi
 
     menuEnd

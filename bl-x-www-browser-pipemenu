@@ -1,6 +1,7 @@
 #!/bin/bash
 # ---------------------------------------------------------------------
 # A pipemenu to install a browser on Bunsen Labs Linux.
+#
 # Originally written for CrunchBang Linux <http://crunchbang.org/>
 # by Philip Newborough (aka corenominal) <corenominal@corenominal.org>
 #
@@ -12,9 +13,7 @@
 # ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
-USR_CFG='.config/openbox/pipemenus.rc'
-
-source $USR_CFG
+USR_CFG_DIR="$HOME/.config/openbox"
 
 # If the package needs additional configuration before installation
 # create a function called setupBrowserName, it will be called automatically.
@@ -25,14 +24,21 @@ KEY_URLS_OPERA=('http://deb.opera.com/archive.key')
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
-elif ! . "$USR_CFG" 2> /dev/null; then
-    echo $"Error: Failed to locate pipemenus.rc in $USR_CFG" >&2
+elif ! . "$USR_CFG_DIR/pipemenus.rc" 2> /dev/null; then
+    echo $"Error: Failed to locate pipemenus.rc in $USR_CFG_DIR" >&2
     exit 1
 fi
 
-browserExists() {
-    for curBrowser in "${BROWSERS[@]}"; do # if $packageName exists in BROWSERS array
-        [[ $curBrowser = "$1" ]] &&
+declare -A AppName AppStatus # AppName: split on hyphens, first letter uppercase
+for curApp in "${BROWSERS[@]}"; do
+    words=(${curApp//-/ })
+    AppName[$curApp]="${words[*]^}"
+    type "$curApp" >/dev/null 2>&1 && AppStatus[$curApp]=installed
+done
+
+appExists() {
+    for curApp in "${BROWSERS[@]}"; do # if $packageName exists in BROWSERS array
+        [[ $curApp = "$1" ]] &&
             return 0
     done
     say "Unable to install $1. There is no such browser that I know of." 1 >&2
@@ -75,41 +81,47 @@ setupOpera() {
     echo 'deb http://deb.opera.com/opera/ stable non-free' | sudo tee '/etc/apt/sources.list.d/opera.list'
 }
 
-if [[ $1 && ! $1 = --install-* ]]; then
-    packageName=${1#--}
-    read -ra words <<< "${packageName//-/ }"
-    x-terminal-emulator -T "Install ${words[*]^}" -e "$0" "--install-$packageName"
+if [[ $1 = --install ]]; then
+    packageName=$2
+    appName=${AppName[$packageName]}
+    appExists "$packageName" || exit 1
 
-elif [[ $1 = --install-* ]]; then
-    packageName=${1#--install-}
-    browserExists "$packageName" || exit 1
-    browserName=${packageName//-/ }
-    read -ra words <<< "$browserName"
-    browserName=${words[*]^}
-    browserNameUpper=${browserName^^}
+    terminalCheck -T "Install $appName" "$@"
 
-    setupFunctionName="setup${browserName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
+    desc="This script will install the $appName browser."
+    setupFunctionName="setup${appName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-        promptInstall --setup "$setupFunctionName" "${browserNameUpper% BROWSER} BROWSER" "$browserName" "$packageName"
+        promptInstall --setup "$setupFunctionName" "$appName" "$desc" "$packageName"
     else
-        promptInstall "${browserNameUpper% BROWSER} BROWSER" "$browserName" "$packageName"
+        promptInstall "$appName" "$desc" "$packageName"
     fi
+
+elif [[ $1 ]]; then
+    echo "$0: no such option $*" >&2
+    exit 1
 
 else # pipemenu
     INSTALLED=false
     menuStart
-    for curBrowser in "${BROWSERS[@]}"; do
-        read -ra words <<< "${curBrowser//-/ }"
-        curBrowserName=${words[*]^}
-        if type "$curBrowser" &> /dev/null; then
+
+    for curApp in "${BROWSERS[@]}"; do
+        if [[ ${AppStatus[$curApp]} = installed ]]; then
             INSTALLED=true
-            menuItem "$curBrowserName" "$curBrowser"
-            [[ $curBrowser = chrom* ]] &&
-                menuItem "$curBrowserName (Private Mode)" "$curBrowser --incognito" # Incognito mode for chrome and chromium
-        else
-            menuItem "Install $curBrowserName" "$0 --$curBrowser"
+            menuItem "${AppName[$curApp]}" "$curApp"
+            [[ $curApp = *chrom* ]] && {
+                menuItem "${AppName[$curApp]} (Private Mode)" "$curApp --incognito" # Incognito mode for chrome and chromium
+            }
         fi
     done
+    menu_started=false
+    for curApp in "${BROWSERS[@]}"; do
+        if ! [[ ${AppStatus[$curApp]} = installed ]]; then
+            $menu_started || menuSubmenu "browsers-install-submenu" "Install"
+            menu_started=true
+            menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
+        fi
+    done
+    $menu_started && menuSubmenuEnd
 
     if $INSTALLED ; then
         menuSeparator
