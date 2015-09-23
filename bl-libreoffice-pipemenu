@@ -69,7 +69,7 @@ else
             menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
         fi
     done
-    if ! dpkg-query -W --showformat='${db:Status-Abbrev}' libreoffice 2>/dev/null | grep -q '^ii'
+    if ! [[ $(dpkg-query --show --showformat='${db:Status-Abbrev}' libreoffice 2>/dev/null) =~ ^ii ]]
     then
         $submenu_started || menuSubmenu "lo-apps-install-submenu" "Install"
         submenu_started=true

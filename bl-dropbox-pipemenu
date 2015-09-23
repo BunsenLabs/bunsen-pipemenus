@@ -9,13 +9,11 @@
 
 # Directory to install the dropbox cli interface, dropbox.py.
 # If dropbox.py is in user's $PATH they can use that command
-# to control dropbox. Otherwise, the absolute path /path/to/dropbox.py
+# to control dropbox. Otherwise, use the absolute path /path/to/dropbox.py
 USER_DBPY_DIR="$HOME/bin"
 USER_DBPY="$USER_DBPY_DIR/dropbox.py"
 
 USERDBDIR="$HOME/.dropbox-dist/"
-
-BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 PROMPT_DELAY_TEXT='It is a good idea to add a delay before autostarting Dropbox
 so that your system can establish a working network connection.
@@ -23,6 +21,8 @@ so that your system can establish a working network connection.
 Select the number of seconds to delay Dropbox autostarting.
 Click "Cancel" if you do not want to add a delay.'
 PROMPT_DELAY_VARIANTS=(FALSE 10 FALSE 20 FALSE 30 FALSE 40 FALSE 50 TRUE 60)
+
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
@@ -71,7 +71,7 @@ elif [[ $1 = '--install-dropbox' ]]; then
             exit 1
         }
     }
-    [[ $(dpkg-query --show --showformat='${db:Status-Abbrev}' python-gpgme) = 'ii' ]] || {
+    [[ $(dpkg-query --show --showformat='${db:Status-Abbrev}' python-gpgme 2>/dev/null) =~ ^ii ]] || {
         zenity --question --title='Dropbox Installation' --text='We need to install the package python-gpgme (~125k)\nDo you want to proceed?' || exit 0
         gksu 'apt-get install -y python-gpgme' || {
             zenity --error --title='Dropbox Installation' --text="Failed to install python-gpgme."
@@ -102,6 +102,10 @@ DRBX
     fi
     zenity --question --title='Dropbox Installation' --text='Do you wish to start the Dropbox client now?' || exit 0
     "$USER_DBPY" start
+
+elif [[ $1 ]]; then
+    echo "$0: no such option $*" >&2
+    exit 1
 
 else
     # pipemenu stuff
