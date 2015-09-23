@@ -116,7 +116,7 @@ else
         menuItem 'Find out more about Dropbox' 'x-www-browser http://db.tt/5mJg9lb'
     else
         [[ -d $HOME/Dropbox ]] &&
-            menuItem 'Open Dropbox Folder' 'bl-file-manager $HOME/Dropbox'
+            menuItem 'Open Dropbox Folder' "bl-file-manager $HOME/Dropbox"
 
         if ! pidof dropbox > /dev/null; then
             menuItem 'Start Dropbox' "$0 --start-dropbox"
