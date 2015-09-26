@@ -71,13 +71,39 @@ elif [[ $1 = '--install-dropbox' ]]; then
             exit 1
         }
     }
+
     [[ $(dpkg-query --show --showformat='${db:Status-Abbrev}' python-gpgme 2>/dev/null) =~ ^ii ]] || {
-        zenity --question --title='Dropbox Installation' --text='We need to install the package python-gpgme (~125k)\nDo you want to proceed?' || exit 0
-        gksu 'apt-get install -y python-gpgme' || {
+        zenity --question --title='Dropbox Installation' --text='We need to install the package python-gpgme.\nDo you want to proceed?' || exit 0
+    #        gksu 'apt-get install -y python-gpgme' || {
+        tmpDir=$(mktemp -d)
+        tmpFile=$(mktemp --tmpdir="$tmpDir")
+        export tmpFile
+        installer(){
+            (
+            say 'Installing python-gpgme...' 1
+            connectiontest || return 1
+            say 'Updating sources...' 1
+            safeUpdate || say 'Continuing in spite of update problems...' 3
+            say 'Installing...' 1
+            safeInstall -y python-gpgme || return 1
+            say "
+    python-pgpme has been installed successfully.
+
+    Hit any key to continue..."
+            read -srn1
+            return 0
+            )
+        }
+        export -f say connectiontest errorExit safeUpdate safeInstall installer
+        x-terminal-emulator -T 'Installing python-gpgme' -e bash -c 'installer; echo $? > "$tmpFile"'
+        instRet=$(<$tmpFile)
+        [[ -d $tmpDir && $tmpDir = /tmp/* ]] && rm -r "$tmpDir"
+        [[ $instRet -ne 0 ]] && {
             zenity --error --title='Dropbox Installation' --text="Failed to install python-gpgme."
             exit 1
         }
     }
+
     "$USER_DBPY" start -i
     dropbox_is_installed || {
         zenity --error --title='Dropbox Installation' --text="Dropbox installation failed."
