@@ -20,15 +20,13 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     exit 1
 fi
 
-if ! [ -e "$KBTEXT" ];then # write keybinds to textfile, if it doesn't exist
-    # test if bl-kb exists in path
-    if type "$KBSCRIPT" &> /dev/null;then
-        # run script to write kbinds.txt, suppress terminal output
-        "$KBSCRIPT" > /dev/null
-    else
-        echo $"ERROR: $KBSCRIPT not found" >&2
-        exit 1
-    fi
+# test if bl-kb exists in path
+if type "$KBSCRIPT" &> /dev/null;then
+    # run script to write kbinds.txt, suppress terminal output
+    "$KBSCRIPT" > /dev/null
+else
+    echo $"ERROR: bl-kb not found" >&2
+    exit 1
 fi
 
 if [[ $1 = '--rcedit' ]];then # "Backup & Edit rc.xml" is chosen in menu
@@ -42,26 +40,27 @@ fi
 
 # pipemenu
 menuStart
-menuItem "Backup and Edit rc.xml" "$0 --rcedit"
-menuItem "Refesh keybinds list" "$KBSCRIPT" # use if rc.xml has been edited
-menuSeparator
-menuSeparator "Openbox window commands"
-while read -r a b c;do      # write out Openbox commands (not clickable)
-    if [[ "$a" = "o" ]];then
-        curItem=$(printf "%-20s %s" "$b" "$c")
-        menuItem "$curItem" "echo >/dev/null 2>&1"
-    fi
-done < "$KBTEXT"
-
-menuSeparator
-menuSeparator "'Run' commands"
-while read -r a b c;do      # write out 'Run' commands (clickable)
-    if [[ "$a" = "x" ]];then
-        curItem=$(printf "%-20s %s" "$b" "$c")
-        menuItem "$curItem" "$c"
-    fi
-done < "$KBTEXT"
-
+    menuItem "Backup and Edit rc.xml" "bl-kb-pipemenu --rcedit"
+    menuSeparator
+    menuItem "Display Keybinds in new window" "bl-kb --gui"
+    menuSubmenu "Display keybinds" "Display Keybinds in menu"
+        menuSeparator "Openbox window commands"
+        while read -r a b c;do      # write out Openbox commands (not clickable)
+            if [[ "$a" = "o" ]];then
+                curItem=$(printf "%-20s %s" "$b" "$c")
+                menuItem "$curItem" "echo >/dev/null 2>&1"
+            fi
+        done < "$KBTEXT"
+        
+        menuSeparator
+        menuSeparator "'Run' commands"
+        while read -r a b c;do      # write out 'Run' commands (clickable)
+            if [[ "$a" = "x" ]];then
+                curItem=$(printf "%-20s %s" "$b" "$c")
+                menuItem "$curItem" "$c"
+            fi
+        done < "$KBTEXT"
+    menuSubmenuEnd
 menuEnd
 
 exit 0
