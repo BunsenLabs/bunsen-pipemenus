@@ -19,6 +19,7 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
 fi
 if [ ! -e "$CSESSIONFILE" ] 2> /dev/null ; then
     echo $"Error: Failed to locate conky-sessionfile in $CONKYPATH" >&2
+    echo "conky -c $HOME/.conkyrc & sleep 1" > "$CSESSIONFILE"
 fi
 if [ ! -e "$SESSIONS" ] 2> /dev/null ; then
     echo $"Error: Failed to locate saved-sessions in $CONKYPATH" >&2
@@ -32,25 +33,19 @@ getSessions(){  # read any saved sessions from save-sessions file
     done < "$SESSIONS"
 }
 
-conkyRunning(){    # find running conkys
-    if [ "$(pidof conky)" ];then
-        ps aux | grep [c]onky" -c" |  awk  '{print $NF}'
-    fi
-}
-
 loadEditmenu(){
     menuItem "Default conkyrc" "bl-text-editor $CONKYDEFAULT"
-    menuSubmenu "RunningConky" "Running Conkys"
     if [ "$(pidof conky)" ];then
+        menuSubmenu "RunningConky" "Running Conkys"
         while read session ;do  # get running conkys from sessionfile
             CPATH=$(echo "$session" | awk '{print $3}')
             CONKY=$(echo "$CPATH" | awk -F"/" '{print $(NF-1)"/"$NF }')
             menuItem "$CONKY" "bl-text-editor $CPATH"
         done < "$CSESSIONFILE"
+        menuSubmenuEnd
     else 
-        menuItem "No conkys running" 
+        menuItem "No Running Conkys" 
     fi
-    menuSubmenuEnd
 }
 
 getConkys(){
@@ -65,7 +60,6 @@ getConkys(){
 }
 
 checkHelpfile(){
-    echo "Helpfile= $HELPFILE"
     if [ -e "$HELPFILE" ];then
         menuItem "Conkyzen Help" 'zenity --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt" --width=650 --height=700'
     fi
