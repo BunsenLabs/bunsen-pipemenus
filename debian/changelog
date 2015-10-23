@@ -1,3 +1,9 @@
+bunsen-pipemenus (8.6.4-1) bunsen-hydrogen; urgency=medium
+
+  * damo: Add enhancements to keybinds and conky pipemenus.
+
+ -- John Crawley <john@bunsenlabs.org>  Fri, 23 Oct 2015 11:01:59 +0900
+
 bunsen-pipemenus (8.6.3-1) bunsen-hydrogen; urgency=low
 
   * bl-dropbox-pipemenu: add code to install python-gpgme in terminal.
