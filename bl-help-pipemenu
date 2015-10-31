@@ -13,8 +13,8 @@ fi
 menuStart
 menuSeparator 'Online Help'
 menuSeparator
-menuItem 'Forum Help & Support' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?id=38737"'
-menuItem 'Tips, Tricks & Scripts' 'x-www-browser "http://crunchbang.org/forums/viewforum.php?id=8"'
+menuItem 'Forum Basic Help & Support' 'x-www-browser "https://forums.bunsenlabs.org/viewforum.php?id=2"'
+menuItem 'Scripts, Tutorials & Tips' 'x-www-browser "https://forums.bunsenlabs.org/viewforum.php?id=9"'
 menuSubmenu 'DebianWWW' 'Debian'
 menuItem 'Debian Documentation' 'x-www-browser "https://www.debian.org/doc/"'
 menuItem 'Debian Handbook' 'x-www-browser "https://debian-handbook.info/browse/jessie/"'
@@ -44,7 +44,7 @@ menuSubmenuEnd
 menuSubmenu 'Tint2WWW' 'Tint2'
 menuItem 'Tint2 Wiki: FAQ' 'x-www-browser "https://gitlab.com/o9000/tint2/wikis/FAQ"'
 menuItem 'Tint2 Wiki: Configuration' 'x-www-browser "https://gitlab.com/o9000/tint2/wikis/Configure"'
-menuItem 'Tint2 Forum Thread' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?id=3232"'
+menuItem 'Tint2 Forum Thread' 'x-www-browser "https://forums.bunsenlabs.org/viewtopic.php?id=254"'
 menuItem 'Tint2 man page' 'x-terminal-emulator -T "Tint2 man page" -e man tint2'
 menuSubmenuEnd
 
