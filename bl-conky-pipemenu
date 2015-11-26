@@ -28,14 +28,14 @@ fi
 getSessions(){  # read any saved sessions from save-sessions file
     menuItem "Default" "$CSESSION $CSESSIONFILE"
     while read session ;do
-        [ -z "$session" ] && continue   # skip if line is blank
+        [[ -z $session ]] && continue   # skip if line is blank
         menuItem "$session" "$CSESSION $session"
     done < "$SESSIONS"
 }
 
 loadEditmenu(){
     menuItem "Default conkyrc" "bl-text-editor $CONKYDEFAULT"
-    if [ "$(pidof conky)" ];then
+    if [[ $(pidof conky) ]];then
         menuSubmenu "RunningConky" "Running Conkys"
         while read session ;do  # get running conkys from sessionfile
             CPATH=$(echo "$session" | awk '{print $3}')
@@ -60,8 +60,14 @@ getConkys(){
 }
 
 checkHelpfile(){
-    if [ -e "$HELPFILE" ];then
-        menuItem "Conkyzen Help" 'zenity --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt" --width=650 --height=700'
+    DLG="yad --text-info --center --borders=20 \
+    --title='BunsenLabs Conky Manager Help' \
+    --window-icon=/usr/share/pixmaps/Bunsenlabs-flame-256.svg \
+    --filename=$HELPFILE \
+    --width=650 --height=700 \
+    --button=OK:0"
+    if [[ -e $HELPFILE ]];then
+        menuItem "Conky Manager Help" "$DLG"
     fi
 }
 
@@ -69,6 +75,8 @@ menuStart "Conkymenu" "Conky"
 menuItem "Conky Chooser" "$CZEN"
 menuItem "Reload Conkys" "$CSESSION"
 getConkys
+menuSeparator 
+menuItem "Pin moveable Conkys" "bl-conkypin"
 menuSeparator 
 menuItem "New Conky Session" "bl-conkyzen -z"
 menuSubmenu "Sessions" "Saved Sessions"
