@@ -63,7 +63,7 @@ checkHelpfile(){
     DLG="yad --text-info --center --borders=20 \
     --title='BunsenLabs Conky Manager Help' \
     --window-icon=/usr/share/pixmaps/Bunsenlabs-flame-256.svg \
-    --filename=$HELPFILE \
+    --filename=$HELPFILE --fontname=Monospace \
     --width=650 --height=700 \
     --button=OK:0"
     if [[ -e $HELPFILE ]];then
