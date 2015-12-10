@@ -62,7 +62,7 @@ getConkys(){
 checkHelpfile(){
     DLG="yad --text-info --center --borders=20 \
     --title='BunsenLabs Conky Manager Help' \
-    --window-icon=/usr/share/pixmaps/Bunsenlabs-flame-256.svg \
+    --window-icon=distributor-logo-bunsenlabs \
     --filename=$HELPFILE --fontname=Monospace \
     --width=650 --height=700 \
     --button=OK:0"
