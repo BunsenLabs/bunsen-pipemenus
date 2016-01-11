@@ -1,3 +1,9 @@
+bunsen-pipemenus (8.7.1-1) bunsen-hydrogen; urgency=low
+
+  * bl-dropbox-pipemenu: Tweak yad arguments.
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 11 Jan 2016 18:17:29 +0900
+
 bunsen-pipemenus (8.7-1) bunsen-hydrogen; urgency=medium
 
   * bl-dropbox-pipemenu: Replace zenity with yad.

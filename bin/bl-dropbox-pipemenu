@@ -20,7 +20,7 @@ so that your system can establish a working network connection.
 
 Select the number of seconds to delay Dropbox autostarting.
 Click "Cancel" to cancel the autostart.'
-PROMPT_DELAY_VARIANTS=(0 10 20 30 40 50 60)
+PROMPT_DELAY_VARIANTS=(FAlSE 0 FALSE 10 FALSE 20 FALSE 30 FALSE 40 FALSE 50 TRUE 60)
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
@@ -38,7 +38,7 @@ yad_info(){
     yad --image=dropbox --text="$1" --button=OK "${yad_common_args[@]}"
     }
 yad_error(){
-    yad --image=dialog-error --text="$1" --button=OK "${yad_common_args[@]}"
+    yad --image=dialog-error --text="$1" --button=OK --on-top "${yad_common_args[@]}"
     }
 
 dropbox_is_installed() {
@@ -127,7 +127,7 @@ Run '$USER_DBPY help' to view options.
 
     yad_question 'Dropbox can be started automatically when you start your session. Would you like to autostart Dropbox when you login?'
     if [[ $? = 0 ]]; then # add to autostart
-        ans=$(yad --title='Dropbox Installation' --list --window-icon='distributor-logo-bunsenlabs' --center --on-top --borders=20 --text="$PROMPT_DELAY_TEXT" --separator='' --column='Seconds:':NUM "${PROMPT_DELAY_VARIANTS[@]}")
+        ans=$(yad --image=dropbox --list --radiolist "${yad_common_args[@]}" --text="$PROMPT_DELAY_TEXT" --print-column=2 --separator='' --column='Pick':RD --column='Seconds:':NUM "${PROMPT_DELAY_VARIANTS[@]}")
         if [[ $? = 0 ]]; then
             cat <<DRBX >> "$HOME/.config/openbox/autostart"
 
