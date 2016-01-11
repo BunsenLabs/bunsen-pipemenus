@@ -1,3 +1,10 @@
+bunsen-pipemenus (8.7-1) bunsen-hydrogen; urgency=medium
+
+  * bl-dropbox-pipemenu: Replace zenity with yad.
+  * damo:bl-conky-pipemenu: Replace zenity with yad.
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 11 Jan 2016 17:25:53 +0900
+
 bunsen-pipemenus (8.6.4-1) bunsen-hydrogen; urgency=medium
 
   * damo: Add enhancements to keybinds and conky pipemenus.

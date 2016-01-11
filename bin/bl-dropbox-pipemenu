@@ -4,7 +4,7 @@
 # Originally written for CrunchBang Linux <http://crunchbanglinux.org/>
 # by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
 # Rewritten by Aleks-Daniel Jakimenko in 2013 and
-# John Crawley <john@bunsenlabs.org> in 2015 to use dropbox.py.
+# John Crawley <john@bunsenlabs.org> in 2015-2016 to use dropbox.py.
 # --------------------------------------------------------------------
 
 # Directory to install the dropbox cli interface, dropbox.py.
@@ -19,8 +19,8 @@ PROMPT_DELAY_TEXT='It is a good idea to add a delay before autostarting Dropbox
 so that your system can establish a working network connection.
 
 Select the number of seconds to delay Dropbox autostarting.
-Click "Cancel" if you do not want to add a delay.'
-PROMPT_DELAY_VARIANTS=(FALSE 10 FALSE 20 FALSE 30 FALSE 40 FALSE 50 TRUE 60)
+Click "Cancel" to cancel the autostart.'
+PROMPT_DELAY_VARIANTS=(0 10 20 30 40 50 60)
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
@@ -28,6 +28,18 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
+
+yad_common_args=('--title=Dropbox Installation' '--window-icon=distributor-logo-bunsenlabs' '--center' '--borders=20')
+
+yad_question(){
+    yad --image=dropbox --text="$1" --button=Yes:0 --button=No:1 "${yad_common_args[@]}"
+    }
+yad_info(){
+    yad --image=dropbox --text="$1" --button=OK "${yad_common_args[@]}"
+    }
+yad_error(){
+    yad --image=dialog-error --text="$1" --button=OK "${yad_common_args[@]}"
+    }
 
 dropbox_is_installed() {
     [[ -x "$USERDBDIR/dropboxd" ]] || return 1
@@ -61,7 +73,7 @@ elif [[ $1 = '--stop-dropbox' ]]; then
     "$USER_DBPY" stop
 
 elif [[ $1 = '--install-dropbox' ]]; then
-    zenity --question --title='Dropbox Installation' --text='This script will install Dropbox.\nDo you want to proceed?' || exit 0
+    yad_question 'This script will install Dropbox.\nDo you want to proceed?' || exit 0
 
     # use dropbox.py to install dropbox
     [[ -x "$USER_DBPY" ]] || {
@@ -73,8 +85,7 @@ elif [[ $1 = '--install-dropbox' ]]; then
     }
 
     [[ $(dpkg-query --show --showformat='${db:Status-Abbrev}' python-gpgme 2>/dev/null) =~ ^ii ]] || {
-        zenity --question --title='Dropbox Installation' --text='We need to install the package python-gpgme.\nDo you want to proceed?' || exit 0
-    #        gksu 'apt-get install -y python-gpgme' || {
+        yad_question 'We need to install the package python-gpgme.\nDo you want to proceed?' || exit 0
         tmpDir=$(mktemp -d)
         tmpFile=$(mktemp --tmpdir="$tmpDir")
         export tmpFile
@@ -99,24 +110,24 @@ elif [[ $1 = '--install-dropbox' ]]; then
         instRet=$(<$tmpFile)
         [[ -d $tmpDir && $tmpDir = /tmp/* ]] && rm -r "$tmpDir"
         [[ $instRet -ne 0 ]] && {
-            zenity --error --title='Dropbox Installation' --text="Failed to install python-gpgme."
+            yad_error 'Failed to install python-gpgme.'
             exit 1
         }
     }
 
     "$USER_DBPY" start -i
     dropbox_is_installed || {
-        zenity --error --title='Dropbox Installation' --text="Dropbox installation failed."
+        yad_error 'Dropbox installation failed.'
         exit 1
     }
     notify-send -i dialog-information 'Dropbox Installation' 'Dropbox has been installed.'
-    zenity --info --title='Dropbox Installation' --text="Dropbox CLI frontend dropbox.py has been installed in $USER_DBPY_DIR.
+    yad_info "Dropbox CLI frontend dropbox.py has been installed in $USER_DBPY_DIR.
 Run '$USER_DBPY help' to view options.
 (If $USER_DBPY_DIR is in your PATH, then the path $USER_DBPY_DIR can be omitted.)"
 
-    zenity --question --title='Dropbox Installation' --text='Dropbox can be started automatically when you start your session. Would you like to autostart Dropbox when you login?'
+    yad_question 'Dropbox can be started automatically when you start your session. Would you like to autostart Dropbox when you login?'
     if [[ $? = 0 ]]; then # add to autostart
-        ans=$(zenity  --title='Dropbox Installation' --list --text="$PROMPT_DELAY_TEXT" --radiolist  --column 'Pick' --column 'Seconds:' "${PROMPT_DELAY_VARIANTS[@]}")
+        ans=$(yad --title='Dropbox Installation' --list --window-icon='distributor-logo-bunsenlabs' --center --on-top --borders=20 --text="$PROMPT_DELAY_TEXT" --separator='' --column='Seconds:':NUM "${PROMPT_DELAY_VARIANTS[@]}")
         if [[ $? = 0 ]]; then
             cat <<DRBX >> "$HOME/.config/openbox/autostart"
 
@@ -126,7 +137,7 @@ Run '$USER_DBPY help' to view options.
 DRBX
         fi
     fi
-    zenity --question --title='Dropbox Installation' --text='Do you wish to start the Dropbox client now?' || exit 0
+    yad_question 'Do you wish to start the Dropbox client now?' || exit 0
     "$USER_DBPY" start
 
 elif [[ $1 ]]; then
