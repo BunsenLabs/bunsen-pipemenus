@@ -59,7 +59,7 @@ elif [[ $1 = '--restart' ]]; then
         echo "$0 --restart: compton is not running" >&2
     fi
 elif [[ $1 = '--watch' ]]; then
-    while inotifywait -e modify "$HOME/.config/compton.conf"; do
+    while inotifywait -e close_write "$HOME/.config/compton.conf"; do
         "$0" --restart # TODO move this to function?
     done
 else

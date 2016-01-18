@@ -29,16 +29,17 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     exit 1
 fi
 
-yad_common_args=('--title=Dropbox Installation' '--window-icon=distributor-logo-bunsenlabs' '--center' '--borders=20')
-
+yad_common_args=('--window-icon=distributor-logo-bunsenlabs' '--center' '--borders=20')
+yad_common_args+=('--title=Dropbox Installation')
+yad_popup_args=('--undecorated' '--fixed')
 yad_question(){
-    yad --image=dropbox --text="$1" --button=Yes:0 --button=No:1 "${yad_common_args[@]}"
+    yad --image=dropbox --text="$1" --button=Yes:0 --button=No:1 "${yad_common_args[@]}" "${yad_popup_args[@]}"
     }
 yad_info(){
-    yad --image=dropbox --text="$1" --button=OK "${yad_common_args[@]}"
+    yad --image=dropbox --text="$1" --button=OK "${yad_common_args[@]}" "${yad_popup_args[@]}"
     }
 yad_error(){
-    yad --image=dialog-error --text="$1" --button=OK --on-top "${yad_common_args[@]}"
+    yad --image=dialog-error --text="$1" --button=OK --on-top "${yad_common_args[@]}" "${yad_popup_args[@]}"
     }
 
 dropbox_is_installed() {

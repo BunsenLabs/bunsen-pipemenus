@@ -1,3 +1,11 @@
+bunsen-pipemenus (8.7.2-1) bunsen-hydrogen; urgency=medium
+
+  * bl-compositor: Correct inotifywait bug.
+  * bl-dropbox-pipemenu: Improve yad formatting.
+  * Add inotify-tools as Recommend.
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 18 Jan 2016 17:29:32 +0900
+
 bunsen-pipemenus (8.7.1-1) bunsen-hydrogen; urgency=low
 
   * bl-dropbox-pipemenu: Tweak yad arguments.
