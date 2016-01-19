@@ -30,16 +30,16 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
 fi
 
 yad_common_args=('--window-icon=distributor-logo-bunsenlabs' '--center' '--borders=20')
-yad_common_args+=('--title=Dropbox Installation')
-yad_popup_args=('--undecorated' '--fixed')
+yad_common_args+=('--title=Dropbox Installation' '--image=dropbox')
+yad_popup_args=('--undecorated' '--fixed' '--on-top')
 yad_question(){
-    yad --image=dropbox --text="$1" --button=Yes:0 --button=No:1 "${yad_common_args[@]}" "${yad_popup_args[@]}"
+    yad --text="$1" --button=Yes:0 --button=No:1 "${yad_common_args[@]}" "${yad_popup_args[@]}"
     }
 yad_info(){
-    yad --image=dropbox --text="$1" --button=OK "${yad_common_args[@]}" "${yad_popup_args[@]}"
+    yad --text="$1" --button=OK "${yad_common_args[@]}" "${yad_popup_args[@]}"
     }
 yad_error(){
-    yad --image=dialog-error --text="$1" --button=OK --on-top "${yad_common_args[@]}" "${yad_popup_args[@]}"
+    yad --text="$1" --button=OK "${yad_common_args[@]}" "${yad_popup_args[@]}" --image=dialog-error
     }
 
 dropbox_is_installed() {
@@ -77,15 +77,13 @@ elif [[ $1 = '--install-dropbox' ]]; then
     yad_question 'This script will install Dropbox.\nDo you want to proceed?' || exit 0
 
     # use dropbox.py to install dropbox
-    [[ -x "$USER_DBPY" ]] || {
-        get_dropbox.py || {
-            echo "$0: failed to fetch dropbox.py" >&2
-            notify-send -i dialog-error 'Dropbox Installation' 'Failed to fetch dropbox.py'
-            exit 1
-        }
+    get_dropbox.py || {
+        echo "$0: failed to fetch dropbox.py" >&2
+        yad_error 'Failed to fetch dropbox.py'
+        exit 1
     }
 
-    [[ $(dpkg-query --show --showformat='${db:Status-Abbrev}' python-gpgme 2>/dev/null) =~ ^ii ]] || {
+    [[ $(dpkg-query --show --showformat='${db:Status-Abbrev;2}' python-gpgme 2>/dev/null) = ii ]] || {
         yad_question 'We need to install the package python-gpgme.\nDo you want to proceed?' || exit 0
         tmpDir=$(mktemp -d)
         tmpFile=$(mktemp --tmpdir="$tmpDir")
@@ -111,6 +109,7 @@ elif [[ $1 = '--install-dropbox' ]]; then
         instRet=$(<$tmpFile)
         [[ -d $tmpDir && $tmpDir = /tmp/* ]] && rm -r "$tmpDir"
         [[ $instRet -ne 0 ]] && {
+            echo "$0: failed to install python-gpgme." >&2
             yad_error 'Failed to install python-gpgme.'
             exit 1
         }

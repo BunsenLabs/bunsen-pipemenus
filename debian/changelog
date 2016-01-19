@@ -1,3 +1,10 @@
+bunsen-pipemenus (8.7.3-1) bunsen-hydrogen; urgency=low
+
+  * bl-dropbox-pipemenu: Small code improvements.
+  * Move dependency on inotify-tools to Recommends.
+
+ -- John Crawley <john@bunsenlabs.org>  Tue, 19 Jan 2016 13:20:50 +0900
+
 bunsen-pipemenus (8.7.2-1) bunsen-hydrogen; urgency=medium
 
   * bl-compositor: Correct inotifywait bug.
