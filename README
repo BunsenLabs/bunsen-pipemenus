@@ -1,2 +1,23 @@
 # bunsen-pipemenus #
-This is a collection of pipemenu scripts for Openbox, based on cb-pipemenus from CrunchBang Linux.
+This is a collection of pipemenu scripts for Openbox,
+ based on cb-pipemenus from CrunchBang Linux.
+
+Current scripts are:
+
+bl-compositor
+bl-conky-pipemenu
+bl-dropbox-pipemenu
+bl-graphics-pipemenu
+bl-help-pipemenu
+bl-kb-pipemenu
+bl-libreoffice-pipemenu
+bl-multimedia-pipemenu
+bl-places-pipemenu
+bl-printing-pipemenu
+bl-recent-files-pipemenu
+bl-remote-desktop-pipemenu
+bl-sshconfig-pipemenu
+bl-tint2-pipemenu
+bl-x-www-browser-pipemenu
+
+They are all used by the BunsenLabs Openbox menu defined in bunsen-configs.

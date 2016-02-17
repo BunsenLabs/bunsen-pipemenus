@@ -1,3 +1,10 @@
+bunsen-pipemenus (8.7.4-1) bunsen-hydrogen; urgency=low
+
+  * README: Add list of scripts.
+  * debian/control: Add dependency on scrot.
+
+ -- John Crawley <john@bunsenlabs.org>  Wed, 17 Feb 2016 14:01:47 +0900
+
 bunsen-pipemenus (8.7.3-1) bunsen-hydrogen; urgency=low
 
   * bl-dropbox-pipemenu: Small code improvements.
