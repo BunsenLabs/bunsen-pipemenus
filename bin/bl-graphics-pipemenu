@@ -13,7 +13,6 @@
 # ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
-#BL_COMMON_LIBDIR='/home/damo'
 USR_CFG_DIR="$HOME/.config/openbox"
 
 # Get $USER images directory
@@ -113,8 +112,6 @@ elif [[ $1 ]]; then
 
 else # pipemenu
     menuStart
-    menuItem "Blender 2.76b" "~/blender-2.76b/blender"
-    menuSeparator
     for curApp in "${GRAPHICS_APPS[@]}"; do
         if [[ ${AppStatus[$curApp]} = installed ]]; then
             menuItem "${AppName[$curApp]}" "$curApp"
