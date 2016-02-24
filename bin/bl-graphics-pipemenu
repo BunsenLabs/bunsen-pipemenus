@@ -13,6 +13,7 @@
 # ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+#BL_COMMON_LIBDIR='/home/damo'
 USR_CFG_DIR="$HOME/.config/openbox"
 
 # Get $USER images directory
@@ -90,9 +91,20 @@ if [[ $1 = --install ]]; then
     desc="This script will install $appName."
     setupFunctionName="setup${appName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupBlender'
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-        promptInstall --setup "$setupFunctionName" "$appName" "$desc" "$packageName"
+            promptInstall --setup "$setupFunctionName" "$appName" "$desc" "$packageName"
     else
-        promptInstall "$appName" "$desc" "$packageName"
+        if [[ $packageName = gimp ]];then
+            if ! $(prompt 'This will install GIMP. Do you also want to install Gimp Extras?' N);then
+                promptInstall "$appName" "$desc" "$packageName"
+            else
+                appName="gimp gimp-plugin-registry gimp-gmic"
+                packageNameSet=(gimp gimp-plugin-registry gimp-gmic)
+                desc="This script will install gimp, gimp-plugin-registry and gimp-gmic"
+                promptInstall "$appName" "$desc" "${packageNameSet[@]}"
+            fi
+        else
+            promptInstall "$appName" "$desc" "$packageName"
+        fi
     fi
 
 elif [[ $1 ]]; then
@@ -101,7 +113,8 @@ elif [[ $1 ]]; then
 
 else # pipemenu
     menuStart
-
+    menuItem "Blender 2.76b" "~/blender-2.76b/blender"
+    menuSeparator
     for curApp in "${GRAPHICS_APPS[@]}"; do
         if [[ ${AppStatus[$curApp]} = installed ]]; then
             menuItem "${AppName[$curApp]}" "$curApp"
