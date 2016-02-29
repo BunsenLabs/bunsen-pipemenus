@@ -1,7 +1,20 @@
 #!/bin/bash
+
+#    bl-tint2-pipemenu - an Openbox pipemenu for tint2 manipulation
+#    Copyright (C) 2015-2016 damo    <damo@bunsenlabs.org>
 #
-# bl-tint2-pipemenu
-# Written for BunsenLabs Linux by damo <damo@bunsenlabs.org> April 2015
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
@@ -10,16 +23,16 @@ TINT2RC="$TINT2PATH/tint2rc"
 TZEN="bl-tint2zen"
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+    echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 
 loadTEditmenu(){
-    menuSeparator 
+    menuSeparator
     menuItem "Default tint2rc" "bl-text-editor $TINT2RC"
     if [ "$(pidof tint2)" ];then
         menuSubmenu "RunningTint2" "Running Tint2s"
-        pgrep -a tint2 | while read pid cmd; do 
+        pgrep -a tint2 | while read pid cmd; do
             if [[ ${cmd%% *} = tint2 ]]; then
                 TINT=${cmd##* }
                 TINT2=${TINT#$HOME/.config/}
@@ -58,5 +71,3 @@ menuItem "Tint2 Chooser" "$TZEN"
 loadRestartmenu
 getTint2s
 menuEnd
-
-

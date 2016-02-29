@@ -1,11 +1,21 @@
 #!/bin/bash
-# --------------------------------------------------------------------
-# An Openbox pipemenu for use with Dropbox and Bunsen Labs Linux.
-# Originally written for CrunchBang Linux <http://crunchbanglinux.org/>
-# by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
-# Rewritten by Aleks-Daniel Jakimenko in 2013 and
-# John Crawley <john@bunsenlabs.org> in 2015-2016 to use dropbox.py.
-# --------------------------------------------------------------------
+#    bl-dropbox-pipemenu - an Openbox pipemenu for use with Dropbox
+#    Copyright (C) 2012 Philip Newborough <corenominal@corenominal.org>
+#    Copyright (C) 2013 Aleks-Daniel Jakimenko
+#    Copyright (C) 2015-2016  John Crawley <john@bunsenlabs.org>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Directory to install the dropbox cli interface, dropbox.py.
 # If dropbox.py is in user's $PATH they can use that command
@@ -24,23 +34,17 @@ PROMPT_DELAY_VARIANTS=(FAlSE 0 FALSE 10 FALSE 20 FALSE 30 FALSE 40 FALSE 50 TRUE
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
-if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
-    exit 1
-fi
+for i in bl-include.cfg yad-includes
+do
+    if ! . "$BL_COMMON_LIBDIR/$i" 2> /dev/null; then
+        echo "Error: Failed to source $i in $BL_COMMON_LIBDIR" >&2
+        exit 1
+    fi
+done
 
-yad_common_args=('--window-icon=distributor-logo-bunsenlabs' '--center' '--borders=20')
+declareDependencies wget
+
 yad_common_args+=('--title=Dropbox Installation' '--image=dropbox')
-yad_popup_args=('--undecorated' '--fixed' '--on-top')
-yad_question(){
-    yad --text="$1" --button=Yes:0 --button=No:1 "${yad_common_args[@]}" "${yad_popup_args[@]}"
-    }
-yad_info(){
-    yad --text="$1" --button=OK "${yad_common_args[@]}" "${yad_popup_args[@]}"
-    }
-yad_error(){
-    yad --text="$1" --button=OK "${yad_common_args[@]}" "${yad_popup_args[@]}" --image=dialog-error
-    }
 
 dropbox_is_installed() {
     [[ -x "$USERDBDIR/dropboxd" ]] || return 1
@@ -149,8 +153,6 @@ else
     menuStart
     if ! dropbox_is_installed; then
         menuItem 'Install Dropbox' "$0 --install-dropbox"
-        menuSeparator
-        menuItem 'Find out more about Dropbox' 'x-www-browser http://db.tt/5mJg9lb'
     else
         [[ -d $HOME/Dropbox ]] &&
             menuItem 'Open Dropbox Folder' "bl-file-manager $HOME/Dropbox"

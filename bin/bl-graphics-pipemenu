@@ -1,16 +1,24 @@
 #!/bin/bash
-# ---------------------------------------------------------------------
-# An Openbox pipemenu for Graphics applications.
+#    bl-graphics-pipemenu - an Openbox pipemenu for Graphics applications
+#    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
+#    Copyright (C) 2015-2016 damo    <damo@bunsenlabs.org>
+#    Copyright (C) 2015-2016 John Crawley    <john@bunsenlabs.org>
 #
-# Originally written for CrunchBang Linux <http://crunchbang.org/>
-# by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# Modified by damo <damo@bunsenlabs.org> for BunsenLabs Linux   April 2015
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #   To change the entries shown in the Graphics pipemenu:
 #   edit ".config/openbox/pipemenus.rc"
-#
-# ---------------------------------------------------------------------
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 USR_CFG_DIR="$HOME/.config/openbox"
@@ -25,14 +33,11 @@ fi
 SCROTSDIR="$IMGDIR/screenshots"
 mkdir -p "$SCROTSDIR"
 
-# If the package needs additional configuration before installation
-# create a function called setupappName, it will be called automatically.
-
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+    echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 elif ! . "$USR_CFG_DIR/pipemenus.rc" 2> /dev/null; then
-    echo $"Error: Failed to locate pipemenus.rc in $USR_CFG_DIR" >&2
+    echo $"Error: Failed to source pipemenus.rc in $USR_CFG_DIR" >&2
     exit 1
 fi
 
@@ -76,6 +81,9 @@ writeScrot() {                  # Write scrot submenu items
     menuSubmenuEnd
 }
 
+# If the package needs additional configuration before installation
+# create a function called setupappName, it will be called automatically.
+
 if [[ $1 = --install ]]; then
     packageName=$2
     appName=${AppName[$packageName]}
@@ -93,10 +101,10 @@ if [[ $1 = --install ]]; then
             promptInstall --setup "$setupFunctionName" "$appName" "$desc" "$packageName"
     else
         if [[ $packageName = gimp ]];then
-            if ! $(prompt 'This will install GIMP. Do you also want to install Gimp Extras?' N);then
+            if ! prompt 'This will install GIMP. Do you also want to install Gimp Extras?' N;then
                 promptInstall "$appName" "$desc" "$packageName"
             else
-                appName="gimp gimp-plugin-registry gimp-gmic"
+                appName="Gimp and Gimp Extras"
                 packageNameSet=(gimp gimp-plugin-registry gimp-gmic)
                 desc="This script will install gimp, gimp-plugin-registry and gimp-gmic"
                 promptInstall "$appName" "$desc" "${packageNameSet[@]}"

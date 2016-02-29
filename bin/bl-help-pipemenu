@@ -1,12 +1,24 @@
 #!/bin/bash
+#    bl-help-pipemenu - an Openbox pipemenu for displaying help files
+#    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
 #
-# bl-help-pipemenu
-# Prepared for BunsenLabs Linux by damo <damo@bunsenlabs.org> March 2015
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+    echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 
@@ -68,5 +80,11 @@ menuItem 'dmenu' 'x-terminal-emulator -T "dmenu man page" -e man dmenu'
 menuItem 'gmrun' 'x-terminal-emulator -T "gmrun man page" -e man gmrun'
 menuItem 'xrandr' 'x-terminal-emulator -T "xrandr man page" -e man xrandr'
 
+menuSeparator
+menuSubmenu 'BL help' 'Bunsen Help Files'
+menuItem 'How to Edit Menu' 'yad--button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="How to Edit the Menu" --filename="/usr/share/bunsen/bunsen-docs/helpfile-menu.txt" --width=900 --height=700 --fontname=Monospace'
+menuItem 'About Bunsen Alternatives' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="About Bunsen Alternatives" --filename="/usr/share/bunsen/bunsen-docs/helpfile-bl-alternatives.txt" --width=900 --height=700 --fontname=Monospace'
+menuItem 'Conkyzen Help' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt" --width=900 --height=700 --fontname=Monospace'
+menuSubmenuEnd
 
 menuEnd

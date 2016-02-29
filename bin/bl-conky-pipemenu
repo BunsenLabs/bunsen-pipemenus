@@ -1,7 +1,19 @@
 #!/bin/bash
+#    bl-conky-pipemenu - an Openbox pipemenu for manipulating conky
+#    Copyright (C) 2015 damo <damo@bunsenlabs.org>
 #
-# bl-conky-pipemenu
-# Written for BunsenLabs Linux by damo <damo@bunsenlabs.org> April 2015
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
@@ -14,7 +26,7 @@ CSESSION="bl-conky-session"
 HELPFILE="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt"
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+    echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 if [ ! -e "$CSESSIONFILE" ] 2> /dev/null ; then
@@ -24,6 +36,8 @@ fi
 if [ ! -e "$SESSIONS" ] 2> /dev/null ; then
     echo $"Error: Failed to locate saved-sessions in $CONKYPATH" >&2
 fi
+
+declareDependencies yad bl-conkyzen bl-conky-session
 
 getSessions(){  # read any saved sessions from save-sessions file
     menuItem "Default" "$CSESSION $CSESSIONFILE"
@@ -43,8 +57,8 @@ loadEditmenu(){
             menuItem "$CONKY" "bl-text-editor $CPATH"
         done < "$CSESSIONFILE"
         menuSubmenuEnd
-    else 
-        menuItem "No Running Conkys" 
+    else
+        menuItem "No Running Conkys"
     fi
 }
 
@@ -75,14 +89,14 @@ menuStart "Conkymenu" "Conky"
 menuItem "Conky Chooser" "$CZEN"
 menuItem "Reload Conkys" "$CSESSION"
 getConkys
-menuSeparator 
+menuSeparator
 menuItem "Pin moveable Conkys" "bl-conkypin"
-menuSeparator 
+menuSeparator
 menuItem "New Conky Session" "bl-conkyzen -z"
 menuSubmenu "Sessions" "Saved Sessions"
 getSessions
 menuSubmenuEnd
-menuSeparator 
+menuSeparator
 checkHelpfile
 menuEnd
 

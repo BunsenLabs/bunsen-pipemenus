@@ -1,18 +1,32 @@
 #!/bin/bash
-# bl-compositor
-# Openbox Pipe Menu for use with compton compositor
-# Originally written for CrunchBang Linux <http://crunchbang.org/>
-# by Philip Newborough <corenominal@corenominal.org>
-# Adapted for Bunsen Labs Linux.
+#    bl-compositor an Openbox Pipe Menu for use with compton compositor
+#    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
+#    Copyright (C) 2013 Aleks-Daniel Jakimenko
+#    Copyright (C) 2015 John Crawley    <john@bunsenlabs.org>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 RESTART_ATTEMPTS=20 # times to try killall before reverting to -s KILL
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+    echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
+
+declareDependencies compton
 
 # ------------- Set compton command options -----------------------------------
 EXECXCOMP='compton'
@@ -23,10 +37,10 @@ fi
 forcekill_compton() {
     killall -q compton
     for (( i=0; i < RESTART_ATTEMPTS; i++ )); do
-        pidof compton > /dev/null || # no process found! Safe to start again
+        pidof compton > /dev/null ||
             break
 
-        (( i == RESTART_ATTEMPTS - 1 )) && # still didn't die? Probably hangs. Force it to die!
+        (( i == RESTART_ATTEMPTS - 1 )) &&
             killall -q -S KILL compton
 
         sleep 0.25
@@ -60,7 +74,7 @@ elif [[ $1 = '--restart' ]]; then
     fi
 elif [[ $1 = '--watch' ]]; then
     while inotifywait -e close_write "$HOME/.config/compton.conf"; do
-        "$0" --restart # TODO move this to function?
+        "$0" --restart
     done
 else
     # Output Openbox menu

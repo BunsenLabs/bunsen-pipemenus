@@ -1,14 +1,26 @@
 #!/bin/bash
-# ---------------------------------------------------------------------
-# An Openbox pipemenu for configuring printing under Bunsen labs Linux.
-# Originally written for CrunchBang Linux <http://crunchbanglinux.org/>
-# by Philip Newborough (aka corenominal) <mail@philipnewborough.co.uk>
-# ---------------------------------------------------------------------
+#    bl-printing-pipemenu an Openbox pipemenu for configuring printing
+#    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
+#    Copyright (C) 2013 Aleks-Daniel Jakimenko
+#    Copyright (C) 2015 John Crawley    <john@bunsenlabs.org>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+    echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 
