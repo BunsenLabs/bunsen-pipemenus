@@ -28,7 +28,7 @@ if [[ $1 = '--install' ]]; then
 
     terminalCheck -T 'Install Printer Support' --install
 
-    promptInstall 'PRINTING SUPPORT' 'This script will install printing support.' 'bl-meta-printer-support'
+    promptInstall 'PRINTING SUPPORT' 'This script will install printing support.' 'bunsen-meta-printer-support'
 
 elif [[ $1 ]]; then
     echo "$0: no such option $*" >&2

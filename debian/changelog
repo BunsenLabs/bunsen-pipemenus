@@ -1,12 +1,18 @@
-bunsen-pipemenus (8.8-1) bunsen-hydrogen; urgency=low
+bunsen-pipemenus (8.8.1-1) bunsen-hydrogen; urgency=high
 
-  * Add GPL3 headers to all scripts.
+  * bl-printing-pipemenu: Fix incorrect install command.
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 29 Feb 2016 18:10:57 +0900
+
+bunsen-pipemenus (8.8-1) bunsen-hydrogen; urgency=high
+
+  * bl-sshconfig-pipemenu: Correct x-terminal-editor execute command.
+  * bl-remote-desktop-pipemenu: Install dconf-editor, edit "preferences" menu.
   * bl-dropbox-pipemenu: Use yad functions from bunsen-common.
   * bl-graphics-pipemenu: Add option to install Gimp extras.
   * bl-help-pipemenu: Restore missing "Bunsen Help Files" submenu.
-  * bl-remote-desktop-pipemenu: Install dconf-editor, edit "preferences" menu.
-  * bl-sshconfig-pipemenu: Correct x-terminal-editor execute command.
   * debian/control: Remove dependency on scrot.
+  * Add GPL3 headers to all scripts.
 
  -- John Crawley <john@bunsenlabs.org>  Mon, 29 Feb 2016 16:40:47 +0900
 
