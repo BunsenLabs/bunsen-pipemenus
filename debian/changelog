@@ -1,3 +1,9 @@
+bunsen-pipemenus (8.8.2-1) bunsen-hydrogen; urgency=high
+
+  * bl-help-pipemenu: Fix bug in "How to Edit Menu" item.
+
+ -- John Crawley <john@bunsenlabs.org>  Sat, 05 Mar 2016 11:51:13 +0900
+
 bunsen-pipemenus (8.8.1-1) bunsen-hydrogen; urgency=high
 
   * bl-printing-pipemenu: Fix incorrect install command.
