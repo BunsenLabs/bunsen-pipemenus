@@ -37,7 +37,7 @@ if [[ $1 = --install ]]; then
         ;;
     server)
         terminalCheck -T "Install VNC Server" "$@"
-        promptInstall  'REMOTE DESKTOP SERVER' 'This script will install Vino VNC server and dconf-editor.' 'vino dconf-editor'
+        promptInstall  'REMOTE DESKTOP SERVER' 'This script will install Vino VNC server and dconf-editor.' 'vino' 'dconf-editor'
         ;;
     *)
         echo "$0: no such install option $2"
