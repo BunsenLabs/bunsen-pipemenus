@@ -1,3 +1,9 @@
+bunsen-pipemenus (8.8.3-1) bunsen-hydrogen; urgency=high
+
+  * xaos52: bl-remote-desktop-pipemenu: fix bug with installing vino
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 14 Mar 2016 10:48:20 +0900
+
 bunsen-pipemenus (8.8.2-1) bunsen-hydrogen; urgency=high
 
   * bl-help-pipemenu: Fix bug in "How to Edit Menu" item.
