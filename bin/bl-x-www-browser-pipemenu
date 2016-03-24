@@ -27,6 +27,8 @@ USR_CFG_DIR="$HOME/.config/openbox"
 KEY_URLS_GOOGLE=('https://dl-ssl.google.com/linux/linux_signing_key.pub')
 KEY_URLS_OPERA=('http://deb.opera.com/archive.key')
 
+declareDependencies wget
+
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1

@@ -36,7 +36,9 @@ if type "$KBSCRIPT" &> /dev/null;then
     # run script to write kbinds.txt, suppress terminal output
     "$KBSCRIPT" > /dev/null
 else
-    echo $"ERROR: bl-kb not found" >&2
+    menuStart
+    menuSeparator "$KBSCRIPT is not available. Try installing bunsen-utilities."
+    menuEnd
     exit 1
 fi
 

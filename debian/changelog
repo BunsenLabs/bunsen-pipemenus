@@ -1,3 +1,10 @@
+bunsen-pipemenus (8.8.4-1) bunsen-hydrogen; urgency=low
+
+  * bl-conky-pipemenu, bl-tint2-pipemenu, bl-kb-pipemenu: 
+    Gracefuly handle absence of bunsen-utilities.
+
+ -- John Crawley <john@bunsenlabs.org>  Thu, 24 Mar 2016 15:38:47 +0900
+
 bunsen-pipemenus (8.8.3-1) bunsen-hydrogen; urgency=high
 
   * xaos52: bl-remote-desktop-pipemenu: fix bug with installing vino

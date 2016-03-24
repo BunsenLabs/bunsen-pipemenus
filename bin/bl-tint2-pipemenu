@@ -58,6 +58,12 @@ getTint2s(){
     menuSubmenuEnd
 }
 
+loadChoosermenu(){
+    if type $TZEN &>/dev/null;then  # bl-tint2zen script found
+        menuItem "Tint2 Chooser" "$TZEN"
+    fi
+}
+
 loadRestartmenu(){
     if [ "$(pidof tint2)" ];then
         if type bl-tint2restart &>/dev/null;then  # bl-tint2restart script found
@@ -67,7 +73,7 @@ loadRestartmenu(){
 }
 
 menuStart "Tintmenu" "Tint2"
-menuItem "Tint2 Chooser" "$TZEN"
+loadChoosermenu
 loadRestartmenu
 getTint2s
 menuEnd
