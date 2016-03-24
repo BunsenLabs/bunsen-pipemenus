@@ -43,7 +43,7 @@ getSessions(){  # read any saved sessions from save-sessions file
     menuItem "Default" "$CSESSION $CSESSIONFILE"
     if [ -e "$SESSIONS" ]
     then
-        while read session ;do
+        while read -r session ;do
             [[ -z $session ]] && continue   # skip if line is blank
             menuItem "$session" "$CSESSION $session"
         done < "$SESSIONS"
@@ -89,7 +89,7 @@ loadEditMenu(){
     menuItem "Default conkyrc" "bl-text-editor $CONKYDEFAULT"
     if [[ $(pidof conky) ]];then
         menuSubmenu "RunningConky" "Running Conkys"
-        while read session ;do  # get running conkys from sessionfile
+        while read -r session ;do  # get running conkys from sessionfile
             [[ -z $session ]] && continue
             CPATH=$(echo "$session" | awk '{print $3}')
             CONKY=$(echo "$CPATH" | awk -F"/" '{print $(NF-1)"/"$NF }')
