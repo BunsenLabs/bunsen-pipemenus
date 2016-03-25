@@ -32,7 +32,7 @@ loadTEditmenu(){
     menuItem "Default tint2rc" "bl-text-editor $TINT2RC"
     if [ "$(pidof tint2)" ];then
         menuSubmenu "RunningTint2" "Running Tint2s"
-        pgrep -a tint2 | while read pid cmd; do
+        pgrep -a tint2 | while read -r pid cmd; do
             if [[ ${cmd%% *} = tint2 ]]; then
                 TINT=${cmd##* }
                 TINT2=${TINT#$HOME/.config/}
