@@ -1,3 +1,9 @@
+bunsen-pipemenus (8.9-1) bunsen-hydrogen; urgency=medium
+
+  * Adjust include paths to match bunsen-common 8.8-1 and bunsen-docs 8.1-1
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 04 Apr 2016 18:05:54 +0900
+
 bunsen-pipemenus (8.8.4-1) bunsen-hydrogen; urgency=low
 
   * bl-conky-pipemenu, bl-tint2-pipemenu, bl-kb-pipemenu: 
