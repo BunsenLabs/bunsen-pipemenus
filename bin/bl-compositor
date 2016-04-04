@@ -19,7 +19,7 @@
 
 RESTART_ATTEMPTS=20 # times to try killall before reverting to -s KILL
 
-BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2

@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
 CONKYDEFAULT="$HOME/.conkyrc"
 CONKYPATH="$HOME/.config/conky"
@@ -23,7 +23,7 @@ CSESSIONFILE="$CONKYPATH/conky-sessionfile"
 SESSIONS="$CONKYPATH/saved-sessions"
 CZEN="bl-conkyzen"
 CSESSION="bl-conky-session"
-HELPFILE="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt"
+HELPFILE="/usr/share/bunsen/docs/helpfile-conkyzen.txt"
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo "Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
