@@ -32,7 +32,7 @@ Select the number of seconds to delay Dropbox autostarting.
 Click "Cancel" to cancel the autostart.'
 PROMPT_DELAY_VARIANTS=(FAlSE 0 FALSE 10 FALSE 20 FALSE 30 FALSE 40 FALSE 50 TRUE 60)
 
-BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 for i in bl-include.cfg yad-includes
 do

@@ -20,7 +20,7 @@
 #   To change the entries shown in the Graphics pipemenu:
 #   edit ".config/openbox/pipemenus.rc"
 
-BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 USR_CFG_DIR="$HOME/.config/openbox"
 
 # Get $USER images directory

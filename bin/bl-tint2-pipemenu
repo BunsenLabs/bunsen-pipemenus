@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 
 TINT2PATH="$HOME/.config/tint2"
 TINT2RC="$TINT2PATH/tint2rc"

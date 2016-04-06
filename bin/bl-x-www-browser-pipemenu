@@ -21,7 +21,7 @@
 #   To change the entries shown in the Browsers pipemenu:
 #   edit ".config/openbox/pipemenus.rc"
 
-BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 USR_CFG_DIR="$HOME/.config/openbox"
 
 KEY_URLS_GOOGLE=('https://dl-ssl.google.com/linux/linux_signing_key.pub')

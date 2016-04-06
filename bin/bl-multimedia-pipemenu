@@ -20,7 +20,7 @@
 #   To change the entries shown in the Multimedia pipemenu:
 #   edit ".config/openbox/pipemenus.rc"
 
-BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
+BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
 USR_CFG_DIR="$HOME/.config/openbox"
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
