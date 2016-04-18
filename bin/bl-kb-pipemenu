@@ -20,7 +20,7 @@
 
 # bl-kb is used to parse rc.xml and send the output to a textfile
 
-BL_COMMON_LIBDIR="/usr/lib/bunsen/bunsen-common"
+BL_COMMON_LIBDIR="/usr/lib/bunsen/common"
 USR_CFG_DIR="$HOME/.config/openbox"
 KBSCRIPT="bl-kb"
 RCPATH="$USR_CFG_DIR/rc.xml"

@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-BL_COMMON_LIBDIR='/usr/lib/bunsen/bunsen-common'
+BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
@@ -82,9 +82,9 @@ menuItem 'xrandr' 'x-terminal-emulator -T "xrandr man page" -e man xrandr'
 
 menuSeparator
 menuSubmenu 'BL help' 'Bunsen Help Files'
-menuItem 'How to Edit Menu' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="How to Edit the Menu" --filename="/usr/share/bunsen/bunsen-docs/helpfile-menu.txt" --width=900 --height=700 --fontname=Monospace'
-menuItem 'About Bunsen Alternatives' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="About Bunsen Alternatives" --filename="/usr/share/bunsen/bunsen-docs/helpfile-bl-alternatives.txt" --width=900 --height=700 --fontname=Monospace'
-menuItem 'Conkyzen Help' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/bunsen-docs/helpfile-conkyzen.txt" --width=900 --height=700 --fontname=Monospace'
+menuItem 'How to Edit Menu' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="How to Edit the Menu" --filename="/usr/share/bunsen/docs/helpfile-menu.txt" --width=900 --height=700 --fontname=Monospace'
+menuItem 'About Bunsen Alternatives' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="About Bunsen Alternatives" --filename="/usr/share/bunsen/docs/helpfile-bl-alternatives.txt" --width=900 --height=700 --fontname=Monospace'
+menuItem 'Conkyzen Help' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/docs/helpfile-conkyzen.txt" --width=900 --height=700 --fontname=Monospace'
 menuSubmenuEnd
 
 menuEnd
