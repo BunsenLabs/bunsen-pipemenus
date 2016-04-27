@@ -3,7 +3,7 @@
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
-#    Copyright (C) 2015 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2016 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -126,7 +126,8 @@ else # pipemenu
     done
     menu_started=false
     for curApp in "${BROWSERS[@]}"; do
-        if ! [[ ${AppStatus[$curApp]} = installed ]]; then
+        if [[ ${AppStatus[$curApp]} != installed ]]; then
+			[[ $(dpkg --print-architecture) != 'amd64' && $curApp = google-chrome-stable ]] && continue
             $menu_started || menuSubmenu "browsers-install-submenu" "Install"
             menu_started=true
             menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"

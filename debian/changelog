@@ -1,3 +1,9 @@
+bunsen-pipemenus (8.9.1-1) bunsen-hydrogen; urgency=medium
+
+  * bl-x-www-browser-pipemenu: Hide install for google chrome on 32 bit systems.
+
+ -- John Crawley <john@bunsenlabs.org>  Wed, 27 Apr 2016 21:44:03 +0900
+
 bunsen-pipemenus (8.9-1) bunsen-hydrogen; urgency=medium
 
   * Adjust include paths to match bunsen-common 8.8-1 and bunsen-docs 8.1-1
