@@ -127,7 +127,7 @@ else # pipemenu
     menu_started=false
     for curApp in "${BROWSERS[@]}"; do
         if [[ ${AppStatus[$curApp]} != installed ]]; then
-			[[ $(dpkg --print-architecture) != 'amd64' && $curApp = google-chrome-stable ]] && continue
+			[[ $curApp = google-chrome-stable && $(dpkg --print-architecture) != 'amd64' ]] && continue
             $menu_started || menuSubmenu "browsers-install-submenu" "Install"
             menu_started=true
             menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
