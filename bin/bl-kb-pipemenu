@@ -32,10 +32,7 @@ if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
 fi
 
 # test if bl-kb exists in path
-if type "$KBSCRIPT" &> /dev/null;then
-    # run script to write kbinds.txt, suppress terminal output
-    "$KBSCRIPT" > /dev/null
-else
+if ! type "$KBSCRIPT" &> /dev/null;then
     menuStart
     menuSeparator "$KBSCRIPT is not available. Try installing bunsen-utilities."
     menuEnd
@@ -48,7 +45,31 @@ if [[ $1 = '--rcedit' ]];then # "Backup & Edit rc.xml" is chosen in menu
     RCBKP="$RCPATH.$NOW"
     cp "$RCPATH" "$RCBKP"
     bl-text-editor "$RCPATH"        # open rc.xml in default editor
+    exit
+fi
 
+if [[ $1 = '--keybinds' ]];then
+    # run script to write kbinds.txt, suppress terminal output
+    "$KBSCRIPT" > /dev/null
+    menuStart
+    menuSeparator "Openbox window commands"
+    while read -r a b c;do      # write out Openbox commands (not clickable)
+        if [[ "$a" = "o" ]];then
+            curItem=$(printf "%-20s %s" "$b" "$c")
+            menuItem "$curItem" "echo >/dev/null 2>&1"
+        fi
+    done < "$KBTEXT"
+
+    menuSeparator
+    menuSeparator "'Run' commands"
+    while read -r a b c;do      # write out 'Run' commands (clickable)
+        if [[ "$a" = "x" ]];then
+            curItem=$(printf "%-20s %s" "$b" "$c")
+            menuItem "$curItem" "$c"
+        fi
+    done < "$KBTEXT"
+    menuEnd
+    exit
 fi
 
 # pipemenu
@@ -56,24 +77,7 @@ menuStart
     menuItem "Backup and Edit rc.xml" "bl-kb-pipemenu --rcedit"
     menuSeparator
     menuItem "Display Keybinds in new window" "bl-kb --gui"
-    menuSubmenu "Display keybinds" "Display Keybinds in menu"
-        menuSeparator "Openbox window commands"
-        while read -r a b c;do      # write out Openbox commands (not clickable)
-            if [[ "$a" = "o" ]];then
-                curItem=$(printf "%-20s %s" "$b" "$c")
-                menuItem "$curItem" "echo >/dev/null 2>&1"
-            fi
-        done < "$KBTEXT"
-
-        menuSeparator
-        menuSeparator "'Run' commands"
-        while read -r a b c;do      # write out 'Run' commands (clickable)
-            if [[ "$a" = "x" ]];then
-                curItem=$(printf "%-20s %s" "$b" "$c")
-                menuItem "$curItem" "$c"
-            fi
-        done < "$KBTEXT"
-    menuSubmenuEnd
+    echo '        <menu execute="bl-kb-pipemenu --keybinds" id="Display keybinds" label="Display Keybinds in menu"/>'
 menuEnd
 
 exit 0
