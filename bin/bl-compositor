@@ -29,7 +29,7 @@ fi
 declareDependencies compton
 
 # ------------- Set compton command options -----------------------------------
-EXECXCOMP='compton'
+EXECXCOMP='compton -b'
 if glxinfo | egrep -iq 'direct rendering: yes'; then
     EXECXCOMP+=' --vsync opengl'
 fi
@@ -59,7 +59,8 @@ if [[ $1 = '--edit' ]]; then # Edit compton settings
     fi
 elif [[ $1 = '--start' ]]; then
     if ! pidof compton > /dev/null; then
-        $EXECXCOMP &
+        $EXECXCOMP
+        bl-tint2restart || true
     else
         echo "$0 --start: compton already running" >&2
     fi
