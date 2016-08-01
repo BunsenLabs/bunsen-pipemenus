@@ -1,3 +1,9 @@
+bunsen-pipemenus (8.9.3-1) bunsen-hydrogen; urgency=medium
+
+  * Jens John: bl-recent-files-pipemenu: fix truncation of some commands.
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 01 Aug 2016 10:03:01 +0900
+
 bunsen-pipemenus (8.9.2-1) bunsen-hydrogen; urgency=low
 
   * bl-x-www-browser-pipemenu: small code optimization.
