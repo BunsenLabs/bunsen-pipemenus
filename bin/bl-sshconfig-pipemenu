@@ -55,7 +55,7 @@ if not  os.access('/usr/sbin/sshd', os.X_OK):
     print '    <item label="Install OpenSSH server and client">'
     print '        <action name="Execute">'
     print '            <command>'
-    print '                x-terminal-emulator -T &apos;Install OpenSSH server and client&apos; -e sh -c &apos;bl-install -n bunsen-meta-ssh bunsen-meta-ssh&apos;' 
+    print '                bl-install --name &apos;OpenSSH server and client&apos; bunsen-meta-ssh' 
     print '            </command>'
     print '        </action>'
     print '    </item>\n'
