@@ -49,6 +49,19 @@ else:
 
 print '<openbox_pipe_menu>\n'
 
+need_separator = False
+if not  os.access('/usr/sbin/sshd', os.X_OK):
+    # print '<menu id="ssh install" label="Install bunsen-meta-ssh">'
+    print '    <item label="Install OpenSSH server and client">'
+    print '        <action name="Execute">'
+    print '            <command>'
+    print '                bl-install --name &apos;OpenSSH server and client&apos; bunsen-meta-ssh' 
+    print '            </command>'
+    print '        </action>'
+    print '    </item>\n'
+    # print '</menu>\n'
+    need_separator = True
+
 if len(hosts) >= 2:
     for h in hosts[1:]:
         if 'host' in h and 'hostname' in h['config']:
@@ -60,6 +73,9 @@ if len(hosts) >= 2:
             if 'port' in conf:
                 port[0] = '-p ' + conf['port'] + ' '
                 port[1] = ':' + conf['port']
+            if need_separator:
+                print '<separator/>\n'
+                need_separator = False
             print '<menu id="ssh-'+h['host'][0]+'" label="'+h['host'][0]+'">'
             print '    <item label="Start terminal session">'
             print '        <action name="Execute">'
@@ -78,6 +94,9 @@ if len(hosts) >= 2:
             print '</menu>\n'
     print '<separator/>\n'
 
+if need_separator:
+    print '<separator/>\n'
+    need_separator = False
 print '<item label="Edit ~/.ssh/config">'
 print '    <action name="Execute">'
 print '        <command>'
