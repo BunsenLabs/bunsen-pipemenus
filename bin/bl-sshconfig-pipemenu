@@ -21,7 +21,13 @@ import warnings
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     from paramiko.config import SSHConfig
+import argparse
+import sys
 
+ap = argparse.ArgumentParser(description="""Openbox pipemenu to handle secure shell installation and configuration.
+The install menu item is only shown when '/usr/sbin/sshd' is not executable. """)
+opts = ap.parse_args(sys.argv[1:])
+    
 cfgdir = os.getenv("HOME")+"/.ssh"
 cfgfile = cfgdir+"/config"
 
