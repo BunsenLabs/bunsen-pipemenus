@@ -1,5 +1,5 @@
 #!/bin/bash
-#    bl-dropbox-pipemenu - an Openbox pipemenu for use with Dropbox
+#    bl-dropbox-pipemenu: an Openbox pipemenu for use with Dropbox
 #    Copyright (C) 2012 Philip Newborough <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
 #    Copyright (C) 2015-2016  John Crawley <john@bunsenlabs.org>

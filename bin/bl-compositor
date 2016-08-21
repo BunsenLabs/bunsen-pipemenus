@@ -1,5 +1,5 @@
 #!/bin/bash
-#    bl-compositor an Openbox Pipe Menu for use with compton compositor
+#    bl-compositor: an Openbox Pipe Menu for use with compton compositor
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
 #    Copyright (C) 2015 John Crawley    <john@bunsenlabs.org>
