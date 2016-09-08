@@ -90,9 +90,9 @@ menuSubmenuEnd
 menuSeparator
 
 menuSubmenu 'ThemesWWW' 'Theme Resources'
+menuItem 'Bunsenlabs on DeviantArt' 'x-www-browser "http://bunsenlabs.deviantart.com/"'
 menuItem 'Box-Look.org' 'x-www-browser "http://www.box-look.org"'
 menuItem 'gnome-look.org' 'x-www-browser "http://gnome-look.org/"'
-menuItem 'DeviantArt' 'x-www-browser "http://www.deviantart.com/browse/all/"'
 menuSubmenuEnd
 menuSeparator
 menuSeparator 'man pages'
