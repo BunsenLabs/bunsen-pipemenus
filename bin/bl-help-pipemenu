@@ -76,7 +76,7 @@ menuSubmenuEnd
 
 menuSubmenu 'Tint2WWW' 'Tint2'
 menuItem 'Tint2 Wiki: FAQ' 'x-www-browser "https://gitlab.com/o9000/tint2/wikis/FAQ"'
-menuItem 'Tint2 Wiki: Configuration' 'x-www-browser "https://gitlab.com/o9000/tint2/wikis/Configure"'
+menuItem 'Tint2 Wiki: Configuration' 'x-www-browser "https://gitlab.com/o9000/tint2/blob/master/doc/tint2.md"'
 menuItem 'Tint2 Forum Thread' 'x-www-browser "https://forums.bunsenlabs.org/viewtopic.php?id=254"'
 menuItem 'Tint2 man page' 'x-terminal-emulator -T "Tint2 man page" -e man tint2'
 menuSubmenuEnd
