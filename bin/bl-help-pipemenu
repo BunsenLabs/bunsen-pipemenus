@@ -82,8 +82,7 @@ menuItem 'Tint2 man page' 'x-terminal-emulator -T "Tint2 man page" -e man tint2'
 menuSubmenuEnd
 
 menuSubmenu 'ConkyWWW' 'Conky'
-menuItem 'Conky Configuration Settings' 'x-www-browser "http://conky.sourceforge.net/config_settings.html"'
-menuItem 'Conky Variables' 'x-www-browser "http://conky.sourceforge.net/variables.html"'
+menuItem 'Conky Wiki' 'x-www-browser "https://github.com/brndnmtthws/conky/wiki"'
 menuItem 'Conky Archive' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?pid=371424"'
 menuItem 'Conky man pages' 'x-terminal-emulator -T "Conky man page" -e man conky'
 menuSubmenuEnd
