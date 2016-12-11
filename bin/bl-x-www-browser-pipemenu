@@ -127,6 +127,7 @@ if [[ $1 = --install ]]; then
 
     desc="This script will install the $appName browser."
     setupFunctionName="setup${appName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
+    [[ $packageName = firefox ]] && packageName='firefox-esr' # firefox in Debian Jessie
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
         promptInstall --setup "$setupFunctionName" "$appName" "$desc" "$packageName"
     else
