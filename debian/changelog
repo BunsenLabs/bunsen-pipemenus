@@ -1,6 +1,6 @@
 bunsen-pipemenus (8.9.3-2) bunsen-hydrogen; urgency=medium
 
-  * debian/control: update dependency on bunsen-common version. 
+  * debian/control: update dependency on bunsen-common version.
 
  -- John Crawley <john@bunsenlabs.org>  Sat, 14 Jan 2017 15:47:32 +0900
 
