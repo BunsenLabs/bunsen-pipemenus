@@ -78,8 +78,14 @@ if [[ $1 = --install ]]; then
         appName=${AppName[$packageName]}
         appExists "$packageName" || exit 1
         terminalCheck -T "Install $appName" "$@"
-        desc="This script will install $appName (without recommends)."
-        promptInstall --no-install-recommends "$appName" "$desc" "$packageName"
+        if allInstalled libreoffice-gtk; then
+            inst_pkgs=( "$packageName" )
+            desc="This script will install $appName (without recommends)."
+        else
+            inst_pkgs=( "$packageName" 'libreoffice-gtk' )
+            desc="This script will install $appName and libreoffice-gtk (without recommends)."
+        fi
+        promptInstall --no-install-recommends "$appName" "$desc" "${inst_pkgs[@]}"
     fi
 
 elif [[ $1 ]]; then
@@ -103,7 +109,7 @@ else
             menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
         fi
     done
-    if ! [[ $(dpkg-query --show --showformat='${db:Status-Abbrev;2}' libreoffice 2>/dev/null) = ii ]]
+    if ! allInstalled libreoffice
     then
         $submenu_started || menuSubmenu "lo-apps-install-submenu" "Install"
         submenu_started=true

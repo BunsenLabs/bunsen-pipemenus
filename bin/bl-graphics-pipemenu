@@ -2,7 +2,7 @@
 #    bl-graphics-pipemenu - an Openbox pipemenu for Graphics applications
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2015-2016 damo    <damo@bunsenlabs.org>
-#    Copyright (C) 2015-2016 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2017 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#   To change the entries shown in the Graphics pipemenu:
+#   To add to the entries shown in the Graphics pipemenu:
 #   edit ".config/openbox/pipemenus.rc"
 
 HELP='    bl-graphics-pipemenu an Openbox Pipe Menu for graphics applications
@@ -26,7 +26,8 @@ HELP='    bl-graphics-pipemenu an Openbox Pipe Menu for graphics applications
 Options (usually passed from the menu):
     -h --help   show this message
     --install   install a graphics-related package
-    (the package must be in the list defined in the pipemenu config file)
+    (the package must be in the list defined in the pipemenu config file
+    or in the default list in this file)
 
     If bl-graphics-pipemenu is called with no options (the usual method),
     it will output an xml openbox pipemenu
@@ -34,6 +35,16 @@ Options (usually passed from the menu):
 
 See ~/.config/openbox/pipemenus.rc for configuration options.
 '
+# default apps lists
+# user lists in ~/.config/openbox/pipemenus.rc will be merged
+DEF_GRAPHICS_APPS=( 'mirage' 'gpicview' 'ristretto' 'viewnior' 'eog' 'gimp' 'blender' 'inkscape' 'mandelbulber' )
+DEF_GRAPHICS_SCROTS=('xfce4-screenshooter' 'scrot' )
+
+# array: commands in menu which are different from package names
+declare -A pkg_cmd
+pkg_cmd=()
+########################################################################
+
 # look for a help option somewhere
 for i in "$@"
 do
@@ -58,19 +69,75 @@ fi
 SCROTSDIR="$IMGDIR/screenshots"
 mkdir -p "$SCROTSDIR"
 
+# user_package_commands might be in $USR_CFG_DIR/pipemenus.rc
+declare -A user_package_commands AppName AppStatus AppCmd
+
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
 elif ! . "$USR_CFG_DIR/pipemenus.rc" 2> /dev/null; then
-    echo $"Error: Failed to source pipemenus.rc in $USR_CFG_DIR" >&2
-    exit 1
+    echo $"Failed to source pipemenus.rc in $USR_CFG_DIR" >&2
 fi
 
-declare -A AppName AppStatus # AppName: split on hyphens, first letter uppercase
+# add any user-specified commands, overwriting defaults if set
+for i in "${!user_package_commands[@]}"
+do
+    [[ -n ${user_package_commands[$i]} ]] || continue
+    pkg_cmd[$i]="${user_package_commands[$i]}"
+done
+
+# get BL alternatives viewer
+bl_iv_cmd=$(readlink -f /usr/bin/bl-image-viewer)
+bl_iv_cmd="${bl_iv_cmd##*/}"
+BL_VIEWER=
+for i in "${DEF_GRAPHICS_APPS[@]}" "${GRAPHICS_APPS[@]-}"
+do
+    [[ ${pkg_cmd[$i]:-$i} = "$bl_iv_cmd" ]] && {
+        BL_VIEWER=$i
+        # AppName: split on hyphens, first letter uppercase
+        words=(${i//-/ })
+        AppName[$i]="${words[*]^} Image Viewer"
+        break
+    }
+done
+
+# remove duplicate members of array passed as $1, keep order
+nodups(){
+    local -A check
+    local -n target_array="$1"
+    for i in "${!target_array[@]}"
+    do
+        local content="${target_array[$i]}"
+        if [[ ${check[$content]+x} = x ]]
+        then
+            unset target_array[$i]
+        else
+            check[$content]=1
+        fi
+    done
+}
+
+# if this function is removed the version in bl-include.cfg will be used
+allInstalled(){
+    local list="/var/lib/dpkg/info/${1}.list"
+    [[ -f "${list}" ]] || return 1
+    grep -Evq '^/etc($|/)' "${list}" || return 1
+    return 0
+}
+
+GRAPHICS_APPS=( "$BL_VIEWER" "${DEF_GRAPHICS_APPS[@]}" "${GRAPHICS_APPS[@]-}" )
+GRAPHICS_SCROTS=( "${DEF_GRAPHICS_SCROTS[@]}" "${GRAPHICS_SCROTS[@]-}" )
+
+for i in GRAPHICS_APPS GRAPHICS_SCROTS
+do
+    nodups "$i"
+done
+
 for curApp in "${GRAPHICS_APPS[@]}" "${GRAPHICS_SCROTS[@]}"; do
     words=(${curApp//-/ })
-    AppName[$curApp]="${words[*]^}"
-    type "$curApp" >/dev/null 2>&1 && AppStatus[$curApp]=installed
+    AppName[$curApp]="${AppName[$curApp]:-${words[*]^}}"
+    AppCmd[$curApp]="${pkg_cmd[$curApp]:-$curApp}" # use packagename as command if not defined in pkg_cmd
+    allInstalled "$curApp" && AppStatus[$curApp]='installed' || AppStatus[$curApp]=''
 done
 
 appExists() {
@@ -123,17 +190,13 @@ if [[ $1 = --install ]]; then
     desc="This script will install $appName."
     setupFunctionName="setup${appName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupBlender'
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-            promptInstall --setup "$setupFunctionName" "$appName" "$desc" "$packageName"
+        promptInstall --setup "$setupFunctionName" "$appName" "$desc" "$packageName"
     else
-        if [[ $packageName = gimp ]];then
-            if ! prompt 'This will install GIMP. Do you also want to install Gimp Extras?' N;then
-                promptInstall "$appName" "$desc" "$packageName"
-            else
-                appName="Gimp and Gimp Extras"
-                packageNameSet=(gimp gimp-plugin-registry gimp-gmic)
-                desc="This script will install gimp, gimp-plugin-registry and gimp-gmic"
-                promptInstall "$appName" "$desc" "${packageNameSet[@]}"
-            fi
+        if [[ $packageName = gimp ]] && prompt 'This will install GIMP. Do you also want to install Gimp Extras?' N; then
+            appName="Gimp and Gimp Extras"
+            packageNameSet=(gimp gimp-plugin-registry gimp-gmic)
+            desc="This script will install gimp, gimp-plugin-registry and gimp-gmic"
+            promptInstall "$appName" "$desc" "${packageNameSet[@]}"
         else
             promptInstall "$appName" "$desc" "$packageName"
         fi
@@ -150,16 +213,8 @@ else # pipemenu
             menuItem "${AppName[$curApp]}" "$curApp"
         fi
     done
-    menu_started=false
-    for curApp in "${GRAPHICS_APPS[@]}"; do
-        if ! [[ ${AppStatus[$curApp]} = installed ]]; then
-            $menu_started || menuSubmenu "graph-apps-install-submenu" "Install"
-            menu_started=true
-            menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
-        fi
-    done
-    $menu_started && menuSubmenuEnd
 
+    menuSeparator
     menuSeparator 'Screenshots'
 
     for curScrot in "${GRAPHICS_SCROTS[@]}"; do
@@ -171,15 +226,30 @@ else # pipemenu
             fi
         fi
     done
-    menu_started=false
+
+    install_menu_started=false
+
+    for curApp in "${GRAPHICS_APPS[@]}"; do
+        if ! [[ ${AppStatus[$curApp]} = installed ]]; then
+            $install_menu_started || { menuSeparator; menuSubmenu "graph-install-submenu" "Install";}
+            install_menu_started=true
+            menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
+        fi
+    done
+
+    scrots_menu_started=false
     for curScrot in "${GRAPHICS_SCROTS[@]}"; do
         if ! [[ ${AppStatus[$curScrot]} = installed ]]; then
-            $menu_started || menuSubmenu "graph-scrots-install-submenu" "Install"
-            menu_started=true
+            $install_menu_started || { menuSeparator; menuSubmenu "graph-install-submenu" "Install";}
+            $scrots_menu_started || menuSeparator 'Screenshots'
+            install_menu_started=true
+            scrots_menu_started=true
             menuItem "Install ${AppName[$curScrot]}" "$0 --install $curScrot"
         fi
     done
-    $menu_started && menuSubmenuEnd
+
+    $install_menu_started && menuSubmenuEnd
+
     menuEnd
 fi
 exit 0

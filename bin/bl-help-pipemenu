@@ -46,7 +46,8 @@ fi
 menuStart
 menuSeparator 'Online Help'
 menuSeparator
-menuItem 'Forum Basic Help & Support' 'x-www-browser "https://forums.bunsenlabs.org/viewforum.php?id=2"'
+menuItem 'Getting Started' 'x-www-browser "https://forums.bunsenlabs.org/viewforum.php?id=21"'
+menuItem 'Basic Help & Support' 'x-www-browser "https://forums.bunsenlabs.org/viewforum.php?id=2"'
 menuItem 'Scripts, Tutorials & Tips' 'x-www-browser "https://forums.bunsenlabs.org/viewforum.php?id=9"'
 menuSubmenu 'DebianWWW' 'Debian'
 menuItem 'Debian Documentation' 'x-www-browser "https://www.debian.org/doc/"'
