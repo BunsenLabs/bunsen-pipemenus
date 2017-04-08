@@ -1,3 +1,10 @@
+bunsen-pipemenus (8.11.1-1) bunsen-hydrogen; urgency=medium
+
+  * Improve presentation of graphics and multimedia pipemenus.
+  * bl-graphics-pipemenu: nodups(): Handle null array elements.
+
+ -- John Crawley <john@bunsenlabs.org>  Sat, 08 Apr 2017 15:29:00 +0900
+
 bunsen-pipemenus (8.11-1) bunsen-hydrogen; urgency=medium
 
   * Make user file pipemenus.rc optional.

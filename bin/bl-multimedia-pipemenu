@@ -174,18 +174,20 @@ else # pipemenu
         fi
     done
 
-    menuSeparator
-    menuSeparator 'Editors'
+    editors_section_started=false
     for curApp in "${MM_EDITORS[@]}"; do
         if [[ ${AppStatus[$curApp]} = installed ]]; then
+            $editors_section_started || { menuSeparator; menuSeparator 'Editors';}
+            editors_section_started=true
             menuItem "${AppName[$curApp]}" "${AppCmd[$curApp]}"
         fi
     done
 
-    menuSeparator
-    menuSeparator 'Utilities'
+    utils_section_started=false
     for curApp in "${MM_UTILS[@]}"; do
         if [[ ${AppStatus[$curApp]} = installed ]]; then
+            $utils_section_started || { menuSeparator; menuSeparator 'Utilities';}
+            utils_section_started=true
             menuItem "${AppName[$curApp]}" "${AppCmd[$curApp]}"
         fi
     done
@@ -200,24 +202,24 @@ else # pipemenu
         fi
     done
 
-    editors_menu_started=false
+    inst_editors_section_started=false
     for curApp in "${MM_EDITORS[@]}"; do
         if ! [[ ${AppStatus[$curApp]} = installed ]]; then
             $install_menu_started || { menuSeparator; menuSubmenu "mm-install-submenu" "Install";}
-            $editors_menu_started || menuSeparator 'Editors'
+            $inst_editors_section_started || menuSeparator 'Editors'
             install_menu_started=true
-            editors_menu_started=true
+            inst_editors_section_started=true
             menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
         fi
     done
 
-    utils_menu_started=false
+    inst_utils_section_started=false
     for curApp in "${MM_UTILS[@]}"; do
         if ! [[ ${AppStatus[$curApp]} = installed ]]; then
             $install_menu_started || { menuSeparator; menuSubmenu "mm-install-submenu" "Install";}
-            $utils_menu_started || menuSeparator 'Utilities'
+            $inst_utils_section_started || menuSeparator 'Utilities'
             install_menu_started=true
-            utils_menu_started=true
+            inst_utils_section_started=true
             menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
         fi
     done

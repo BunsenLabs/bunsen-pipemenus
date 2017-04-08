@@ -101,18 +101,18 @@ do
     }
 done
 
-# remove duplicate members of array passed as $1, keep order
+# remove duplicate, and null, values of array passed as $1, keep order
 nodups(){
     local -A check
     local -n target_array="$1"
     for i in "${!target_array[@]}"
     do
-        local content="${target_array[$i]}"
-        if [[ ${check[$content]+x} = x ]]
+        local value="${target_array[$i]}"
+        if [[ -z $value || ${check[$value]+x} = x ]]
         then
             unset target_array[$i]
         else
-            check[$content]=1
+            check[$value]=1
         fi
     done
 }
@@ -208,17 +208,18 @@ elif [[ $1 ]]; then
 
 else # pipemenu
     menuStart
+
     for curApp in "${GRAPHICS_APPS[@]}"; do
         if [[ ${AppStatus[$curApp]} = installed ]]; then
             menuItem "${AppName[$curApp]}" "$curApp"
         fi
     done
 
-    menuSeparator
-    menuSeparator 'Screenshots'
-
+    scrots_section_started=false
     for curScrot in "${GRAPHICS_SCROTS[@]}"; do
         if [[ ${AppStatus[$curScrot]} = installed ]]; then
+            $scrots_section_started || { menuSeparator; menuSeparator 'Screenshots';}
+            scrots_section_started=true
             if [[ "$curScrot" = scrot ]];then
                 writeScrot
             else
@@ -237,13 +238,13 @@ else # pipemenu
         fi
     done
 
-    scrots_menu_started=false
+    inst_scrots_section_started=false
     for curScrot in "${GRAPHICS_SCROTS[@]}"; do
         if ! [[ ${AppStatus[$curScrot]} = installed ]]; then
             $install_menu_started || { menuSeparator; menuSubmenu "graph-install-submenu" "Install";}
-            $scrots_menu_started || menuSeparator 'Screenshots'
+            $inst_scrots_section_started || menuSeparator 'Screenshots'
             install_menu_started=true
-            scrots_menu_started=true
+            inst_scrots_section_started=true
             menuItem "Install ${AppName[$curScrot]}" "$0 --install $curScrot"
         fi
     done
