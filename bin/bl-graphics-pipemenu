@@ -37,7 +37,7 @@ See ~/.config/openbox/pipemenus.rc for configuration options.
 '
 # default apps lists
 # user lists in ~/.config/openbox/pipemenus.rc will be merged
-DEF_GRAPHICS_APPS=( 'mirage' 'gpicview' 'ristretto' 'viewnior' 'eog' 'gimp' 'blender' 'inkscape' 'mandelbulber' )
+DEF_GRAPHICS_APPS=( 'mirage' 'viewnior' 'gpicview' 'ristretto' 'gimp' 'blender' 'inkscape' 'mandelbulber' )
 DEF_GRAPHICS_SCROTS=('xfce4-screenshooter' 'scrot' )
 
 # array: commands in menu which are different from package names
@@ -125,8 +125,8 @@ allInstalled(){
     return 0
 }
 
-GRAPHICS_APPS=( "$BL_VIEWER" "${DEF_GRAPHICS_APPS[@]}" "${GRAPHICS_APPS[@]-}" )
-GRAPHICS_SCROTS=( "${DEF_GRAPHICS_SCROTS[@]}" "${GRAPHICS_SCROTS[@]-}" )
+GRAPHICS_APPS=( "$BL_VIEWER" "${GRAPHICS_APPS[@]-}" "${DEF_GRAPHICS_APPS[@]}" )
+GRAPHICS_SCROTS=( "${GRAPHICS_SCROTS[@]-}" "${DEF_GRAPHICS_SCROTS[@]}" )
 
 for i in GRAPHICS_APPS GRAPHICS_SCROTS
 do

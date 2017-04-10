@@ -117,9 +117,9 @@ allInstalled(){
     return 0
 }
 
-MM_APPS=( "$BL_MM_APP" "${DEF_MM_APPS[@]}" "${MM_APPS[@]-}" )
-MM_EDITORS=( "${DEF_MM_EDITORS[@]}" "${MM_EDITORS[@]-}" )
-MM_UTILS=( "${DEF_MM_UTILS[@]}" "${MM_UTILS[@]-}" )
+MM_APPS=( "$BL_MM_APP" "${MM_APPS[@]-}" "${DEF_MM_APPS[@]}" )
+MM_EDITORS=( "${MM_EDITORS[@]-}" "${DEF_MM_EDITORS[@]}" )
+MM_UTILS=( "${MM_UTILS[@]-}" "${DEF_MM_UTILS[@]}" )
 
 for i in MM_APPS MM_EDITORS MM_UTILS
 do
