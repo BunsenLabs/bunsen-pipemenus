@@ -1,3 +1,9 @@
+bunsen-pipemenus (8.11.3-1) bunsen-hydrogen; urgency=low
+
+  * bl-graphics-pipemenu: add geeqie to apps list.
+
+ -- John Crawley <john@bunsenlabs.org>  Wed, 26 Apr 2017 16:28:53 +0900
+
 bunsen-pipemenus (8.11.2-1) bunsen-hydrogen; urgency=low
 
   * Improve apps listing in graphics and multimedia menus.
