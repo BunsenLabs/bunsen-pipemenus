@@ -27,7 +27,8 @@ HELP='    bl-x-www-browser-pipemenu an Openbox Pipe Menu for web browsers
 Options (usually passed from the menu):
     -h --help   show this message
     --install   install a web browser
-    (the browser must be in the list defined in the pipemenu config file)
+    (the browser must be in the list defined in the pipemenu config file
+     or in the default list in this file)
     (NOTE: Google Chrome will not appear in the menu on 32bit systems.)
 
     If bl-x-www-browser-pipemenu is called with no options (the usual method),
@@ -36,6 +37,17 @@ Options (usually passed from the menu):
 
 See ~/.config/openbox/pipemenus.rc for configuration options.
 '
+
+# default apps list
+# user list in ~/.config/openbox/pipemenus.rc will be merged
+DEF_BROWSERS=( 'firefox-esr' 'chromium' 'google-chrome-stable' 'opera' )
+
+# associative array: commands which are different from package names
+# like: pkg_cmd=([name1]='command1' [name2]='command2' ...)
+declare -A pkg_cmd
+pkg_cmd=([firefox-esr]='firefox')
+########################################################################
+
 # look for a help option somewhere
 for i in "$@"
 do
@@ -53,7 +65,8 @@ USR_CFG_DIR="$HOME/.config/openbox"
 KEY_URLS_GOOGLE=('https://dl-ssl.google.com/linux/linux_signing_key.pub')
 KEY_URLS_OPERA=('http://deb.opera.com/archive.key')
 
-declareDependencies wget
+# user_package_commands might be in $USR_CFG_DIR/pipemenus.rc
+declare -A user_package_commands AppName AppStatus AppCmd
 
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
@@ -63,11 +76,60 @@ elif ! . "$USR_CFG_DIR/pipemenus.rc" 2> /dev/null; then
     exit 1
 fi
 
-declare -A AppName AppStatus # AppName: split on hyphens, first letter uppercase
+# add any user-specified commands, overwriting defaults if set
+for i in "${!user_package_commands[@]}"
+do
+    [[ -n ${user_package_commands[$i]} ]] || continue
+    pkg_cmd[$i]="${user_package_commands[$i]}"
+done
+
+# get x-www-browser
+xwwwb_cmd=$(readlink -f /usr/bin/x-www-browser)
+X_WWW_B=
+for i in "${DEF_BROWSERS[@]}" "${BROWSERS[@]-}"
+do
+    [[ -f "/var/lib/dpkg/info/${i}.list" ]] && grep -q "$xwwwb_cmd" "/var/lib/dpkg/info/${i}.list" && {
+        X_WWW_B=$i
+        break
+    }
+done
+
+# remove duplicate, and null, values of array passed as $1, keep order
+nodups(){
+    local -A check
+    local -n target_array="$1"
+    for i in "${!target_array[@]}"
+    do
+        local value="${target_array[$i]}"
+        if [[ -z $value || ${check[$value]+x} = x ]]
+        then
+            unset target_array[$i]
+        else
+            check[$value]=1
+        fi
+    done
+}
+
+# if this function is removed the version in bl-include.cfg will be used
+allInstalled(){
+    local list="/var/lib/dpkg/info/${1}.list"
+    [[ -f "${list}" ]] || return 1
+    grep -Evq '^/etc($|/)' "${list}" || return 1
+    return 0
+}
+
+BROWSERS=( "$X_WWW_B" "${BROWSERS[@]-}" "${DEF_BROWSERS[@]}" )
+nodups BROWSERS
+
 for curApp in "${BROWSERS[@]}"; do
-    words=(${curApp//-/ })
-    AppName[$curApp]="${words[*]^}"
-    type "$curApp" >/dev/null 2>&1 && AppStatus[$curApp]=installed
+    if [[ "$curApp" = 'firefox-esr' ]]; then
+        AppName[$curApp]='Firefox'
+    else
+        words=(${curApp//-/ })
+        AppName[$curApp]="${AppName[$curApp]:-${words[*]^}}"
+    fi
+    AppCmd[$curApp]="${pkg_cmd[$curApp]:-$curApp}" # use packagename as command if not defined in pkg_cmd
+    allInstalled "$curApp" && AppStatus[$curApp]='installed' || AppStatus[$curApp]=''
 done
 
 appExists() {
@@ -81,6 +143,7 @@ appExists() {
 }
 
 addAptKey() {
+    declareDependencies wget
     clear
     say 'Adding APT key...'
     keyFile=$(mktemp)
@@ -145,9 +208,9 @@ else # pipemenu
     for curApp in "${BROWSERS[@]}"; do
         if [[ ${AppStatus[$curApp]} = installed ]]; then
             INSTALLED=true
-            menuItem "${AppName[$curApp]}" "$curApp"
+            menuItem "${AppName[$curApp]}" "${AppCmd[$curApp]}"
             [[ $curApp = *chrom* ]] && {
-                menuItem "${AppName[$curApp]} (Private Mode)" "$curApp --incognito" # Incognito mode for chrome and chromium
+                menuItem "${AppName[$curApp]} (Private Mode)" "${AppCmd[$curApp]} --incognito" # Incognito mode for chrome and chromium
             }
         fi
     done

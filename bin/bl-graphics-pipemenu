@@ -35,12 +35,14 @@ Options (usually passed from the menu):
 
 See ~/.config/openbox/pipemenus.rc for configuration options.
 '
+
 # default apps lists
 # user lists in ~/.config/openbox/pipemenus.rc will be merged
 DEF_GRAPHICS_APPS=( 'mirage' 'viewnior' 'gpicview' 'ristretto' 'geeqie' 'gimp' 'blender' 'inkscape' 'mandelbulber' )
 DEF_GRAPHICS_SCROTS=('xfce4-screenshooter' 'scrot' )
 
-# array: commands in menu which are different from package names
+# associative array: commands which are different from package names
+# like: pkg_cmd=([name1]='command1' [name2]='command2' ...)
 declare -A pkg_cmd
 pkg_cmd=()
 ########################################################################
@@ -211,7 +213,7 @@ else # pipemenu
 
     for curApp in "${GRAPHICS_APPS[@]}"; do
         if [[ ${AppStatus[$curApp]} = installed ]]; then
-            menuItem "${AppName[$curApp]}" "$curApp"
+            menuItem "${AppName[$curApp]}" "${AppCmd[$curApp]}"
         fi
     done
 
@@ -223,7 +225,7 @@ else # pipemenu
             if [[ "$curScrot" = scrot ]];then
                 writeScrot
             else
-                menuItem "${AppName[$curScrot]}" "$curScrot"
+                menuItem "${AppName[$curScrot]}" "${AppCmd[$curScrot]}"
             fi
         fi
     done

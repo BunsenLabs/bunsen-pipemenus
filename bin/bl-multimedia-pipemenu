@@ -42,7 +42,8 @@ DEF_MM_APPS=('mpv' 'vlc' 'audacious' 'smplayer' 'gnome-mplayer')
 DEF_MM_EDITORS=('mhwaveedit' 'audacity' 'openshot')
 DEF_MM_UTILS=('xfburn' 'gtk-recordmydesktop')
 
-# array: commands in menu which are different from package names
+# associative array: commands which are different from package names
+# like: pkg_cmd=([name1]='command1' [name2]='command2' ...)
 declare -A pkg_cmd
 pkg_cmd=([mpv]='bl-mpv')
 ########################################################################

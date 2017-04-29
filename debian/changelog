@@ -1,3 +1,10 @@
+bunsen-pipemenus (8.11.4-1) bunsen-hydrogen; urgency=medium
+
+  * bl-x-www-browser-pipemenu: adjust to cope with empty user lists.
+     Put browser chosen as x-www-browser at top.
+
+ -- John Crawley <john@bunsenlabs.org>  Sat, 29 Apr 2017 12:25:02 +0900
+
 bunsen-pipemenus (8.11.3-1) bunsen-hydrogen; urgency=low
 
   * bl-graphics-pipemenu: add geeqie to apps list.
