@@ -1,3 +1,10 @@
+bunsen-pipemenus (9.0-1) helium; urgency=medium
+
+  * Version bump for helium
+  * bl-compositor: replace '--vsync opengl' with '--backend glx'
+
+ -- John Crawley <john@bunsenlabs.org>  Sat, 10 Jun 2017 16:53:37 +0900
+
 bunsen-pipemenus (8.11.4-1) bunsen-hydrogen; urgency=medium
 
   * bl-x-www-browser-pipemenu: adjust to cope with empty user lists.
