@@ -12,4 +12,3 @@ Depends: ${misc:Depends}, bunsen-common (>= 8.8.2-1), xterm | x-terminal-emulato
 Recommends: bunsen-utilities, bunsen-docs(>= 8.1-1), bunsen-conky, tint2, compton, inotify-tools
 Description: Various Openbox pipemenus
  Contains various Openbox pipemenus for use with Bunsen Linux.
- Adapted from cb-pipemenus by Philip Newborough

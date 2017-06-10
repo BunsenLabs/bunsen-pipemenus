@@ -2,7 +2,7 @@
 #    bl-compositor: an Openbox Pipe Menu for use with compton compositor
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
-#    Copyright (C) 2015 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2017 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ declareDependencies compton
 # ------------- Set compton command options -----------------------------------
 EXECXCOMP='compton -b'
 if glxinfo | egrep -iq 'direct rendering: yes'; then
-    EXECXCOMP+=' --vsync opengl'
+    EXECXCOMP+=' --backend glx'
 fi
 
 forcekill_compton() {
