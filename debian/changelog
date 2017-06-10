@@ -1,3 +1,9 @@
+bunsen-pipemenus (9.0.1-1) helium; urgency=high
+
+  * bl-compositor:revert change to command option.
+
+ -- John Crawley <john@bunsenlabs.org>  Sat, 10 Jun 2017 17:22:12 +0900
+
 bunsen-pipemenus (9.0-1) helium; urgency=medium
 
   * Version bump for helium

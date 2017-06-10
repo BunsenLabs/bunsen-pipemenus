@@ -59,7 +59,7 @@ declareDependencies compton
 # ------------- Set compton command options -----------------------------------
 EXECXCOMP='compton -b'
 if glxinfo | egrep -iq 'direct rendering: yes'; then
-    EXECXCOMP+=' --backend glx'
+    EXECXCOMP+=' --vsync opengl'
 fi
 
 forcekill_compton() {
