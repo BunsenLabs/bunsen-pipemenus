@@ -1,3 +1,9 @@
+bunsen-pipemenus (9.0.2-1) helium; urgency=medium
+
+  * bl-graphics-pipemenu: replace madelbulber with mandelbulber2.
+
+ -- John Crawley <john@bunsenlabs.org>  Thu, 22 Jun 2017 15:11:43 +0900
+
 bunsen-pipemenus (9.0.1-1) helium; urgency=high
 
   * bl-compositor:revert change to command option.
