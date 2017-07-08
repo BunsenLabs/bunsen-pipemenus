@@ -75,6 +75,7 @@ getTint2s(){
     menuSubmenu "EditTint2" "Edit Tint2s"
         if type bl-tint2edit &>/dev/null;then  # bl-tint2edit script found
             menuItem "Tint2 Editor" "bl-tint2edit"
+            menuItem "Tint2 Config GUI" "tint2conf"
             loadTEditmenu
         else
             loadTEditmenu
