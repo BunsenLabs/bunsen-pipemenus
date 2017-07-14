@@ -1,3 +1,9 @@
+bunsen-pipemenus (9.0.3-1) helium; urgency=medium
+
+  * (damo) bl-tint2-pipemenu: add tint2conf to Tint2 Edit menu
+
+ -- John Crawley <john@bunsenlabs.org>  Fri, 14 Jul 2017 09:32:49 +0900
+
 bunsen-pipemenus (9.0.2-1) helium; urgency=medium
 
   * bl-graphics-pipemenu: replace madelbulber with mandelbulber2.
