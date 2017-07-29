@@ -106,6 +106,7 @@ menuSubmenu 'BLhelp' 'Bunsen Help Files'
 menuItem 'How to Edit Menu' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="How to Edit the Menu" --filename="/usr/share/bunsen/docs/helpfile-menu.txt" --width=900 --height=700 --fontname=Monospace'
 menuItem 'About Bunsen Alternatives' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="About Bunsen Alternatives" --filename="/usr/share/bunsen/docs/helpfile-bl-alternatives.txt" --width=900 --height=700 --fontname=Monospace'
 menuItem 'Conkyzen Help' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/docs/helpfile-conkyzen.txt" --width=900 --height=700 --fontname=Monospace'
+menuItem 'Exit Dialog Help' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="Exit Dialog Help" --filename="/usr/share/bunsen/docs/helpfile-bl-exit.txt" --width=960 --height=700 --fontname=Monospace'
 menuSubmenuEnd
 
 menuEnd
