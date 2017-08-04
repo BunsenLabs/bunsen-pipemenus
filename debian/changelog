@@ -1,3 +1,9 @@
+bunsen-pipemenus (9.0.4-1) helium; urgency=medium
+
+  * (damo) bl-help-pipemenu: add bl-exit help.
+
+ -- John Crawley <john@bunsenlabs.org>  Fri, 04 Aug 2017 16:20:24 +0900
+
 bunsen-pipemenus (9.0.3-1) helium; urgency=medium
 
   * (damo) bl-tint2-pipemenu: add tint2conf to Tint2 Edit menu
