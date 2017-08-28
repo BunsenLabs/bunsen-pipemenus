@@ -3,7 +3,7 @@
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
-#    Copyright (C) 2015-2016 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2017 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ See ~/.config/openbox/pipemenus.rc for configuration options.
 DEF_BROWSERS=( 'firefox-esr' 'chromium' 'google-chrome-stable' 'opera' )
 
 # associative array: commands which are different from package names
-# like: pkg_cmd=([name1]='command1' [name2]='command2' ...)
 declare -A pkg_cmd
 pkg_cmd=([firefox-esr]='firefox')
 ########################################################################
@@ -71,7 +70,9 @@ declare -A user_package_commands AppName AppStatus AppCmd
 if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
     echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
     exit 1
-elif ! . "$USR_CFG_DIR/pipemenus.rc" 2> /dev/null; then
+fi
+
+if ! . "$USR_CFG_DIR/pipemenus.rc" 2> /dev/null; then
     echo $"Error: Failed to source pipemenus.rc in $USR_CFG_DIR" >&2
     exit 1
 fi
@@ -111,12 +112,12 @@ nodups(){
 }
 
 # if this function is removed the version in bl-include.cfg will be used
-allInstalled(){
-    local list="/var/lib/dpkg/info/${1}.list"
-    [[ -f "${list}" ]] || return 1
-    grep -Evq '^/etc($|/)' "${list}" || return 1
-    return 0
-}
+#allInstalled(){
+#    local list="/var/lib/dpkg/info/${1}.list"
+#    [[ -f "${list}" ]] || return 1
+#    grep -Evq '^/etc($|/)' "${list}" || return 1
+#    return 0
+#}
 
 BROWSERS=( "$X_WWW_B" "${BROWSERS[@]-}" "${DEF_BROWSERS[@]}" )
 nodups BROWSERS
@@ -129,7 +130,7 @@ for curApp in "${BROWSERS[@]}"; do
         AppName[$curApp]="${AppName[$curApp]:-${words[*]^}}"
     fi
     AppCmd[$curApp]="${pkg_cmd[$curApp]:-$curApp}" # use packagename as command if not defined in pkg_cmd
-    allInstalled "$curApp" && AppStatus[$curApp]='installed' || AppStatus[$curApp]=''
+    hash "${AppCmd[$curApp]}" 2>/dev/null && AppStatus[$curApp]='installed' || AppStatus[$curApp]=''
 done
 
 appExists() {

@@ -1,3 +1,10 @@
+bunsen-pipemenus (9.0.5-1) helium; urgency=medium
+
+  * bl-{multimedia,graphics,x-www-browser}-pipemenu: use existance of executable
+     to test installed status of packages.
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 28 Aug 2017 16:47:01 +0900
+
 bunsen-pipemenus (9.0.4-1) helium; urgency=medium
 
   * (damo) bl-help-pipemenu: add bl-exit help.
