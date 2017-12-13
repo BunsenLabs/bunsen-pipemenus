@@ -26,7 +26,7 @@
 # path to your "recent files" script, if you want to incorporate it:
 recent_script=/usr/bin/bl-recent-files-pipemenu
 
-# Command to open folders at "Browse here..." - any file manager
+# Command to open folders at "Browse here..." - might be any file manager, xdg-open... (gio open doesn't work)
 open_folder_cmd=bl-file-manager
 # Default command to open files with - others might be exo-open, gnome-open, thunar, pcmanfm...
 default_open_cmd=xdg-open
@@ -35,10 +35,12 @@ text_editor=bl-text-editor
 
 # function to open files with default open command, or alternative command for certain files
 # - add other conditions to choice
+# comment/uncomment choosen below lines to manage behaviour, higher satisfied condition (line) takes place/precedance
 open_file() {
-    [ -x "$1" ] && exec "$text_editor" "$1"     # comment out this line if you don't want to edit executables instead of executing
-    #[ -x "$1" ] && exec "x-terminal-emulator -e" "$1"     # uncomment this and comment out previous line to run executables in terminal instead of editing
-    [ "${1##*.}" = desktop ] && exec "$text_editor" "$1"     # comment out this line if you don't want to edit .desktop files instead of executing
+    #[ "${1##*.}" = desktop ] && exec `grep '^Exec' "$1" | tail -1 | sed 's/^Exec=//' | sed 's/%.//' | sed 's/^"//g' | sed 's/" *$//g'`     # execute .desktop files
+    #[[ "`file -b --mime-type "$1"`" == "text/x-shellscript" ]] && exec xterm -hold -e sh "$1"     # run shell scripts in xterm
+    #[ -x "$1" ] && exec xterm -hold -e "$1"     # run executables in xterm and keep open
+    [[ "`file -b --mime-type "$1"`" == "text/"* ]] && exec "$text_editor" "$1"     # edit text files
     exec "$default_open_cmd" "$1"     # use default open command if above conditions not satisfied
 }
 
@@ -113,6 +115,7 @@ esac
 
 path="${1:-$HOME}"  # default starting place is ~, otherwise $1
 path="${path%/}"
+path=$(realpath "$path")
 [ -d "$path" ] || { echo "$0 : $path is not a directory" >&2; exit 1; }
 
 case "$path" in    # only escape if string needs it
