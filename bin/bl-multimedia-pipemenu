@@ -38,7 +38,7 @@ See ~/.config/openbox/pipemenus.rc for configuration options.
 
 # default apps lists
 # user lists in ~/.config/openbox/pipemenus.rc will be merged
-DEF_MM_APPS=('mpv' 'vlc' 'audacious' 'smplayer' 'gnome-mplayer')
+DEF_MM_APPS=('mpv' 'vlc' 'audacious' 'smplayer' 'gnome-mpv')
 DEF_MM_EDITORS=('mhwaveedit' 'audacity' 'openshot')
 DEF_MM_UTILS=('xfburn' 'gtk-recordmydesktop')
 
