@@ -40,7 +40,7 @@ See ~/.config/openbox/pipemenus.rc for configuration options.
 
 # default apps list
 # user list in ~/.config/openbox/pipemenus.rc will be merged
-DEF_BROWSERS=( 'firefox-esr' 'chromium' 'google-chrome-stable' 'opera' )
+DEF_BROWSERS=( 'firefox-esr' 'chromium' 'google-chrome-stable' )
 
 # associative array: commands which are different from package names
 declare -A pkg_cmd
@@ -62,7 +62,7 @@ BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 USR_CFG_DIR="$HOME/.config/openbox"
 
 KEY_URLS_GOOGLE=('https://dl-ssl.google.com/linux/linux_signing_key.pub')
-KEY_URLS_OPERA=('http://deb.opera.com/archive.key')
+#KEY_URLS_OPERA=('http://deb.opera.com/archive.key')
 
 # user_package_commands might be in $USR_CFG_DIR/pipemenus.rc
 declare -A user_package_commands AppName AppStatus AppCmd
@@ -176,11 +176,11 @@ setupGoogleChromeStable() {
     echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee '/etc/apt/sources.list.d/google-chrome.list'
 }
 
-setupOpera() {
-    addAptKey "${KEY_URLS_OPERA[@]}" || return 1
-    say 'Creating APT sources file...' 1
-    echo 'deb http://deb.opera.com/opera/ stable non-free' | sudo tee '/etc/apt/sources.list.d/opera.list'
-}
+#setupOpera() {
+#    addAptKey "${KEY_URLS_OPERA[@]}" || return 1
+#    say 'Creating APT sources file...' 1
+#    echo 'deb http://deb.opera.com/opera/ stable non-free' | sudo tee '/etc/apt/sources.list.d/opera.list'
+#}
 
 if [[ $1 = --install ]]; then
     packageName=$2
