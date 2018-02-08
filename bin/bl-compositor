@@ -2,7 +2,7 @@
 #    bl-compositor: an Openbox Pipe Menu for use with compton compositor
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
-#    Copyright (C) 2015-2017 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2018 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -17,7 +17,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-compton_conf="$HOME/.config/compton.conf"
+user_conf="$HOME/.config/compton.conf"
+sys_conf='/etc/bunsen/compton-startup'
 
 HELP="    bl-compositor an Openbox Pipe Menu for use with compton compositor
     It should normally be called from an openbox menu.
@@ -34,7 +35,7 @@ Options (usually passed from the menu):
     If bl-compositor is called with no options (the usual method),
     it will output an xml openbox pipemenu for handling compositing.
 
-See $compton_conf and \"man compton\" for configuration options.
+See $user_conf and \"man compton\" for configuration options.
 "
 # look for a help option somewhere
 for i in "$@"
@@ -47,7 +48,7 @@ do
     esac
 done
 
-RESTART_ATTEMPTS=20 # times to try killall before reverting to -s KILL
+RESTART_ATTEMPTS=10 # times to try killall before reverting to -s KILL
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
@@ -62,32 +63,39 @@ declareDependencies compton
 
 EXECXCOMP='compton'
 
-if glxinfo | egrep -iq 'direct rendering: yes'; then
-    EXECXCOMP+=' --vsync opengl'
-fi
+# Look for system startup file
+[[ -r $sys_conf ]] && {
+    options=()
+    while read line
+    do
+        options+=(${line%%\#*})
+    done < "$sys_conf"
 
-forcekill_compton() {
-    killall -q compton
-    for (( i=0; i < RESTART_ATTEMPTS; i++ )); do
-        pidof compton > /dev/null ||
-            break
-
-        (( i == RESTART_ATTEMPTS - 1 )) &&
-            killall -q -S KILL compton
-
-        sleep 0.25
+    for i in "${options[@]}"
+    do
+        EXECXCOMP+=" $i"
     done
 }
 
 
-if [[ $1 = '--edit' ]]; then # Edit compton settings
-    [[ ! -f $compton_conf ]] &&
-        cp '/etc/xdg/compton.conf' "$compton_conf"
+forcekill_compton() {
+    for (( i=0; i < RESTART_ATTEMPTS; i++ )); do
+        killall -q compton
+        pidof compton > /dev/null || return 0
+        sleep 0.25
+    done
+    killall -q --signal KILL compton
+}
 
-    if type bl-text-editor >/dev/null;then
-        bl-text-editor "$compton_conf"
+
+if [[ $1 = '--edit' ]]; then # Edit compton settings
+    [[ ! -f $user_conf ]] &&
+        cp '/usr/share/doc/compton/examples/compton.sample.conf' "$user_conf"
+
+    if hash bl-text-editor;then
+        bl-text-editor "$user_conf"
     else
-        x-terminal-emulator -T 'edit compton.conf' -e nano "$compton_conf"
+        x-terminal-emulator -T 'edit compton.conf' -e nano "$user_conf"
     fi
 elif [[ $1 = '--start' ]]; then
     if ! pidof compton > /dev/null; then
@@ -99,6 +107,7 @@ elif [[ $1 = '--start' ]]; then
     fi
 elif [[ $1 = '--stop' ]]; then
     forcekill_compton
+    bl-tint2restart || true
 elif [[ $1 = '--restart' ]]; then
     if pidof compton > /dev/null; then
         forcekill_compton
@@ -107,7 +116,7 @@ elif [[ $1 = '--restart' ]]; then
         echo "$0 --restart: compton is not running" >&2
     fi
 elif [[ $1 = '--watch' ]]; then
-    while inotifywait -e close_write "$compton_conf"; do
+    while inotifywait -e close_write "$user_conf" -e close_write "$sys_conf"; do
         "$0" --restart
     done
 else
@@ -121,6 +130,9 @@ else
         menuSeparator
     fi
     menuItem 'Edit Compositing Settings' "$0 --edit"
+    if [[ -f "$sys_conf" ]] && hash bl-text-editor; then
+        menuItem 'Edit Compositing system settings (root)' "pkexec bl-text-editor $sys_conf"
+    fi
     menuEnd
 fi
 exit 0
