@@ -1,3 +1,9 @@
+bunsen-pipemenus (9.0.7-1) helium; urgency=medium
+
+  * bl-compositor: add system level config file for startup options.
+
+ -- John Crawley <john@bunsenlabs.org>  Thu, 08 Feb 2018 15:08:35 +0900
+
 bunsen-pipemenus (9.0.6-1) helium; urgency=medium
 
   * bl-compositor: drop compton -b option, fork instead.
