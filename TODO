@@ -1,0 +1,5 @@
+ * bl-recent-files-pipemenu:
+  * lua-posix 34.0 removed the binding of posix.getopt to getopt_long
+    in favour of supporting only the POSIX short options API. This is
+    fine on Debian Stretch (lua-posix=31) but needs to be fixed for
+    newer releases and portability to other distros.
