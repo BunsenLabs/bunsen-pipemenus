@@ -1,6 +1,7 @@
 #!/bin/bash
 #    bl-kb-pipemenu - an Openbox pipemenu for displaying keybinds
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
+#                  2016 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

@@ -34,7 +34,7 @@ default_open_cmd=xdg-open
 text_editor=bl-text-editor
 
 # function to open files with default open command, or alternative command for certain files
-# - add other conditions to choice
+# - edit conditions or add other conditions to choice
 open_file() {
     [ -x "$1" ] && exec "$text_editor" "$1"     # comment out this line if you don't want to edit executables instead of executing
     #[ -x "$1" ] && exec "x-terminal-emulator -e" "$1"     # uncomment this and comment out previous line to run executables in terminal instead of editing

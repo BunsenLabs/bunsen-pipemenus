@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #    bl-tint2-pipemenu - an Openbox pipemenu for tint2 manipulation
-#    Copyright (C) 2015-2016 damo    <damo@bunsenlabs.org>
+#    Copyright (C) 2015-2017 damo    <damo@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ loadTEditmenu(){
     fi
 }
 
-getTint2s(){   
+getTint2s(){
     menuSubmenu "EditTint2" "Edit Tint2s"
         if type bl-tint2edit &>/dev/null;then  # bl-tint2edit script found
             menuItem "Tint2 Editor" "bl-tint2edit"
