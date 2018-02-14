@@ -113,12 +113,19 @@ loadEditMenu(){
     menuItem "Default conkyrc" "bl-text-editor $CONKYDEFAULT"
     if [[ $(pidof conky) ]];then
         menuSubmenu "RunningConky" "Running Conkys"
-        while read -r session ;do  # get running conkys from sessionfile
-            [[ -z $session ]] && continue
-            CPATH=$(echo "$session" | awk '{print $3}')
-            CONKY=$(echo "$CPATH" | awk -F"/" '{print $(NF-1)"/"$NF }')
-            menuItem "$CONKY" "bl-text-editor $CPATH"
-        done < "$CSESSIONFILE"
+        pgrep -a conky | while read -r pid cmd; do #get running conkys from pgrep
+            if [[ ${cmd%% *} = conky ]]; then
+                CPATH=${cmd##* }
+                CONKY="${CPATH#$HOME/}"
+                CONKY="${CONKY#\~/}"
+                CONKY="${CONKY#.config/}"
+                if [[ $CPATH = conky ]];then
+                    CPATH="$CONKYDEFAULT"
+                    CONKY="Default conkyrc"
+                fi
+                menuItem "$CONKY" "bl-text-editor $CPATH"
+            fi
+        done
         menuSubmenuEnd
     else
         menuItem "No Running Conkys"
