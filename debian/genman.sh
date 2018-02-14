@@ -1,6 +1,7 @@
 #!/bin/sh
 # genman.sh
-# script to generate man files from executables' --help options,
+# This is a script for Debian packagers,
+# to generate man files from executables' --help options,
 # using help2man.
 # Tested on Dash, should work with other POSIX shells.
 
@@ -33,14 +34,15 @@
 #	dh_clean
 #	debian/genman.sh --clean
 #
-#Also add help2man to Build-Depends in debian/control.
+# Also add help2man to Build-Depends in debian/control.
 
 set -e
 
-# default if genman-list has no digit in name
+# default if genman-list file has no digit in name
 default_section=1
 
 # BunsenLabs generic content
+# Other vendors, please edit to taste.
 includes="[authors]
 Written by the BunsenLabs team.
 
@@ -60,8 +62,9 @@ Options:
                 to the state it was in before running the script.
     -h --help   Show this message.
 
-This is a wrapper script around help2man which automates the
-generation of simple man pages from the output of the \"--help\" option,
+This is a wrapper script around help2man for debian packagers,
+which automates the generation of simple man pages
+from the output of executables' \"--help\" option,
 along with information from dpkg,
 and configuration files in the package source debian/ directory.
 
@@ -138,7 +141,7 @@ mk_man() {
     [ -x "$exec" ] && execflag=true
     [ "$execflag" = false ] && chmod +x "$exec"
     default_desc="a script provided by ${pkg_name}"
-    desc="$( ./"$exec" --help | sed -rn "/^ *$cmd/ {s/^ *$cmd( -|:| is)? *//p;q}")"
+    desc="$( ./"$exec" --help 2>&1 | sed -rn "/^ *$cmd/ {s/^ *$cmd( -|:| is)? *//p;q}")"
     [ -z "$desc" ] && desc="$default_desc"
     help2man ./"$exec" --no-info --no-discard-stderr --version-string="$cmd $pkg_ver" --section="$section" --name="$desc" --include="$include_file" | sed "s|$HOME|~|g" > "$manfile"
     [ "$execflag" = false ] && chmod -x "$exec"
