@@ -116,9 +116,7 @@ loadEditMenu(){
         pgrep -a conky | while read -r pid cmd; do #get running conkys from pgrep
             if [[ ${cmd%% *} = conky ]]; then
                 CPATH=${cmd##* }
-                CONKY="${CPATH#$HOME/}"
-                CONKY="${CONKY#\~/}"
-                CONKY="${CONKY#.config/}"
+                CONKY="${CPATH#*.config/}"
                 if [[ $CPATH = conky ]];then
                     CPATH="$CONKYDEFAULT"
                     CONKY="Default conkyrc"
