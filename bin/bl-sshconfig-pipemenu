@@ -68,8 +68,6 @@ if not  os.access('/usr/sbin/sshd', os.X_OK):
     print ('    </item>')
     print ('</menu>')
     print ('<separator/>')
-home_dir = os.path.expanduser('~')
-mount_point = home_dir + '/Public'
 if len(hosts) >= 2:
     for host_entries in hosts:
         for host_name in host_entries['host']:
