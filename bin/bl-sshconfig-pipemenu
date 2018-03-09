@@ -73,11 +73,10 @@ if len(hosts) >= 2:
         for host_name in host_entries['host']:
             if host_name is not "*":
                 # build a secure shell command
-                ssh_command = 'x-terminal-emulator -e ssh '
-                ssh_command += host_name
+                ssh_command = 'x-terminal-emulator -e sh -c &apos; ssh ' + host_name + \
+                              ' || echo &quot;Press any key to close this window&quot;; read REPLY&apos;'
                 # build a ssh for filesystem command
-                fs_command = 'bl-file-manager ssh://'
-                fs_command += host_name
+                fs_command = 'bl-file-manager ssh://' + host_name
                 print ('<menu id="' + host_name + '" label="' + host_name + '">')
                 print ('    <item label="Start terminal session">')
                 print ('        <action name="Execute">')
