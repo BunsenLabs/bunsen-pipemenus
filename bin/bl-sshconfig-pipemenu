@@ -58,73 +58,50 @@ print '<openbox_pipe_menu>'
 
 need_separator = False
 if not  os.access('/usr/sbin/sshd', os.X_OK):
-    print '<menu id="ssh install" label="SSH server">'
-    print '    <item label="Install OpenSSH server">'
-    print '        <action name="Execute">'
-    print '            <command>'
-    print '                bl-install --name &apos;OpenSSH server and&apos; bunsen-meta-ssh'
-    print '            </command>'
-    print '        </action>'
-    print '    </item>'
-    print '</menu>'
-    print '<separator/>'
+    print ('<menu id="ssh install" label="SSH server">')
+    print ('    <item label="Install OpenSSH server">')
+    print ('        <action name="Execute">')
+    print ('            <command>')
+    print ('                bl-install --name &apos;OpenSSH server and&apos; bunsen-meta-ssh')
+    print ('            </command>')
+    print ('        </action>')
+    print ('    </item>')
+    print ('</menu>')
+    print ('<separator/>')
 home_dir = os.path.expanduser('~')
 mount_point = home_dir + '/Public'
 if len(hosts) >= 2:
     for host_entries in hosts:
         for host_name in host_entries['host']:
             if host_name is not "*":
-                config = host_entries['config']
-                if 'user' in config:
-                    user = config['user']
-                else:
-                    user = ''
-                if 'port' in config:
-                    port = config['port']
-                else:
-                    port = ''
-                if 'identityfile' in config:
-                    identity_file = config['identityfile']
                 # build a secure shell command
                 ssh_command = 'x-terminal-emulator -e ssh '
-                if port:
-                    ssh_command += '-p ' + port + ' '
-                if identity_file:
-                    ssh_command += '-i ' + identity_file[0] + ' '
-                if user:
-                    ssh_command += user + '@'
                 ssh_command += host_name
                 # build a ssh for filesystem command
-                fs_command = "bl-file-manager ssh://"
-                if user:
-                    fs_command += user + '@'
-                fs_command += host_name + ':'
-                if port:
-                    fs_command += port
-                fs_command += '/shares/Public'
-                print fs_command
-                print '<menu id="' + host_name + '" label="' + host_name + '">'
-                print '    <item label="Start terminal session">'
-                print '        <action name="Execute">'
-                print '            <command>'
-                print '                ' + ssh_command
-                print '            </command>'
-                print '        </action>'
-                print '    </item>'
-                print '    <item label="Browse with File Manager">'
-                print '        <action name="Execute">'
-                print '            <command>'
-                print '                ' + fs_command
-                print '            </command>'
-                print '        </action>'
-                print '    </item>'
-                print '</menu>'
-print '<separator/>'
-print '<item label="Edit ~/.ssh/config">'
-print '    <action name="Execute">'
-print '        <command>'
-print '            bl-text-editor ~/.ssh/config'
-print '        </command>'
-print '    </action>'
-print '</item>'
-print '</openbox_pipe_menu>'
+                fs_command = 'bl-file-manager ssh://'
+                fs_command += host_name
+                print ('<menu id="' + host_name + '" label="' + host_name + '">')
+                print ('    <item label="Start terminal session">')
+                print ('        <action name="Execute">')
+                print ('            <command>')
+                print ('                ' + ssh_command)
+                print ('            </command>')
+                print ('        </action>')
+                print ('    </item>')
+                print ('    <item label="Browse with File Manager">')
+                print ('        <action name="Execute">')
+                print ('            <command>')
+                print ('                ' + fs_command)
+                print ('            </command>')
+                print ('        </action>')
+                print ('    </item>')
+                print ('</menu>')
+print ('<separator/>')
+print ('<item label="Edit ~/.ssh/config">')
+print ('    <action name="Execute">')
+print ('        <command>')
+print ('            bl-text-editor ~/.ssh/config')
+print ('        </command>')
+print ('    </action>')
+print ('</item>')
+print ('</openbox_pipe_menu>')
