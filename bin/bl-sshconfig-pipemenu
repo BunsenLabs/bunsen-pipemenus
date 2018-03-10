@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #    bl-sshconfig-pipemenu - an Openbox pipemenu for Graphics applications
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2015  Ankur Khanna
 #    Copyright (C) 2016 xaos52 <xaos52@bunsenlabs.org>
-#
+#    Copyright (C) 2018 tknomanzr <webradley9929@gmail.com>
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -21,7 +21,7 @@ import os
 import warnings
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
-    from paramiko.config import SSHConfig
+from paramiko.config import SSHConfig
 import argparse
 import sys
 
@@ -54,62 +54,51 @@ else:
     config.parse(config_file)
     hosts = config._config
 
-print '<openbox_pipe_menu>\n'
+print '<openbox_pipe_menu>'
 
 need_separator = False
 if not  os.access('/usr/sbin/sshd', os.X_OK):
-    # print '<menu id="ssh install" label="Install bunsen-meta-ssh">'
-    print '    <item label="Install OpenSSH server and client">'
-    print '        <action name="Execute">'
-    print '            <command>'
-    print '                bl-install --name &apos;OpenSSH server and client&apos; bunsen-meta-ssh'
-    print '            </command>'
-    print '        </action>'
-    print '    </item>\n'
-    # print '</menu>\n'
-    need_separator = True
-
+    print ('<menu id="ssh install" label="SSH server">')
+    print ('    <item label="Install OpenSSH server">')
+    print ('        <action name="Execute">')
+    print ('            <command>')
+    print ('                bl-install --name &apos;OpenSSH server and&apos; bunsen-meta-ssh')
+    print ('            </command>')
+    print ('        </action>')
+    print ('    </item>')
+    print ('</menu>')
+    print ('<separator/>')
 if len(hosts) >= 2:
-    for h in hosts[1:]:
-        if 'host' in h and 'hostname' in h['config']:
-            conf = h['config']
-            user = ''
-            if 'user' in conf:
-                user = '-l ' + conf['user'] + ' '
-            port = ['', '']
-            if 'port' in conf:
-                port[0] = '-p ' + conf['port'] + ' '
-                port[1] = ':' + conf['port']
-            if need_separator:
-                print '<separator/>\n'
-                need_separator = False
-            print '<menu id="ssh-'+h['host'][0]+'" label="'+h['host'][0]+'">'
-            print '    <item label="Start terminal session">'
-            print '        <action name="Execute">'
-            print '            <command>'
-            print '                x-terminal-emulator -e ssh ' + user + port[0] + conf['hostname']
-            print '            </command>'
-            print '        </action>'
-            print '    </item>\n'
-            print '    <item label="Browse with File Manager">'
-            print '        <action name="Execute">'
-            print '            <command>'
-            print '                bl-file-manager ssh://' + conf['hostname'] + port[1]
-            print '            </command>'
-            print '        </action>'
-            print '    </item>\n'
-            print '</menu>\n'
-    print '<separator/>\n'
-
-if need_separator:
-    print '<separator/>\n'
-    need_separator = False
-print '<item label="Edit ~/.ssh/config">'
-print '    <action name="Execute">'
-print '        <command>'
-print '            bl-text-editor ~/.ssh/config'
-print '        </command>'
-print '    </action>'
-print '</item>\n'
-
-print '</openbox_pipe_menu>'
+    for host_entries in hosts:
+        for host_name in host_entries['host']:
+            if host_name is not "*":
+                # build a secure shell command
+                ssh_command = 'x-terminal-emulator -e sh -c &apos; ssh ' + host_name + \
+                              ' || echo &quot;Press any key to close this window&quot;; read REPLY&apos;'
+                # build a ssh for filesystem command
+                fs_command = 'bl-file-manager ssh://' + host_name
+                print ('<menu id="' + host_name + '" label="' + host_name + '">')
+                print ('    <item label="Start terminal session">')
+                print ('        <action name="Execute">')
+                print ('            <command>')
+                print ('                ' + ssh_command)
+                print ('            </command>')
+                print ('        </action>')
+                print ('    </item>')
+                print ('    <item label="Browse with File Manager">')
+                print ('        <action name="Execute">')
+                print ('            <command>')
+                print ('                ' + fs_command)
+                print ('            </command>')
+                print ('        </action>')
+                print ('    </item>')
+                print ('</menu>')
+print ('<separator/>')
+print ('<item label="Edit ~/.ssh/config">')
+print ('    <action name="Execute">')
+print ('        <command>')
+print ('            bl-text-editor ~/.ssh/config')
+print ('        </command>')
+print ('    </action>')
+print ('</item>')
+print ('</openbox_pipe_menu>')
