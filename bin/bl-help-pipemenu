@@ -45,54 +45,53 @@ fi
 
 menuStart
 menuSeparator 'Online Help'
-menuSeparator
 menuItem 'Getting Started' 'x-www-browser "https://forums.bunsenlabs.org/viewforum.php?id=21"'
 menuItem 'Basic Help & Support' 'x-www-browser "https://forums.bunsenlabs.org/viewforum.php?id=2"'
 menuItem 'Scripts, Tutorials & Tips' 'x-www-browser "https://forums.bunsenlabs.org/viewforum.php?id=9"'
 menuSubmenu 'DebianWWW' 'Debian'
-menuItem 'Debian Documentation' 'x-www-browser "https://www.debian.org/doc/"'
-menuItem 'Debian Handbook' 'x-www-browser "https://debian-handbook.info/browse/jessie/"'
-menuItem 'Debian Reference' 'x-www-browser "https://www.debian.org/doc/manuals/debian-reference/"'
-menuItem 'Wiki' 'x-www-browser "https://wiki.debian.org/"'
-menuItem 'Forum' 'x-www-browser "http://forums.debian.net/"'
-menuItem 'Package Search' 'x-www-browser "https://www.debian.org/distrib/packages"'
-menuItem 'Package Tracker' 'x-www-browser "https://tracker.debian.org/"'
-menuItem 'Security Tracker' 'x-www-browser "https://security-tracker.debian.org/tracker/"'
+    menuItem 'Debian Documentation' 'x-www-browser "https://www.debian.org/doc/"'
+    menuItem 'Debian Handbook' 'x-www-browser "https://debian-handbook.info/browse/jessie/"'
+    menuItem 'Debian Reference' 'x-www-browser "https://www.debian.org/doc/manuals/debian-reference/"'
+    menuItem 'Wiki' 'x-www-browser "https://wiki.debian.org/"'
+    menuItem 'Forum' 'x-www-browser "http://forums.debian.net/"'
+    menuItem 'Package Search' 'x-www-browser "https://www.debian.org/distrib/packages"'
+    menuItem 'Package Tracker' 'x-www-browser "https://tracker.debian.org/"'
+    menuItem 'Security Tracker' 'x-www-browser "https://security-tracker.debian.org/tracker/"'
 menuSubmenuEnd
 menuItem 'Arch Wiki' 'x-www-browser "https://wiki.archlinux.org/index.php/Table_of_contents"'
 
 menuSeparator
 
 menuSubmenu 'OpenboxWWW' 'Openbox'
-menuSubmenu 'ObWWW' 'Openbox Website'
-menuItem 'Openbox Homepage' 'x-www-browser "http://openbox.org/"'
-menuItem 'Openbox Getting Started' 'x-www-browser "http://openbox.org/wiki/Help:Getting_started"'
-menuItem 'Openbox Documentation' 'x-www-browser "http://openbox.org/wiki/Help:Contents"'
-menuItem 'Openbox FAQs' 'x-www-browser "http://openbox.org/wiki/Help:FAQ"'
-menuSubmenuEnd
-menuItem 'ArchWiki Openbox Guide' 'x-www-browser "http://wiki.archlinux.org/index.php/Openbox"'
-menuItem 'Debian Wiki Openbox Guide' 'x-www-browser "https://wiki.debian.org/Openbox"'
-menuItem 'Urukramas Openbox Guide' 'x-www-browser "https://urukrama.wordpress.com/openbox-faq/"'
+    menuSubmenu 'ObWWW' 'Openbox Website'
+        menuItem 'Openbox Homepage' 'x-www-browser "http://openbox.org/"'
+        menuItem 'Openbox Getting Started' 'x-www-browser "http://openbox.org/wiki/Help:Getting_started"'
+        menuItem 'Openbox Documentation' 'x-www-browser "http://openbox.org/wiki/Help:Contents"'
+        menuItem 'Openbox FAQs' 'x-www-browser "http://openbox.org/wiki/Help:FAQ"'
+    menuSubmenuEnd
+    menuItem 'ArchWiki Openbox Guide' 'x-www-browser "http://wiki.archlinux.org/index.php/Openbox"'
+    menuItem 'Debian Wiki Openbox Guide' 'x-www-browser "https://wiki.debian.org/Openbox"'
+    menuItem 'Urukramas Openbox Guide' 'x-www-browser "https://urukrama.wordpress.com/openbox-faq/"'
 menuSubmenuEnd
 
 menuSubmenu 'Tint2WWW' 'Tint2'
-menuItem 'Tint2 Wiki: FAQ' 'x-www-browser "https://gitlab.com/o9000/tint2/wikis/FAQ"'
-menuItem 'Tint2 Wiki: Configuration' 'x-www-browser "https://gitlab.com/o9000/tint2/blob/master/doc/tint2.md"'
-menuItem 'Tint2 Forum Thread' 'x-www-browser "https://forums.bunsenlabs.org/viewtopic.php?id=254"'
-menuItem 'Tint2 man page' 'x-terminal-emulator -T "Tint2 man page" -e man tint2'
+    menuItem 'Tint2 Wiki: FAQ' 'x-www-browser "https://gitlab.com/o9000/tint2/wikis/FAQ"'
+    menuItem 'Tint2 Wiki: Configuration' 'x-www-browser "https://gitlab.com/o9000/tint2/blob/master/doc/tint2.md"'
+    menuItem 'Tint2 Forum Thread' 'x-www-browser "https://forums.bunsenlabs.org/viewtopic.php?id=254"'
+    menuItem 'Tint2 man page' 'x-terminal-emulator -T "Tint2 man page" -e man tint2'
 menuSubmenuEnd
 
 menuSubmenu 'ConkyWWW' 'Conky'
-menuItem 'Conky Wiki' 'x-www-browser "https://github.com/brndnmtthws/conky/wiki"'
-menuItem 'Conky Archive' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?pid=371424"'
-menuItem 'Conky man pages' 'x-terminal-emulator -T "Conky man page" -e man conky'
+    menuItem 'Conky Wiki' 'x-www-browser "https://github.com/brndnmtthws/conky/wiki"'
+    menuItem 'Conky Archive' 'x-www-browser "http://crunchbang.org/forums/viewtopic.php?pid=371424"'
+    menuItem 'Conky man pages' 'x-terminal-emulator -T "Conky man page" -e man conky'
 menuSubmenuEnd
 menuSeparator
 
 menuSubmenu 'ThemesWWW' 'Theme Resources'
-menuItem 'Bunsenlabs on DeviantArt' 'x-www-browser "http://bunsenlabs.deviantart.com/"'
-menuItem 'Box-Look.org' 'x-www-browser "http://www.box-look.org"'
-menuItem 'gnome-look.org' 'x-www-browser "http://gnome-look.org/"'
+    menuItem 'Bunsenlabs on DeviantArt' 'x-www-browser "http://bunsenlabs.deviantart.com/"'
+    menuItem 'Box-Look.org' 'x-www-browser "http://www.box-look.org"'
+    menuItem 'gnome-look.org' 'x-www-browser "http://gnome-look.org/"'
 menuSubmenuEnd
 menuSeparator
 menuSeparator 'man pages'
@@ -103,10 +102,10 @@ menuItem 'xrandr' 'x-terminal-emulator -T "xrandr man page" -e man xrandr'
 
 menuSeparator
 menuSubmenu 'BLhelp' 'Bunsen Help Files'
-menuItem 'How to Edit Menu' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="How to Edit the Menu" --filename="/usr/share/bunsen/docs/helpfile-menu.txt" --width=900 --height=700 --fontname=Monospace'
-menuItem 'About Bunsen Alternatives' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="About Bunsen Alternatives" --filename="/usr/share/bunsen/docs/helpfile-bl-alternatives.txt" --width=900 --height=700 --fontname=Monospace'
-menuItem 'Conkyzen Help' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/docs/helpfile-conkyzen.txt" --width=900 --height=700 --fontname=Monospace'
-menuItem 'Exit Dialog Help' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="Exit Dialog Help" --filename="/usr/share/bunsen/docs/helpfile-bl-exit.txt" --width=960 --height=700 --fontname=Monospace'
+    menuItem 'How to Edit Menu' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="How to Edit the Menu" --filename="/usr/share/bunsen/docs/helpfile-menu.txt" --width=900 --height=700 --fontname=Monospace'
+    menuItem 'About Bunsen Alternatives' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="About Bunsen Alternatives" --filename="/usr/share/bunsen/docs/helpfile-bl-alternatives.txt" --width=900 --height=700 --fontname=Monospace'
+    menuItem 'Conkyzen Help' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="Conkyzen Help" --filename="/usr/share/bunsen/docs/helpfile-conkyzen.txt" --width=900 --height=700 --fontname=Monospace'
+    menuItem 'Exit Dialog Help' 'yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="Exit Dialog Help" --filename="/usr/share/bunsen/docs/helpfile-bl-exit.txt" --width=960 --height=700 --fontname=Monospace'
 menuSubmenuEnd
 
 menuEnd
