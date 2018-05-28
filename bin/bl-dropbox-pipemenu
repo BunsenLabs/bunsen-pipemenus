@@ -184,7 +184,7 @@ else
         [[ -d $HOME/Dropbox ]] &&
             menuItem 'Open Dropbox Folder' "bl-file-manager $HOME/Dropbox"
 
-        if ! pidof dropbox > /dev/null; then
+        if "$USER_DBPY" running; then
             menuItem 'Start Dropbox' "$0 --start-dropbox"
         else
             menuItem 'Stop Dropbox' "$0 --stop-dropbox"
