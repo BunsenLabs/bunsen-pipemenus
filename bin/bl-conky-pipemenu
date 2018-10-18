@@ -104,7 +104,7 @@ loadSavedsessionSubmenu(){
 
 loadPinMenu(){
     if type bl-conkypin &>/dev/null;then
-        menuItem "Pin moveable Conkys" "bl-conkypin"
+        menuItem "Move a Conky" "bl-conkypin"
         menuSeparator
     fi
 }
