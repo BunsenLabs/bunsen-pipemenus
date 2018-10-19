@@ -226,6 +226,11 @@ else # pipemenu
     done
     $menu_started && menuSubmenuEnd
 
+# You can add custom entries like this:
+    #menuSeparator
+    #menuItem "Item name" "Item command"
+    #menuSeparator
+
     if $INSTALLED ; then
         menuSeparator
         menuItem 'Select Default Browser' "x-terminal-emulator -T 'Select Default Browser' -e sh -c 'sudo update-alternatives --config x-www-browser; sleep 5'"

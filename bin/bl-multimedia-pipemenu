@@ -229,6 +229,11 @@ else # pipemenu
 
     $install_menu_started && menuSubmenuEnd
 
+# You can add custom entries like this:
+    #menuSeparator
+    #menuItem "Item name" "Item command"
+    #menuSeparator
+
     menuEnd
 fi
 exit 0
