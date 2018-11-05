@@ -1,3 +1,10 @@
+bunsen-pipemenus (9.1.4-1) helium; urgency=low
+
+  * bl-conky-pipemenu: change title of conky mover menu item
+  * Improve comments and edit README.
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 05 Nov 2018 17:03:38 +0900
+
 bunsen-pipemenus (9.1.3-1) helium; urgency=medium
 
   * bl-dropbox-pipemenu: bugfix: use dropbox.py to detect status
