@@ -21,3 +21,6 @@ bl-tint2-pipemenu
 bl-x-www-browser-pipemenu
 
 They are all used by the BunsenLabs Openbox menu defined in bunsen-configs.
+
+EDIT 2018/11/5: bl-dropbox-pipemenu is no longer invoked by the default menu,
+but is still shipped in this package.
