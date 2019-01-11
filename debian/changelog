@@ -1,3 +1,16 @@
+bunsen-pipemenus (10.0-1) lithium; urgency=medium
+
+  * Migrate to Lithium repository.
+  * Upgrade standards version to 4.3.0, debhelper compat to 10.
+  * Update copyright year.
+  * Depends: Remove pre-Helium version conditions on BunsenLabs packages.
+  * Rename all references to bl-include.cfg to bl-includes.
+  * bl-dropbox-pipemenu: Replace python-gpgme with python-gpg.
+  * bl-libreoffice-pipemenu: Replace libreoffice-gtk with libreoffice-gtk2.
+  * bl-printing-pipemenu: Remove gksudo for system-config-printer call.
+
+ -- John Crawley <john@bunsenlabs.org>  Fri, 11 Jan 2019 15:13:26 +0900
+
 bunsen-pipemenus (9.1.4-1) helium; urgency=low
 
   * bl-conky-pipemenu: change title of conky mover menu item
