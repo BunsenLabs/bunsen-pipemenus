@@ -74,8 +74,8 @@ mkdir -p "$SCROTSDIR"
 # user_package_commands might be in $USR_CFG_DIR/pipemenus.rc
 declare -A user_package_commands AppName AppStatus AppCmd
 
-if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
+    echo $"Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 
@@ -121,7 +121,7 @@ nodups(){
     done
 }
 
-# if this function is removed the version in bl-include.cfg will be used
+# if this function is removed the version in bl-includes will be used
 #allInstalled(){
 #    local list="/var/lib/dpkg/info/${1}.list"
 #    [[ -f "${list}" ]] || return 1

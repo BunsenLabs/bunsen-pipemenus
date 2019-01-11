@@ -2,7 +2,7 @@
 #    bl-dropbox-pipemenu: an Openbox pipemenu for use with Dropbox
 #    Copyright (C) 2012 Philip Newborough <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
-#    Copyright (C) 2015-2016  John Crawley <john@bunsenlabs.org>
+#    Copyright (C) 2015-2019  John Crawley <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ PROMPT_DELAY_VARIANTS=(FAlSE 0 FALSE 10 FALSE 20 FALSE 30 FALSE 40 FALSE 50 TRUE
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
-for i in bl-include.cfg yad-includes
+for i in bl-includes yad-includes
 do
     if ! . "$BL_COMMON_LIBDIR/$i" 2> /dev/null; then
         echo "Error: Failed to source $i in $BL_COMMON_LIBDIR" >&2
@@ -114,19 +114,19 @@ elif [[ $1 = '--install-dropbox' ]]; then
         exit 1
     }
 
-    allInstalled python-gpgme || {
-        yad_question 'We need to install the package python-gpgme.\nDo you want to proceed?' || exit 0
+    allInstalled python-gpg || {
+        yad_question 'We need to install the package python-gpg.\nDo you want to proceed?' || exit 0
         tmpDir=$(mktemp -d)
         tmpFile=$(mktemp --tmpdir="$tmpDir")
         export tmpFile
         installer(){
             (
-            say 'Installing python-gpgme...' 1
+            say 'Installing python-gpg...' 1
             connectiontest || return 1
             say 'Updating sources...' 1
             safeUpdate || say 'Continuing in spite of update problems...' 3
             say 'Installing...' 1
-            safeInstall -y python-gpgme || return 1
+            safeInstall -y python-gpg || return 1
             say "
     python-pgpme has been installed successfully.
 
@@ -136,12 +136,12 @@ elif [[ $1 = '--install-dropbox' ]]; then
             )
         }
         export -f say connectiontest errorExit safeUpdate safeInstall installer
-        x-terminal-emulator -T 'Installing python-gpgme' -e bash -c 'installer; echo $? > "$tmpFile"'
+        x-terminal-emulator -T 'Installing python-gpg' -e bash -c 'installer; echo $? > "$tmpFile"'
         instRet=$(<$tmpFile)
         [[ -d $tmpDir && $tmpDir = /tmp/* ]] && rm -r "$tmpDir"
         [[ $instRet -ne 0 ]] && {
-            echo "$0: failed to install python-gpgme." >&2
-            yad_error 'Failed to install python-gpgme.'
+            echo "$0: failed to install python-gpg." >&2
+            yad_error 'Failed to install python-gpg.'
             exit 1
         }
     }

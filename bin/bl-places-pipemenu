@@ -1,6 +1,6 @@
 #!/bin/sh
 #    bl-places-pipemenu - an openbox places pipe menu
-#    Copyright (C) 2010~2016  John Crawley <john@bunsenlabs.org>
+#    Copyright (C) 2010~2019  John Crawley <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -63,8 +63,8 @@ Options:
 If a directory tree root is not specified, $HOME will be used.
 
 Configuration:
-/usr/bin/bl-places-pipemenu may be edited directly for system-wide changes,
-or copied to ~/bin and edited there for per-user changes.
+/usr/bin/bl-places-pipemenu may be
+copied to ~/bin and edited there for per-user changes.
 
 Editable variables and functions, at the top of the file:
 recent_script       path to a script outputting an openbox pipemenu

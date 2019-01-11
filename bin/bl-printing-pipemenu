@@ -2,7 +2,7 @@
 #    bl-printing-pipemenu an Openbox pipemenu for configuring printing
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
-#    Copyright (C) 2015 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2019 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ done
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
-if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
+    echo $"Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 
@@ -60,7 +60,7 @@ else
     # Pipemenu
     menuStart
     if type 'system-config-printer' &> /dev/null; then
-        menuItem 'Configure Printers' 'gksudo system-config-printer'
+        menuItem 'Configure Printers' 'system-config-printer'
     else
         menuItem 'Install Printing Support' "$0 --install"
     fi

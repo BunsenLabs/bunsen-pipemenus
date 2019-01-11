@@ -48,8 +48,8 @@ done
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
-if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
+    echo $"Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 

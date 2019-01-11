@@ -1,7 +1,7 @@
 #!/bin/bash
 #    bl-conky-pipemenu - an Openbox pipemenu for manipulating conky
 #    Copyright (C) 2015 damo <damo@bunsenlabs.org>
-#                  2016 John Crawley <john@bunsenlabs.org>
+#                  2016-2019 John Crawley <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -49,12 +49,12 @@ CZEN="bl-conkyzen"
 CSESSION="bl-conky-session"
 HELPFILE="/usr/share/bunsen/docs/helpfile-conkyzen.txt"
 
-if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo "Error: Failed to source bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
+    echo "Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 if [ ! -e "$CSESSIONFILE" ] 2> /dev/null ; then
-    echo "Error: Failed to locate conky-sessionfile in $CONKYPATH" >&2
+    echo "Failed to locate ${CSESSIONFILE}, generating default..."
     echo "conky -c $HOME/.conkyrc & sleep 1" > "$CSESSIONFILE"
 fi
 if [ ! -e "$SESSIONS" ] 2> /dev/null ; then

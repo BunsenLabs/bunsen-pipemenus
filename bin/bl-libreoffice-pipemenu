@@ -2,7 +2,7 @@
 #    bl-libreoffice-pipemenu an Openbox Pipe Menu for use with LibreOffice
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
-#    Copyright (C) 2015-2017 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2019 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ done
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
-if ! . "$BL_COMMON_LIBDIR/bl-include.cfg" 2> /dev/null; then
-    echo $"Error: Failed to locate bl-include.cfg in $BL_COMMON_LIBDIR" >&2
+if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
+    echo $"Error: Failed to locate bl-includes in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 
@@ -78,12 +78,12 @@ if [[ $1 = --install ]]; then
         appName=${AppName[$packageName]}
         appExists "$packageName" || exit 1
         terminalCheck -T "Install $appName" "$@"
-        if allInstalled libreoffice-gtk; then
+        if allInstalled libreoffice-gtk2; then
             inst_pkgs=( "$packageName" )
             desc="This script will install $appName (without recommends)."
         else
-            inst_pkgs=( "$packageName" 'libreoffice-gtk' )
-            desc="This script will install $appName and libreoffice-gtk (without recommends)."
+            inst_pkgs=( "$packageName" 'libreoffice-gtk2' )
+            desc="This script will install $appName and libreoffice-gtk2 (without recommends)."
         fi
         promptInstall --no-install-recommends "$appName" "$desc" "${inst_pkgs[@]}"
     fi
