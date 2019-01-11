@@ -2,13 +2,15 @@ Source: bunsen-pipemenus
 Section: misc
 Priority: optional
 Maintainer: John Crawley <john@bunsenlabs.org>
-Build-Depends: debhelper (>= 9), help2man
-Standards-Version: 3.9.5
+Build-Depends: debhelper (>= 10), help2man
+Standards-Version: 4.3.0
 Homepage: https://github.com/BunsenLabs/bunsen-pipemenus
+Vcs-Git: https://github.com/BunsenLabs/bunsen-pipemenus.git
+Vcs-Browser: https://github.com/BunsenLabs/bunsen-pipemenus
 
 Package: bunsen-pipemenus
 Architecture: all
-Depends: ${misc:Depends}, bunsen-common (>= 8.8.2-1), xterm | x-terminal-emulator, openbox, yad, wget, python, python-paramiko, mesa-utils, lua5.2, lua-expat, lua-penlight, lua-posix, lua-socket
-Recommends: bunsen-configs, bunsen-utilities, bunsen-docs(>= 8.1-1), bunsen-conky, tint2, compton, inotify-tools
+Depends: ${misc:Depends}, bunsen-common, xterm | x-terminal-emulator, openbox, yad, wget, python, python-paramiko, mesa-utils, lua5.2, lua-expat, lua-penlight, lua-posix, lua-socket
+Recommends: bunsen-configs, bunsen-utilities, bunsen-docs, bunsen-conky, tint2, compton, inotify-tools
 Description: Various Openbox pipemenus
  Contains various Openbox pipemenus for use with Bunsen Linux.
