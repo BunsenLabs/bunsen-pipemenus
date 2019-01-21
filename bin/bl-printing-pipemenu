@@ -60,7 +60,7 @@ else
     # Pipemenu
     menuStart
     if type 'system-config-printer' &> /dev/null; then
-        menuItem 'Configure Printers' 'gksudo system-config-printer'
+        menuItem 'Configure Printers' 'system-config-printer'
     else
         menuItem 'Install Printing Support' "$0 --install"
     fi
