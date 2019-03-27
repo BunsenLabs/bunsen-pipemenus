@@ -112,8 +112,8 @@ case $1 in
 esac
 
 path="${1:-$HOME}"  # default starting place is ~, otherwise $1
-path="${path%/}"
 [ -d "$path" ] || { echo "$0 : $path is not a directory" >&2; exit 1; }
+path="${path%/}"
 
 case "$path" in    # only escape if string needs it
 *\&*|*\<*|*\>*|*\"*|*\'*)
