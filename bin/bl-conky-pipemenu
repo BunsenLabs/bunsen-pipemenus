@@ -51,11 +51,11 @@ if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     echo "Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
-if [ ! -e "$SESSIONFILE" ] 2> /dev/null ; then
+if [ ! -e "$SESSIONFILE" ] ; then
     echo "Failed to locate ${SESSIONFILE}, generating default..." >&2
     echo "conky -c $CONKYDEFAULT & sleep 1" > "$SESSIONFILE"
 fi
-if [ ! -e "$SESSIONS" ] 2> /dev/null ; then
+if [ ! -e "$SESSIONS" ] ; then
     echo "$0: Failed to locate saved-sessions in $CONKYPATH" >&2
 fi
 
