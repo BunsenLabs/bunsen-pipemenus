@@ -87,7 +87,7 @@ loadNewsessionMenu(){
 }
 
 loadReloadMenu(){
-    if type $bl-conky-session &>/dev/null;then  # bl-conky-session script found
+    if type bl-conky-session &>/dev/null;then  # bl-conky-session script found
         menuItem "Reload Conkys" "bl-conky-session"
     fi
 }
