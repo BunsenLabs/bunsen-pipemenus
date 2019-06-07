@@ -1,3 +1,10 @@
+bunsen-pipemenus (10.0.1-1) lithium; urgency=medium
+
+  * bl-conky-pipemenu: Fix obsolete default conky config path.
+  * Apply some other small bugfixes.
+
+ -- John Crawley <john@bunsenlabs.org>  Fri, 07 Jun 2019 16:55:22 +0900
+
 bunsen-pipemenus (10.0-1) lithium; urgency=medium
 
   * Migrate to Lithium repository.
