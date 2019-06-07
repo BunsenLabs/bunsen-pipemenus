@@ -41,21 +41,19 @@ done
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
-CONKYDEFAULT="$HOME/.conkyrc"
 CONKYPATH="$HOME/.config/conky"
-CSESSIONFILE="$CONKYPATH/conky-sessionfile"
+CONKYDEFAULT="$CONKYPATH/conky.conf"
+SESSIONFILE="$CONKYPATH/conky-sessionfile"
 SESSIONS="$CONKYPATH/saved-sessions"
-CZEN="bl-conkyzen"
-CSESSION="bl-conky-session"
 HELPFILE="/usr/share/bunsen/docs/helpfile-conkyzen.txt"
 
 if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     echo "Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
-if [ ! -e "$CSESSIONFILE" ] 2> /dev/null ; then
-    echo "Failed to locate ${CSESSIONFILE}, generating default..."
-    echo "conky -c $HOME/.conkyrc & sleep 1" > "$CSESSIONFILE"
+if [ ! -e "$SESSIONFILE" ] 2> /dev/null ; then
+    echo "Failed to locate ${SESSIONFILE}, generating default..." >&2
+    echo "conky -c $CONKYDEFAULT & sleep 1" > "$SESSIONFILE"
 fi
 if [ ! -e "$SESSIONS" ] 2> /dev/null ; then
     echo "$0: Failed to locate saved-sessions in $CONKYPATH" >&2
@@ -64,12 +62,12 @@ fi
 declareDependencies yad
 
 getSessions(){  # read any saved sessions from save-sessions file
-    menuItem "Default" "$CSESSION $CSESSIONFILE"
+    menuItem "Default" "bl-conky-session $SESSIONFILE"
     if [ -e "$SESSIONS" ]
     then
         while read -r session ;do
             [[ -z $session ]] && continue   # skip if line is blank
-            menuItem "$session" "$CSESSION $session"
+            menuItem "$session" "bl-conky-session $session"
         done < "$SESSIONS"
     else
         echo "$0: Failed to locate saved-sessions in $CONKYPATH" >&2
@@ -77,25 +75,25 @@ getSessions(){  # read any saved sessions from save-sessions file
 }
 
 loadChooserMenu(){
-    if type "$CZEN" &>/dev/null;then  # bl-conkyzen script found
-        menuItem "Conky Chooser" "$CZEN"
+    if type bl-conkyzen &>/dev/null;then  # bl-conkyzen script found
+        menuItem "Conky Chooser" "bl-conkyzen"
     fi
 }
 
 loadNewsessionMenu(){
-    if type "$CZEN" &>/dev/null;then  # bl-conkyzen script found
-        menuItem "New Conky Session" "$CZEN -z"
+    if type bl-conkyzen &>/dev/null;then  # bl-conkyzen script found
+        menuItem "New Conky Session" "bl-conkyzen -z"
     fi
 }
 
 loadReloadMenu(){
-    if type "$CSESSION" &>/dev/null;then  # bl-conky-session script found
-        menuItem "Reload Conkys" "$CSESSION"
+    if type $bl-conky-session &>/dev/null;then  # bl-conky-session script found
+        menuItem "Reload Conkys" "bl-conky-session"
     fi
 }
 
 loadSavedsessionSubmenu(){
-    if type "$CSESSION" &>/dev/null;then  # bl-conky-session script found
+    if type bl-conky-session &>/dev/null;then  # bl-conky-session script found
         menuSubmenu "Sessions" "Saved Sessions"
         getSessions
         menuSubmenuEnd
