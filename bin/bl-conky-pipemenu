@@ -100,9 +100,9 @@ loadSavedsessionSubmenu(){
     fi
 }
 
-loadPinMenu(){
-    if type bl-conkypin &>/dev/null;then
-        menuItem "Move a Conky" "bl-conkypin"
+loadMoveMenu(){
+    if type bl-conkymove &>/dev/null;then
+        menuItem "Move a Conky" "bl-conkymove"
         menuSeparator
     fi
 }
@@ -156,7 +156,7 @@ loadChooserMenu
 loadReloadMenu
 getConkys
 menuSeparator
-loadPinMenu
+loadMoveMenu
 loadNewsessionMenu
 loadSavedsessionSubmenu
 menuSeparator
