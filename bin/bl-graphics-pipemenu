@@ -2,7 +2,7 @@
 #    bl-graphics-pipemenu - an Openbox pipemenu for Graphics applications
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2015-2016 damo    <damo@bunsenlabs.org>
-#    Copyright (C) 2015-2017 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2019 John Crawley    <john@bunsenlabs.org>
 #    Copyright (C) 2016 Jens John <dev@2ion.de>
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ See ~/.config/openbox/pipemenus.rc for configuration options.
 
 # default apps lists
 # user lists in ~/.config/openbox/pipemenus.rc will be merged
-DEF_GRAPHICS_APPS=( 'mirage' 'viewnior' 'gpicview' 'ristretto' 'geeqie' 'gimp' 'blender' 'inkscape' 'mandelbulber2' )
+DEF_GRAPHICS_APPS=( 'mirage' 'viewnior' 'gpicview' 'ristretto' 'geeqie' 'gimp' 'inkscape' )
 DEF_GRAPHICS_SCROTS=('xfce4-screenshooter' 'scrot' )
 
 # associative array: commands which are different from package names
