@@ -2,7 +2,7 @@
 #    bl-multimedia-pipemenu - an Openbox pipemenu for Multimedia applications
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
-#    Copyright (C) 2015-2017 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2019 John Crawley    <john@bunsenlabs.org>
 #    Copyright (C) 2018 Matthew T Hoare <matthew.t.hoare@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ See ~/.config/openbox/pipemenus.rc for configuration options.
 # user lists in ~/.config/openbox/pipemenus.rc will be merged
 DEF_MM_APPS=('mpv' 'vlc' 'audacious' 'smplayer' 'gnome-mpv')
 DEF_MM_EDITORS=('mhwaveedit' 'audacity' 'openshot')
-DEF_MM_UTILS=('xfburn' 'gtk-recordmydesktop')
+DEF_MM_UTILS=('xfburn' 'brasero' 'k3b' 'gtk-recordmydesktop')
 
 # associative array: commands which are different from package names
 declare -A pkg_cmd
