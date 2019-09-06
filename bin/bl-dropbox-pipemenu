@@ -23,6 +23,8 @@
 USER_DBPY_DIR="$HOME/bin"
 USER_DBPY="$USER_DBPY_DIR/dropbox.py"
 
+REMOTE_DBPY='https://www.dropbox.com/download?dl=packages/dropbox.py'
+
 USERDBDIR="$HOME/.dropbox-dist/"
 
 HELP='    bl-dropbox-pipemenu an Openbox Pipe Menu for use with dropbox
@@ -88,7 +90,7 @@ get_dropbox.py() {
     }
     mkdir -p "$USER_DBPY_DIR"
     notify-send -i dialog-information 'Dropbox Installation' 'Fetching Dropbox frontend dropbox.py...'
-    wget -O "$USER_DBPY" 'https://www.dropbox.com/download?dl=packages/dropbox.py' || { echo "$0: dropbox.py download failed." >&2; return 1;}
+    wget -O "$USER_DBPY" "$REMOTE_DBPY" || { echo "$0: dropbox.py download failed." >&2; return 1;}
     [[ -f "$USER_DBPY" ]] || { echo "$0: $USER_DBPY does not exist." >&2; return 1;}
     chmod 755 "$USER_DBPY" || { echo "$0: failed to set permissions on $USER_DBPY" >&2; return 1;}
     return 0
@@ -114,21 +116,21 @@ elif [[ $1 = '--install-dropbox' ]]; then
         exit 1
     }
 
-    allInstalled python-gpg || {
-        yad_question 'We need to install the package python-gpg.\nDo you want to proceed?' || exit 0
+    allInstalled python3-gpg || {
+        yad_question 'We need to install the package python3-gpg.\nDo you want to proceed?' || exit 0
         tmpDir=$(mktemp -d)
         tmpFile=$(mktemp --tmpdir="$tmpDir")
         export tmpFile
         installer(){
             (
-            say 'Installing python-gpg...' 1
+            say 'Installing python3-gpg...' 1
             connectiontest || return 1
             say 'Updating sources...' 1
             safeUpdate || say 'Continuing in spite of update problems...' 3
             say 'Installing...' 1
-            safeInstall -y python-gpg || return 1
+            safeInstall -y python3-gpg || return 1
             say "
-    python-pgpme has been installed successfully.
+    python3-gpg has been installed successfully.
 
     Hit any key to continue..."
             read -srn1
@@ -136,17 +138,32 @@ elif [[ $1 = '--install-dropbox' ]]; then
             )
         }
         export -f say connectiontest errorExit safeUpdate safeInstall installer
-        x-terminal-emulator -T 'Installing python-gpg' -e bash -c 'installer; echo $? > "$tmpFile"'
+        x-terminal-emulator -T 'Installing python3-gpg' -e bash -c 'installer; echo $? > "$tmpFile"'
         instRet=$(<$tmpFile)
         [[ -d $tmpDir && $tmpDir = /tmp/* ]] && rm -r "$tmpDir"
         [[ $instRet -ne 0 ]] && {
-            echo "$0: failed to install python-gpg." >&2
-            yad_error 'Failed to install python-gpg.'
+            echo "$0: failed to install python3-gpg." >&2
+            yad_error 'Failed to install python3-gpg.'
             exit 1
         }
     }
 
-    "$USER_DBPY" start -i
+    allInstalled thunar-dropbox-plugin || {
+        yad_question 'You might consider also installing the package thunar-dropbox-plugin,\
+\nwhich adds some dropbox-specific context-menu items for Thunar.
+\nWould you like to install this?' && {
+            tmpFile=$(mktemp)
+            bl-install --name 'context-menu items from Dropbox for Thunar' --file "$tmpFile"  --no-install-recommends thunar-dropbox-plugin
+            instRet=$(<$tmpFile)
+            [[ -f $tmpFile && $tmpFile = /tmp/* ]] && rm "$tmpFile"
+            [[ $instRet -ne 0 ]] && {
+                echo "$0: failed to install thunar-dropbox-plugin." >&2
+                yad_error 'thunar-dropbox-plugin was not installed.'
+            }
+        }
+    }
+
+    "$USER_DBPY" start --install
     dropbox_is_installed || {
         yad_error 'Dropbox installation failed.'
         exit 1

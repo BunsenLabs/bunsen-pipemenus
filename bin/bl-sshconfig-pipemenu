@@ -62,7 +62,7 @@ if not  os.access('/usr/sbin/sshd', os.X_OK):
     print ('    <item label="Install OpenSSH server">')
     print ('        <action name="Execute">')
     print ('            <command>')
-    print ('                bl-install --name &apos;OpenSSH server and&apos; bunsen-meta-ssh')
+    print ('                bl-install --name &apos;OpenSSH server and client&apos; bunsen-meta-ssh')
     print ('            </command>')
     print ('        </action>')
     print ('    </item>')
