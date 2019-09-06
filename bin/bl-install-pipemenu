@@ -36,8 +36,8 @@ Options (usually passed from the menu):
 # jgmenu versions of OB menu creation functions
 # These can be provided by /usr/lib/bunsen/common/bl-includes for any pipemenu.
 
-# Associative arrays submenus and submenu_content are generated.
-# submenus holds the submenu tag headers, and submenu_content holds the items.
+# Associative arrays submenu_header and submenu_content are generated.
+# submenu_header holds the submenu tag headers, and submenu_content holds the items.
 # They are merged at jgmenuEnd().
 # This allows a script to judge if the submenu is empty or not.
 
@@ -58,8 +58,8 @@ jgmenuSeparator() {
 
 # Usage jgmenuSubmenu tag label
 jgmenuSubmenu() {
-    declare -Ag submenus
-    submenus[$1]="^tag($1)"$'\nBack,^back()\n'
+    declare -Ag submenu_header
+    submenu_header[$1]="^tag($1)"$'\nBack,^back()\n'
     printf '%s\n' "${2},^checkout($1)"
 }
 
@@ -71,7 +71,7 @@ jgmenuSubmenuItem(){
 
 # Usage jgmenuSubmenuSeparator tag [label]
 jgmenuSubmenuSeparator(){
-    submenus[$1]+='^sep(${2-)'
+    submenu_content[$1]+='^sep(${2-)'
 }
 
 # not used
@@ -81,9 +81,9 @@ jgmenuSubmenuEnd() {
 
 # Add submenu definitions after root menu
 jgmenuEnd() {
-    for i in "${!submenus[@]}"
+    for i in "${!submenu_header[@]}"
     do
-        printf '%b\n' "${submenus[$i]}${submenu_content[$i]}"
+        printf '%b\n' "${submenu_header[$i]}${submenu_content[$i]}"
     done
 }
 
