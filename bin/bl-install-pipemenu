@@ -34,49 +34,33 @@ Options (usually passed from the menu):
 ###############################################
 
 # jgmenu versions of OB menu creation functions
-# These can be provided by /usr/lib/bunsen/common/bl-includes for any pipemenu.
+# These will eventually be provided
+# by /usr/lib/bunsen/common/bl-includes for any pipemenu.
 
 # Associative array menu_content is generated.
 # Submenu content is stored under index of its tag,
 # 'root' indexes the root menu.
 
-# not used at present
-jgmenuStart() {
-    :
-}
-
+# Put an item in the root menu or any submenu.
 # Usage: jgmenuItem tag label command
 # Tag 'root' indicates root menu item.
 jgmenuItem() {
-    declare -Ag menu_content
-    [[ $1 != root && -z ${menu_content[$1]} ]] && {
-        menu_content[$1]="^tag($1)"$'\n'
-    }
+    _jgmenuSetHeader "$1"
     menu_content[$1]+="\"\"\"${2}\"\"\"","\"\"\"${3}\"\"\""$'\n'
 }
 
+# Add a separator.
 # Usage: jgmenuSeparator tag [label]
 jgmenuSeparator() {
-    declare -Ag menu_content
-    [[ $1 != root && -z ${menu_content[$1]} ]] && {
-        menu_content[$1]="^tag($1)"$'\n'
-    }
+    _jgmenuSetHeader "$1"
     menu_content[$1]+="^sep(${2-})"$'\n'
 }
 
+# Put a checkout() for a submenu in the root menu or any submenu.
 # Usage jgmenuSubmenu tag(parentmenu) tag(submenu) label
 jgmenuSubmenu() {
-    declare -Ag menu_content
-    [[ $1 != root && -z ${menu_content[$1]} ]] && {
-        menu_content[$1]="^tag($1)"$'\n'
-    }
+    _jgmenuSetHeader "$1"
     menu_content[$1]+="\"\"\"${3}\"\"\",^checkout($2)"$'\n'
-}
-
-# Usage jgmenuSubmenuSeparator tag [label]
-# not used
-jgmenuSubmenuEnd() {
-    :
 }
 
 # Print root menu, then submenus.
@@ -90,9 +74,29 @@ jgmenuEnd() {
     unset 'menu_content'
 }
 
+# Initiates array and sets header for submenu when first content is added.
+# Do not call this function directly.
+# Usage: _jgmenuSetHeader tag
+_jgmenuSetHeader(){
+    # Catch direct calls
+    case "${FUNCNAME[1]}" in
+        jgmenuItem|jgmenuSeparator|jgmenuSubmenu)
+            :;;
+        *)
+            echo "$0:${FUNCNAME[0]}: this function is only to be called by jgmenuItem, jgmenuSeparator or jgmenuSubmenu." >&2
+            return 1
+            ;;
+    esac
+    declare -Ag menu_content
+    [[ $1 != root && -z ${menu_content[$1]} ]] && {
+        menu_content[$1]="^tag($1)"$'\nBack,^back()\n'
+    }
+}
+
 ########## end jgmenu functions ################
 
 # install apps lists
+TERMS=('rxvt-unicode' 'terminator' 'mate-terminal' 'gnome-terminal' 'xfce4-terminal')
 MM_APPS=('mpv' 'vlc' 'audacious' 'smplayer' 'gnome-mpv')
 MM_EDITORS=('mhwaveedit' 'audacity' 'openshot')
 MM_UTILS=('xfburn' 'brasero' 'k3b' 'gtk-recordmydesktop' )
@@ -106,6 +110,7 @@ LO_APPS=('libreoffice-writer' 'libreoffice-calc' 'libreoffice-impress' 'libreoff
 # If a package provides several commands, it is enough to define one.
 declare -A pkg_cmd
 #pkg_cmd[mpv]='bl-mpv'
+pkg_cmd[rxvt-unicode]='urxvt'
 
 ########################################################################
 
@@ -129,7 +134,7 @@ fi
 
 declare -A AppName AppStatus
 
-for curApp in "${MM_APPS[@]}" "${MM_EDITORS[@]}" "${MM_UTILS[@]}" "${GRAPHICS_APPS[@]}" "${GRAPHICS_SCROTS[@]}"; do
+for curApp in "${TERMS[@]}" "${MM_APPS[@]}" "${MM_EDITORS[@]}" "${MM_UTILS[@]}" "${GRAPHICS_APPS[@]}" "${GRAPHICS_SCROTS[@]}"; do
     words=(${curApp//-/ })
     AppName[$curApp]="${AppName[$curApp]:-${words[*]^}}"
     command="${pkg_cmd[$curApp]:-$curApp}" # use package name as command if not defined in pkg_cmd
@@ -150,7 +155,9 @@ done
 
 # If the package needs additional configuration before installation
 # create a function called setupAppName, it will be called automatically.
-# (This capability is not needed at the moment.)
+# The function will be exported and run by bl-install,
+# just before calling promptInstall(),
+# which is defined in /usr/share/lib/bunsen/bl-includes.
 
 # obsolete example:
 #setupGoogleChromeStable() {
@@ -159,12 +166,30 @@ done
 #    echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee '/etc/apt/sources.list.d/google-chrome.list'
 #}
 
+setupGimp() {
+    tput clear
+    local title="INSTALL GIMP"
+    say "
+$title
+${title//?/-}
+"
+    if prompt 'This will install GIMP. Do you also want to install Gimp Extras?
+(gimp-plugin-registry and gimp-gmic)' N; then
+        name="Gimp and Gimp Extras"
+        message="This script will install gimp, gimp-plugin-registry and gimp-gmic"
+        args+=(gimp-plugin-registry gimp-gmic)
+    fi # name, message and args will be passed to promptInstall() in bl-install
+}
+
+
 if [[ ${1-} = --install ]]; then
+    setup_args=()
     packageName=$2
     appName=${AppName[$packageName]}
     setupFunctionName="setup${appName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
-        "$setupFunctionName" || { echo "$0: function $setupFunctionName failed." >&2; exit 1;} # run setup function if it exists
+    export -f "$setupFunctionName"
+    setup_args=( '--setup' "$setupFunctionName" )
     fi
     case "$packageName" in
     libreoffice)
@@ -185,7 +210,7 @@ if [[ ${1-} = --install ]]; then
         args=("$packageName")
         ;;
     esac
-    /home/john/bin/bl-install --name "$appName" --message "$desc" "${args[@]}"
+    bl-install "${setup_args[@]}" --name "$appName" --message "$desc" "${args[@]}"
 
 elif [[ ${1-} ]]; then
     echo "$0: no such option $*" >&2
@@ -208,6 +233,7 @@ else # pipemenu
         [[ -n ${menu_content[$tag]} ]] && jgmenuSubmenu 'root' "$tag" "$label"
     }
 
+    generate_installmenu 'terms' 'Terminal Emulators'  "${TERMS[@]}"
     generate_installmenu 'mmapps' 'Multimedia Players'  "${MM_APPS[@]}"
     generate_installmenu 'mmeditors' 'Multimedia Editors' "${MM_EDITORS[@]}"
     generate_installmenu 'mmutils' 'Multimedia Utilities' "${MM_UTILS[@]}"
