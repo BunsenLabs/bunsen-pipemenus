@@ -31,69 +31,6 @@ Options (usually passed from the menu):
     it will output a csv jgmenu pipemenu for installing applications.
 
 '
-###############################################
-
-# jgmenu versions of OB menu creation functions
-# These will eventually be provided
-# by /usr/lib/bunsen/common/bl-includes for any pipemenu.
-
-# Associative array menu_content is generated.
-# Submenu content is stored under index of its tag,
-# 'root' indexes the root menu.
-
-# Put an item in the root menu or any submenu.
-# Usage: jgmenuItem tag label command
-# Tag 'root' indicates root menu item.
-jgmenuItem() {
-    _jgmenuSetHeader "$1"
-    menu_content[$1]+="\"\"\"${2}\"\"\"","\"\"\"${3}\"\"\""$'\n'
-}
-
-# Add a separator.
-# Usage: jgmenuSeparator tag [label]
-jgmenuSeparator() {
-    _jgmenuSetHeader "$1"
-    menu_content[$1]+="^sep(${2-})"$'\n'
-}
-
-# Put a checkout() for a submenu in the root menu or any submenu.
-# Usage jgmenuSubmenu tag(parentmenu) tag(submenu) label
-jgmenuSubmenu() {
-    _jgmenuSetHeader "$1"
-    menu_content[$1]+="\"\"\"${3}\"\"\",^checkout($2)"$'\n'
-}
-
-# Print root menu, then submenus.
-jgmenuEnd() {
-    printf '%b\n' "${menu_content[root]}"
-    unset 'menu_content[root]'
-    for i in "${!menu_content[@]}"
-    do
-        printf '%b\n' "${menu_content[$i]}"
-    done
-    unset 'menu_content'
-}
-
-# Initiates array and sets header for submenu when first content is added.
-# Do not call this function directly.
-# Usage: _jgmenuSetHeader tag
-_jgmenuSetHeader(){
-    # Catch direct calls
-    case "${FUNCNAME[1]}" in
-        jgmenuItem|jgmenuSeparator|jgmenuSubmenu)
-            :;;
-        *)
-            echo "$0:${FUNCNAME[0]}: this function is only to be called by jgmenuItem, jgmenuSeparator or jgmenuSubmenu." >&2
-            return 1
-            ;;
-    esac
-    declare -Ag menu_content
-    [[ $1 != root && -z ${menu_content[$1]} ]] && {
-        menu_content[$1]="^tag($1)"$'\nBack,^back()\n'
-    }
-}
-
-########## end jgmenu functions ################
 
 # install apps lists
 TERMS=('rxvt-unicode' 'terminator' 'mate-terminal' 'gnome-terminal' 'xfce4-terminal')
@@ -158,13 +95,7 @@ done
 # The function will be exported and run by bl-install,
 # just before calling promptInstall(),
 # which is defined in /usr/share/lib/bunsen/bl-includes.
-
-# obsolete example:
-#setupGoogleChromeStable() {
-#    addAptKey "${KEY_URLS_GOOGLE[@]}" || return 1
-#    say 'Creating APT sources file...' 1
-#    echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee '/etc/apt/sources.list.d/google-chrome.list'
-#}
+# This means setupAppName can modify the arguments passed to promptInstall.
 
 setupGimp() {
     tput clear
