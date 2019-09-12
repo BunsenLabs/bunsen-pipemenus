@@ -1,3 +1,11 @@
+bunsen-pipemenus (10.1-1) lithium; urgency=medium
+
+  * Add new jgmenu pipemenus bl-install-pipemenu and bl-scrot-pipemenu.
+  * bl-conky-pipemenu: rename bl-conkypin to bl-conkymove.
+  * bl-dropbox-pipemenu: update.
+
+ -- John Crawley <john@bunsenlabs.org>  Thu, 12 Sep 2019 18:12:57 +0900
+
 bunsen-pipemenus (10.0.1-1) lithium; urgency=medium
 
   * bl-conky-pipemenu: Fix obsolete default conky config path.
