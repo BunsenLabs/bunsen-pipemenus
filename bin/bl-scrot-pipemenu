@@ -48,8 +48,7 @@ do
     esac
 done
 
-#BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
-BL_COMMON_LIBDIR='/home/john/git/bunsen/bunsen-common'
+BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
 if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     echo $"Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
