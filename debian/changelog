@@ -1,3 +1,9 @@
+bunsen-pipemenus (10.1.1-1) lithium; urgency=medium
+
+  * bl-scrot-pipemenu: fix library path.
+
+ -- John Crawley <john@bunsenlabs.org>  Sat, 14 Sep 2019 15:01:28 +0900
+
 bunsen-pipemenus (10.1-1) lithium; urgency=medium
 
   * Add new jgmenu pipemenus bl-install-pipemenu and bl-scrot-pipemenu.
