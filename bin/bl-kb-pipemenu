@@ -1,7 +1,7 @@
 #!/bin/bash
 #    bl-kb-pipemenu - an Openbox pipemenu for displaying keybinds
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
-#                  2016 John Crawley    <john@bunsenlabs.org>
+#                  2016-2019 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -20,22 +20,26 @@
 # commands, which just exit the menu
 
 # bl-kb is used to parse rc.xml and send the output to a textfile
+# bl-xbk does the same for .xbindkeysrc
 
 HELP='    bl-kb-pipemenu an Openbox Pipe Menu for displaying keybinds
-    It should normally be called from an openbox menu.
+    It should normally be called from an openbox or jgmenu menu.
 
 Options (usually passed from the menu):
     -h --help   show this message
-    --keybinds  display keybindings defined in rc.xml as a menu
+    --keybinds  display keybindings in .xbindkeysrc and rc.xml as a menu
     (The keybinds in the menu are clickable, except for the Openbox
      commands, which just exit the menu.)
+    --xbkedit   backup and edit .xbindkeysrc
     --rcedit    backup and edit rc.xml
+    --gui       show keybindings in a popup window
 
 If bl-keyboard-pipemenu is called with no options (the usual method),
 it will output an xml openbox pipemenu for displaying keybindings.
 
-NOTE: Some of the functionality of this pipemenu depends on the script
-/usr/bin/bl-kb which is provided by the package "bunsen-utilities".
+NOTE: Most of the functionality of this pipemenu depends on the scripts
+/usr/bin/bl-kb and /usr/bin/bl-xbk
+which are provided by the package "bunsen-utilities".
 '
 # look for a help option somewhere
 for i in "$@"
@@ -49,63 +53,168 @@ do
 done
 
 BL_COMMON_LIBDIR="/usr/lib/bunsen/common"
-USR_CFG_DIR="$HOME/.config/openbox"
+USR_OBCFG_DIR="$HOME/.config/openbox"
+USR_CACHE_DIR="$HOME/.cache/bunsen"
+KBTEXT="$USR_CACHE_DIR/kbinds.txt"
+MENU_CACHE="$USR_CACHE_DIR/kbinds_menu.xml"
 KBSCRIPT="bl-kb"
-RCPATH="$USR_CFG_DIR/rc.xml"
-KBTEXT="$USR_CFG_DIR/kbinds.txt"
+XBKSCRIPT="bl-xbk"
+RCPATH="$USR_OBCFG_DIR/rc.xml"
+XBKPATH="$HOME/.xbindkeysrc"
+
+mkdir -p "$USR_CACHE_DIR"
 
 if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     echo $"Error: Failed to locate bl-includes in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
 
+using_openbox=false
+if ob_cmd=$( pgrep -u "$USER" -ax openbox )
+then
+    using_openbox=true
+    rc_regex='--config-file (.*\.xml)($|[[:blank:]])'
+    if [[ $ob_cmd =~ $rc_regex ]]
+        then RCPATH=${BASH_REMATCH[1]} # otherwise stay with default
+    fi
+fi
+
+using_xbindkeys=false
+if xbk_cmd=$( pgrep -u "$USER" -ax xbindkeys )
+then
+    using_xbindkeys=true
+    xbk_regex='(-f|--file) (.*)$'
+    if [[ $xbk_cmd =~ $xbk_regex ]]
+    then
+        XBKPATH=${BASH_REMATCH[2]}
+    fi
+fi
+
+KBSCRIPT_CMD=( "$KBSCRIPT" '--openbox-rc' "$RCPATH" '--openbox-kbinds' "$KBTEXT" )
+XBKSCRIPT_CMD=( "$XBKSCRIPT" '--xbindkeys-rc' "$XBKPATH" '--kbinds-text' "$KBTEXT" )
+
 # test if bl-kb exists in path
-if ! type "$KBSCRIPT" &> /dev/null;then
+if  [[ $using_openbox = true ]] && ! type "$KBSCRIPT" &> /dev/null;then
     menuStart
     menuSeparator "$KBSCRIPT is not available. Try installing bunsen-utilities."
     menuEnd
     exit 1
 fi
 
-if [[ $1 = '--rcedit' ]];then # "Backup & Edit rc.xml" is chosen in menu
+# test if parse-xbk exists in path
+if  [[ $using_xbindkeys = true ]] && ! type "$XBKSCRIPT" &> /dev/null;then
+    menuStart
+    menuSeparator "$XBKSCRIPT is not available. Try installing bunsen-utilities."
+    menuEnd
+    exit 1
+fi
+
+case $1 in
+'--xbkedit') # "Backup & Edit .xbindkeysrc" is chosen in menu
+    # backup .xbindkeysrc first
+    NOW=$(date +"%Y%m%d-%H%M")
+    XBKBKP="$XBKPATH.$NOW"
+    cp "$XBKPATH" "$XBKBKP"
+    bl-text-editor "$XBKPATH"        # open .xbindkeysrc in default editor
+    ;;
+
+'--rcedit') # "Backup & Edit rc.xml" is chosen in menu
     # backup rc.xml first
     NOW=$(date +"%Y%m%d-%H%M")
     RCBKP="$RCPATH.$NOW"
     cp "$RCPATH" "$RCBKP"
     bl-text-editor "$RCPATH"        # open rc.xml in default editor
-    exit
-fi
+    ;;
 
-if [[ $1 = '--keybinds' ]];then
+'--gui')
+    :> "$KBTEXT" # XBKSCRIPT does not blank file, it appends
+    if [[ $using_openbox = false ]];then
+        GUI_TITLE='Xbindkeys keybinds'
+        "${XBKSCRIPT_CMD[@]}"
+    elif [[ $using_xbindkeys = false ]];then
+        GUI_TITLE='Openbox keybinds'
+        "${KBSCRIPT_CMD[@]}" > /dev/null
+    else
+        GUI_TITLE='Openbox & Xbindkeys keybinds'
+        "${KBSCRIPT_CMD[@]}" > /dev/null
+        "${XBKSCRIPT_CMD[@]}"
+    fi
+    yad --text-info --title="$GUI_TITLE" --window-icon=distributor-logo-bunsenlabs\
+    --filename="$KBTEXT" --width=700 --height=700\
+    --fontname=Monospace --button=gtk-close
+    ;;
+
+'--keybinds')
     # run script to write kbinds.txt, suppress terminal output
-    "$KBSCRIPT" > /dev/null
+    if [[ $RCPATH -nt $MENU_CACHE || $XBKPATH -nt $MENU_CACHE ]]; then
+        :> "$KBTEXT"
+        [[ $using_openbox = true ]] && "${KBSCRIPT_CMD[@]}" > /dev/null 2>&1
+        [[ $using_xbindkeys = true ]] && "${XBKSCRIPT_CMD[@]}"
+
+        OB_Wmenu=''
+        OB_Rmenu=''
+        OB_XBKmenu=''
+        parsing_xbk=false
+        mapfile -t lines < "$KBTEXT"
+        for i in "${!lines[@]}"; do
+            if [[ ${lines[i]} = '#### xbindkeys keybinds ####' ]];then
+                parsing_xbk=true
+                continue
+            fi
+            line=( ${lines[i]} )
+            key=${line[1]}
+            cmd="${line[*]:2}"
+            curItem=$(printf "%-20s %s" "$key" "$cmd")
+            if [[ ${line[0]} = o ]];then
+                OB_Wmenu+=$(menuItem "$curItem" "echo >/dev/null 2>&1")$'\n'
+            elif  [[ ${line[0]} = x ]];then
+                if [[ $parsing_xbk = true ]];then
+                    [[ ${lines[i-1]} = \#* ]] && curItem=$(printf "%-20s %s" "$key" "${lines[i-1]#\# }")
+                    OB_XBKmenu+=$(menuItem "$curItem" "$cmd")$'\n'
+                else
+                    OB_Rmenu+=$(menuItem "$curItem" "$cmd")$'\n'
+                fi
+            fi
+        done
+
+        menuStart > "$MENU_CACHE"
+
+        [[ -n $OB_XBKmenu ]] && {
+            menuSeparator "Xbindkeys 'Run' commands"
+            echo "${OB_XBKmenu}"
+        } >> "$MENU_CACHE"
+        [[ -n $OB_Rmenu ]] && {
+            menuSeparator
+            menuSeparator "Openbox 'Run' commands"
+            echo "${OB_Rmenu}"
+        } >> "$MENU_CACHE"
+        [[ -n $OB_Wmenu ]] && {
+            menuSeparator
+            menuSeparator "Openbox window commands"
+            echo "${OB_Wmenu}"
+        } >> "$MENU_CACHE"
+
+        menuEnd >> "$MENU_CACHE"
+    fi
+
+    cat "$MENU_CACHE"
+
+    ;;
+
+'')
+    # pipemenu
     menuStart
-    menuSeparator "Openbox window commands"
-    while read -r a b c;do      # write out Openbox commands (not clickable)
-        if [[ "$a" = "o" ]];then
-            curItem=$(printf "%-20s %s" "$b" "$c")
-            menuItem "$curItem" "echo >/dev/null 2>&1"
-        fi
-    done < "$KBTEXT"
-
+    [[ $using_xbindkeys = true ]] && menuItem "Backup and Edit .xbindkeysrc" "bl-kb-pipemenu --xbkedit"
+    [[ $using_openbox = true ]] && menuItem "Backup and Edit rc.xml" "bl-kb-pipemenu --rcedit"
     menuSeparator
-    menuSeparator "'Run' commands"
-    while read -r a b c;do      # write out 'Run' commands (clickable)
-        if [[ "$a" = "x" ]];then
-            curItem=$(printf "%-20s %s" "$b" "$c")
-            menuItem "$curItem" "$c"
-        fi
-    done < "$KBTEXT"
-    menuEnd
-    exit
-fi
-
-# pipemenu
-menuStart
-    menuItem "Backup and Edit rc.xml" "bl-kb-pipemenu --rcedit"
-    menuSeparator
-    menuItem "Display Keybinds in new window" "bl-kb --gui"
+    menuItem "Display Keybinds in new window" "bl-kb-pipemenu --gui"
     echo '        <menu execute="bl-kb-pipemenu --keybinds" id="Display keybinds" label="Display Keybinds in menu"/>'
-menuEnd
+    menuEnd
+    ;;
+*)
+    echo "$0: $1: this option not supported" >&2
+    exit 1
+    ;;
+esac
 
 exit 0
