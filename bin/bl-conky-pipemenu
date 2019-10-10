@@ -25,7 +25,7 @@ Options:
     If bl-conky-pipemenu is called with no options (the usual method),
     it will output an xml openbox pipemenu for handling conky sessions.
 
-See /usr/share/bunsen/docs/helpfile-conkyzen.txt and "man conky"
+See /usr/share/bunsen/docs/helpfile-conky-manager.txt and "man conky"
 for more information.
 '
 # look for a help option somewhere
@@ -45,7 +45,7 @@ CONKYPATH="$HOME/.config/conky"
 CONKYDEFAULT="$CONKYPATH/conky.conf"
 SESSIONFILE="$CONKYPATH/conky-sessionfile"
 SESSIONS="$CONKYPATH/saved-sessions"
-HELPFILE="/usr/share/bunsen/docs/helpfile-conkyzen.txt"
+HELPFILE="/usr/share/bunsen/docs/helpfile-conky-manager.txt"
 
 if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     echo "Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
@@ -75,14 +75,14 @@ getSessions(){  # read any saved sessions from save-sessions file
 }
 
 loadChooserMenu(){
-    if type bl-conkyzen &>/dev/null;then  # bl-conkyzen script found
-        menuItem "Conky Chooser" "bl-conkyzen"
+    if type bl-conky-manager &>/dev/null;then  # bl-conky-manager script found
+        menuItem "Conky Chooser" "bl-conky-manager"
     fi
 }
 
 loadNewsessionMenu(){
-    if type bl-conkyzen &>/dev/null;then  # bl-conkyzen script found
-        menuItem "New Conky Session" "bl-conkyzen -z"
+    if type bl-conky-manager &>/dev/null;then  # bl-conky-manager script found
+        menuItem "New Conky Session" "bl-conky-manager -z"
     fi
 }
 

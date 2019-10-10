@@ -44,7 +44,7 @@ BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
 TINT2PATH="$HOME/.config/tint2"
 TINT2RC="$TINT2PATH/tint2rc"
-TZEN="bl-tint2zen"
+TMGR="bl-tint2-manager"
 
 if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     echo $"Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
@@ -82,8 +82,8 @@ getTint2s(){
 }
 
 loadChoosermenu(){
-    if type $TZEN &>/dev/null;then  # bl-tint2zen script found
-        menuItem "Tint2 Chooser" "$TZEN"
+    if type $TMGR &>/dev/null;then  # bl-tint2-manager script found
+        menuItem "Tint2 Chooser" "$TMGR"
     fi
 }
 
