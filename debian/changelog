@@ -1,3 +1,10 @@
+bunsen-pipemenus (10.1.2-1) lithium; urgency=medium
+
+  * bl-kb-pipemenu: Use cache to improve speed.
+  * Rename tint2 and conky zen to *-manager.
+
+ -- John Crawley <john@bunsenlabs.org>  Wed, 13 Nov 2019 16:16:09 +0900
+
 bunsen-pipemenus (10.1.1-1) lithium; urgency=medium
 
   * bl-scrot-pipemenu: fix library path.
