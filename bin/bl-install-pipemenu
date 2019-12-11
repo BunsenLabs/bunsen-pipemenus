@@ -33,7 +33,7 @@ Options (usually passed from the menu):
 '
 
 # install apps lists
-TERMS=('rxvt-unicode' 'terminator' 'mate-terminal' 'gnome-terminal' 'xfce4-terminal')
+TERMS=('rxvt-unicode' 'terminator' 'mate-terminal' 'gnome-terminal' 'xfce4-terminal' 'lxterminal')
 MM_APPS=('mpv' 'vlc' 'audacious' 'smplayer' 'gnome-mpv')
 MM_EDITORS=('mhwaveedit' 'audacity' 'openshot')
 MM_UTILS=('xfburn' 'brasero' 'k3b' 'gtk-recordmydesktop' )
@@ -125,7 +125,7 @@ if [[ ${1-} = --install ]]; then
     case "$packageName" in
     libreoffice)
         desc="This script will install the Full LibreOffice Suite"
-        args=('bl-meta-libreoffice')
+        args=('bunsen-meta-libreoffice')
         ;;
     libreoffice-*)
         if allInstalled libreoffice-gtk2; then
