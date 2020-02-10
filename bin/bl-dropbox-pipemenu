@@ -2,7 +2,7 @@
 #    bl-dropbox-pipemenu: an Openbox pipemenu for use with Dropbox
 #    Copyright (C) 2012 Philip Newborough <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
-#    Copyright (C) 2015-2019  John Crawley <john@bunsenlabs.org>
+#    Copyright (C) 2015-2020  John Crawley <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,11 @@
 # If dropbox.py is in user's $PATH they can use that command
 # to control dropbox. Otherwise, use the absolute path /path/to/dropbox.py
 USER_DBPY_DIR="$HOME/bin"
-USER_DBPY="$USER_DBPY_DIR/dropbox.py"
+USER_DBPY="$USER_DBPY_DIR/dropbox"
+# If dropbox.py is already installed, use that.
+# Otherwise, name executable "dropbox".
+[[ -e "$USER_DBPY_DIR/dropbox.py" ]] && USER_DBPY="$USER_DBPY_DIR/dropbox.py"
+
 
 REMOTE_DBPY='https://www.dropbox.com/download?dl=packages/dropbox.py'
 
