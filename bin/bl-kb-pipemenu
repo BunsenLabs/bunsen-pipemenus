@@ -1,7 +1,7 @@
 #!/bin/bash
 #    bl-kb-pipemenu - an Openbox pipemenu for displaying keybinds
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
-#                  2016-2019 John Crawley    <john@bunsenlabs.org>
+#                  2016-2020 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 # NB The keybinds in the menu are clickable, except for the Openbox
 # commands, which just exit the menu
 
-# bl-kb is used to parse rc.xml and send the output to a textfile
+# bl-kb is used to parse [bl-]rc.xml and send the output to a textfile
 # bl-xbk does the same for .xbindkeysrc
 
 HELP='    bl-kb-pipemenu an Openbox Pipe Menu for displaying keybinds
@@ -27,15 +27,19 @@ HELP='    bl-kb-pipemenu an Openbox Pipe Menu for displaying keybinds
 
 Options (usually passed from the menu):
     -h --help   show this message
-    --keybinds  display keybindings in .xbindkeysrc and rc.xml as a menu
+    --keybinds  display keybindings in .xbindkeysrc and [bl-]rc.xml as a menu
     (The keybinds in the menu are clickable, except for the Openbox
      commands, which just exit the menu.)
     --xbkedit   backup and edit .xbindkeysrc
-    --rcedit    backup and edit rc.xml
+    --rcedit    backup and edit [bl-]rc.xml
     --gui       show keybindings in a popup window
 
 If bl-keyboard-pipemenu is called with no options (the usual method),
 it will output an xml openbox pipemenu for displaying keybindings.
+
+By default, this pipemenu uses rc.xml, but if openbox has been called
+with --config-file then it uses whatever xml file is referenced there.
+In the case of BunsenLabs this will be bl-rc.xml.
 
 NOTE: Most of the functionality of this pipemenu depends on the scripts
 /usr/bin/bl-kb and /usr/bin/bl-xbk
@@ -118,12 +122,12 @@ case $1 in
     bl-text-editor "$XBKPATH"        # open .xbindkeysrc in default editor
     ;;
 
-'--rcedit') # "Backup & Edit rc.xml" is chosen in menu
-    # backup rc.xml first
+'--rcedit') # "Backup & Edit [bl-]rc.xml" is chosen in menu
+    # backup [bl-]rc.xml first
     NOW=$(date +"%Y%m%d-%H%M")
     RCBKP="$RCPATH.$NOW"
     cp "$RCPATH" "$RCBKP"
-    bl-text-editor "$RCPATH"        # open rc.xml in default editor
+    bl-text-editor "$RCPATH"        # open [bl-]rc.xml in default editor
     ;;
 
 '--gui')
@@ -205,7 +209,7 @@ case $1 in
     # pipemenu
     menuStart
     [[ $using_xbindkeys = true ]] && menuItem "Backup and Edit .xbindkeysrc" "bl-kb-pipemenu --xbkedit"
-    [[ $using_openbox = true ]] && menuItem "Backup and Edit rc.xml" "bl-kb-pipemenu --rcedit"
+    [[ $using_openbox = true ]] && menuItem "Backup and Edit ${RCPATH##*/}" "bl-kb-pipemenu --rcedit"
     menuSeparator
     menuItem "Display Keybinds in new window" "bl-kb-pipemenu --gui"
     echo '        <menu execute="bl-kb-pipemenu --keybinds" id="Display keybinds" label="Display Keybinds in menu"/>'
