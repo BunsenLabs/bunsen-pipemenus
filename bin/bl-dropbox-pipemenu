@@ -205,7 +205,8 @@ else
         [[ -d $HOME/Dropbox ]] &&
             menuItem 'Open Dropbox Folder' "bl-file-manager $HOME/Dropbox"
 
-        if "$USER_DBPY" running; then
+#        if "$USER_DBPY" running; then
+        if pgrep -x dropbox >/dev/null
             menuItem 'Start Dropbox' "$0 --start-dropbox"
         else
             menuItem 'Stop Dropbox' "$0 --stop-dropbox"
