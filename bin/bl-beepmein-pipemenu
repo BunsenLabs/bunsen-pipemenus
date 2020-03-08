@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# pipeBeepmein
+# beepmein pipe menu for jgmenu
+
+# usage: pipeBeepmein | jgmenu --simple --icon-size=0
+
+# required
+command -v at >/dev/null 2>&1 || { >&2 echo "I need at: sudo apt install --no-install-recommends at" ; exit 1; }
+command -v gmrun >/dev/null 2>&1 || { >&2 echo "I need gmrun." ; exit 1; }
+
+# for display purposes
+future="$(date -d "+5 minutes" +%R)"
+
+# start to display jgmenu
+echo "Beepmein Alarm Clock (Time is now: $(date +%R)),x-terminal-emulator -T beepmein -e bash -c 'beepmein -h; echo "Press any key to close"; read -srn1' "
+#echo "Beepmein Alarm Clock (Time is now: $(date +%R))"
+#echo "^sep(Time is now: $(date +%R))"
+
+# for timeToEvent()
+now="$(date +%s)"
+
+# timeToEvent
+timeToEvent() {
+    # job Event time
+    #event="$(echo "$1" | cut -d' ' -f 2-6)" # cut instead of awk?
+    event="$1"
+    if [[ "$event" ]]; then
+
+        event="$(date -d "$event" +%s)"
+        diff=$(( event - now ))
+
+        # And show as HH:MM:SS, only if less than 24 hours
+        # 24 hours is 86400 seconds
+        if (( diff < 86400 )); then
+            date -u -d @${diff} +%T
+        fi
+    fi
+}
+
+# action
+echo "＋ Reminder in 1 min., beepmein --nr 1"
+echo "＋ Reminder in 5 min., beepmein --nr 5" 
+echo "＋ Reminder in 15 min (edit), gmrun '"beepmein 15"'"
+echo "＋ Reminder @ $future (edit), gmrun '"beepmein $future"'"
+echo "＋ Alarm @ $future (edit), gmrun '"beepmein $future --alarm"'"
+echo "＋ Alarm @ morning (edit), gmrun '"beepmein 7:00 --alarm"'"
+echo "◼  Stop all playback, killall beepmein"
+echo "Set sounds,^checkout(Set sounds:)"
+
+lines="$(atq | wc -l)"
+if (( lines > 0 )) ; then
+
+    echo "^sep(Click to remove from queue:)"
+    
+    # This is the actual line by line loop    
+    atq | sort -r | while read -r job nameday month day clock year queue _ ; do
+    
+        # get diff
+        toEvent="$(timeToEvent "$nameday $month $day $clock $year")"
+        [[ "$toEvent" ]] && toEvent="\t&lt; $toEvent"
+        
+        echo -n "✕ $clock ($month-$day)"
+        if [[ $queue == "=" ]]; then
+            echo -ne "\t now" 
+        else
+            echo -ne "$toEvent"
+        fi
+        echo ", atrm $job"
+            
+    done
+    
+fi
+
+echo "^tag(Set sounds:)"
+echo "Set Alarm sound, beepmein --set-alarm"
+echo "▶  Alarm test, beepmein --reaction --alarm alarm"
+echo "Set Reminder sound, beepmein --set-remind"
+echo "▶  Reminder test, beepmein --reaction reminder"
