@@ -8,6 +8,7 @@
 # required
 command -v at >/dev/null 2>&1 || { >&2 echo "I need at: sudo apt install --no-install-recommends at" ; exit 1; }
 command -v gmrun >/dev/null 2>&1 || { >&2 echo "I need gmrun." ; exit 1; }
+command -v yad >/dev/null 2>&1 || { >&2 echo "I need yad." ; exit 1; }
 
 # for display purposes
 future="$(date -d "+5 minutes" +%R)"
