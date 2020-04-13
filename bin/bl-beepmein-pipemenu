@@ -15,7 +15,33 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# usage: bl-beepmein-pipemenu | jgmenu --simple --icon-size=0
+HELP="    bl-beepmein-pipemenu a beepmein pipe menu for jgmenu
+
+Usage: bl-beepmein-pipemenu | jgmenu --simple --icon-size=0
+
+    It can be called from a tint2 button, launcher or jgmenu menu.
+
+Options:
+    -h --help   show this message
+
+    If bl-beepmein-pipemenu is called with no options (the usual method),
+    it will output a jgmenu pipemenu for using the beepmein alarm clock.
+
+Example:
+    To launch from the tint2 clock right-click action:
+clock_rclick_command = bash -c \"beepmein-pipemenu | jgmenu --simple --icon-size=0 --config-file=<( sed '/menu_padding_top/ s/^/#/' ~/.config/jgmenu/jgmenurc )\"
+
+"
+# look for a help option somewhere
+for i in "$@"
+do
+    case "$i" in
+    -h|--help)
+        echo "$HELP"
+        exit 0
+        ;;
+    esac
+done
 
 # required
 command -v at >/dev/null 2>&1 || { >&2 echo "I need at: sudo apt install --no-install-recommends at" ; exit 1; }
