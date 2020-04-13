@@ -89,21 +89,25 @@ writeScrot() {                  # Write scrot submenu items
 writeImgur() {                  # Write Imgur submenu items
     jgmenuSubmenu 'root' 'imgur' 'Imgur - Upload Screenshot'
 
-    # take screenshot and upload to account (BBCode is returned)
-    jgmenuSubmenu 'imgur' 'imgur_acct' 'Upload to Account'
-        jgmenuItem 'imgur_acct' "screenshot Now" "imgur -l"
-        jgmenuItem 'imgur_acct' "screenshot In 5 secs..." "imgur -l -d 5"
-        jgmenuItem 'imgur_acct' "screenshot In 10 secs..." "imgur -l -d 10"
-        jgmenuItem 'imgur_acct' "screenshot Select Area" "imgur -l -s"
-        jgmenuItem 'imgur_acct' "screenshot Current Window" "imgur -l -w"
+    if bl-imgur-upload --test-account;then
+        # take screenshot and upload to account (BBCode is returned)
+        jgmenuSubmenu 'imgur' 'imgur_acct' 'Upload to Account'
+            jgmenuItem 'imgur_acct' "screenshot Now" "bl-imgur-upload -l"
+            jgmenuItem 'imgur_acct' "screenshot In 5 secs..." "bl-imgur-upload -l -d 5"
+            jgmenuItem 'imgur_acct' "screenshot In 10 secs..." "bl-imgur-upload -l -d 10"
+            jgmenuItem 'imgur_acct' "screenshot Select Area" "bl-imgur-upload -l -s"
+            jgmenuItem 'imgur_acct' "screenshot Current Window" "bl-imgur-upload -l -w"
+    else
+        jgmenuItem 'imgur' "Setup Imgur Account" "bl-imgur-upload --register"
+    fi
 
     # take screenshot and upload anonymously (BBCode is returned)
     jgmenuSubmenu 'imgur' 'imgur_anon' 'Anonymous Upload'
-        jgmenuItem 'imgur_anon' "screenshot Now" "imgur"
-        jgmenuItem 'imgur_anon' "screenshot In 5 secs..." "imgur -d 5"
-        jgmenuItem 'imgur_anon' "screenshot In 10 secs..." "imgur -d 10"
-        jgmenuItem 'imgur_anon' "screenshot Select Area" "imgur -s"
-        jgmenuItem 'imgur_anon' "screenshot Current Window" "imgur -w"
+        jgmenuItem 'imgur_anon' "screenshot Now" "bl-imgur-upload"
+        jgmenuItem 'imgur_anon' "screenshot In 5 secs..." "bl-imgur-upload -d 5"
+        jgmenuItem 'imgur_anon' "screenshot In 10 secs..." "bl-imgur-upload -d 10"
+        jgmenuItem 'imgur_anon' "screenshot Select Area" "bl-imgur-upload -s"
+        jgmenuItem 'imgur_anon' "screenshot Current Window" "bl-imgur-upload -w"
 }
 # pipemenu
 for curScrot in "${GRAPHICS_SCROTS[@]}"; do
