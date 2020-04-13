@@ -14,7 +14,7 @@ command -v yad >/dev/null 2>&1 || { >&2 echo "I need yad." ; exit 1; }
 future="$(date -d "+5 minutes" +%R)"
 
 # start to display jgmenu
-echo "Beepmein Alarm Clock (Time is now: $(date +%R)),x-terminal-emulator -T beepmein -e bash -c 'beepmein -h; echo "Press any key to close"; read -srn1' "
+echo "Beepmein Alarm Clock (Time is now: $(date +%R)),x-terminal-emulator -T beepmein -e bash -c 'beepmein -h; echo \"Press any key to close\"; read -srn1' "
 
 # for timeToEvent()
 now="$(date +%s)"
@@ -38,11 +38,11 @@ timeToEvent() {
 
 # action
 echo "＋ Reminder in 1 min., beepmein --nr 1"
-echo "＋ Reminder in 5 min., beepmein --nr 5" 
-echo "＋ Reminder in 15 min (edit), gmrun '"beepmein 15"'"
-echo "＋ Reminder @ $future (edit), gmrun '"beepmein $future"'"
-echo "＋ Alarm @ $future (edit), gmrun '"beepmein $future --alarm"'"
-echo "＋ Alarm @ morning (edit), gmrun '"beepmein 7:00 --alarm"'"
+echo "＋ Reminder in 5 min., beepmein --nr 5"
+echo "＋ Reminder in 15 min (edit), gmrun 'beepmein 15'"
+echo "＋ Reminder @ $future (edit), gmrun 'beepmein $future'"
+echo "＋ Alarm @ $future (edit), gmrun 'beepmein $future --alarm'"
+echo "＋ Alarm @ morning (edit), gmrun 'beepmein 7:00 --alarm'"
 echo "◼  Stop all playback, killall beepmein"
 echo "Set sounds,^checkout(Set sounds:)"
 
@@ -50,24 +50,24 @@ lines="$(atq | wc -l)"
 if (( lines > 0 )) ; then
 
     echo "^sep(Click to remove from queue:)"
-    
-    # This is the actual line by line loop    
+
+    # This is the actual line by line loop
     atq | sort -r | while read -r job nameday month day clock year queue _ ; do
-    
+
         # get diff
         toEvent="$(timeToEvent "$nameday $month $day $clock $year")"
         [[ "$toEvent" ]] && toEvent="\t&lt; $toEvent"
-        
+
         echo -n "✕ $clock ($month-$day)"
         if [[ $queue == "=" ]]; then
-            echo -ne "\t now" 
+            echo -ne "\t now"
         else
             echo -ne "$toEvent"
         fi
         echo ", atrm $job"
-            
+
     done
-    
+
 fi
 
 echo "^tag(Set sounds:)"
