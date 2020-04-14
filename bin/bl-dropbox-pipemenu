@@ -122,30 +122,12 @@ elif [[ $1 = '--install-dropbox' ]]; then
 
     allInstalled python3-gpg || {
         yad_question 'We need to install the package python3-gpg.\nDo you want to proceed?' || exit 0
-        tmpDir=$(mktemp -d)
-        tmpFile=$(mktemp --tmpdir="$tmpDir")
-        export tmpFile
-        installer(){
-            (
-            say 'Installing python3-gpg...' 1
-            connectiontest || return 1
-            say 'Updating sources...' 1
-            safeUpdate || say 'Continuing in spite of update problems...' 3
-            say 'Installing...' 1
-            safeInstall -y python3-gpg || return 1
-            say "
-    python3-gpg has been installed successfully.
-
-    Hit any key to continue..."
-            read -srn1
-            return 0
-            )
-        }
-        export -f say connectiontest errorExit safeUpdate safeInstall installer
-        x-terminal-emulator -T 'Installing python3-gpg' -e bash -c 'installer; echo $? > "$tmpFile"'
-        instRet=$(<$tmpFile)
-        [[ -d $tmpDir && $tmpDir = /tmp/* ]] && rm -r "$tmpDir"
-        [[ $instRet -ne 0 ]] && {
+        tmpFile=$(mktemp --tmpdir=/tmp)
+        bl-install --file "$tmpFile" 'python3-gpg'
+        sleep 0.3 # allow time for bl-install to write to $tmpFile
+        retval=$(<"$tmpFile")
+        [[ -f $tmpFile && $tmpFile = /tmp/* ]] && rm "$tmpFile"
+        [[ $retval -ne 0 ]] && {
             echo "$0: failed to install python3-gpg." >&2
             yad_error 'Failed to install python3-gpg.'
             exit 1
@@ -153,16 +135,17 @@ elif [[ $1 = '--install-dropbox' ]]; then
     }
 
     allInstalled thunar-dropbox-plugin || {
-        yad_question 'You might consider also installing the package thunar-dropbox-plugin,\
+        yad_question "You might consider also installing the package thunar-dropbox-plugin,\
 \nwhich adds some dropbox-specific context-menu items for Thunar.
-\nWould you like to install this?' && {
-            tmpFile=$(mktemp)
+\nWould you like to install this?" && {
+            tmpFile=$(mktemp --tmpdir=/tmp)
             bl-install --name 'context-menu items from Dropbox for Thunar' --file "$tmpFile"  --no-install-recommends thunar-dropbox-plugin
-            instRet=$(<$tmpFile)
+            sleep 0.3 # allow time for bl-install to write to $tmpFile
+            retval=$(<"$tmpFile")
             [[ -f $tmpFile && $tmpFile = /tmp/* ]] && rm "$tmpFile"
-            [[ $instRet -ne 0 ]] && {
+            [[ $retval -ne 0 ]] && {
                 echo "$0: failed to install thunar-dropbox-plugin." >&2
-                yad_error 'thunar-dropbox-plugin was not installed.'
+                yad_error 'Failed to install thunar-dropbox-plugin.'
             }
         }
     }
@@ -206,7 +189,7 @@ else
             menuItem 'Open Dropbox Folder' "bl-file-manager $HOME/Dropbox"
 
 #        if "$USER_DBPY" running; then
-        if pgrep -x dropbox >/dev/null
+        if pgrep -x dropbox >/dev/null; then
             menuItem 'Start Dropbox' "$0 --start-dropbox"
         else
             menuItem 'Stop Dropbox' "$0 --stop-dropbox"
