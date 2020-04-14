@@ -1,3 +1,15 @@
+bunsen-pipemenus (10.2-1) lithium; urgency=medium
+
+  * bl-install-pipemenu: fix bug with libreoffice meta package,
+     add lxterminal.
+  * bl-dropbox-pipemenu: rename python script from "dropbox.py" to "dropbox".
+  [ damo ]
+  * bl-scrot-pipemenu: add imgur upload capability.
+  [ brontosaurusrex ]
+  * Add bl-beepmein-pipemenu alarm clock for jgmenu or tint2.
+
+ -- John Crawley <john@bunsenlabs.org>  Tue, 14 Apr 2020 11:33:16 +0900
+
 bunsen-pipemenus (10.1.2-1) lithium; urgency=medium
 
   * bl-kb-pipemenu: Use cache to improve speed.
