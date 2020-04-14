@@ -1,9 +1,9 @@
 # bunsen-pipemenus #
-This is a collection of pipemenu scripts for Openbox,
- originally based on cb-pipemenus from CrunchBang Linux.
+This is a collection of pipemenu scripts for jgmenu and Openbox.
 
 Current scripts are:
 
+bl-beepmein-pipemenu
 bl-compositor
 bl-conky-pipemenu
 bl-dropbox-pipemenu
@@ -20,7 +20,10 @@ bl-sshconfig-pipemenu
 bl-tint2-pipemenu
 bl-x-www-browser-pipemenu
 
-They are all used by the BunsenLabs Openbox menu defined in bunsen-configs.
+They are mostly used by the BunsenLabs jgmenu menu defined in bunsen-configs,
+but may be launched as stand-alone utilities.
+Some are native jgmenu pipemenus, generating csv files, and some generate xml,
+which jgmenu is also able to display.
 
-EDIT 2018/11/5: bl-dropbox-pipemenu is no longer invoked by the default menu,
-but is still shipped in this package.
+EDIT 2020/4/13: bl-dropbox-pipemenu is commented out of the default menu,
+but is still shipped in this package and users can enable it.
