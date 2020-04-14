@@ -1,3 +1,9 @@
+bunsen-pipemenus (10.2.1-1) lithium; urgency=medium
+
+  * bl-dropbox-pipemenu: bugfix
+
+ -- John Crawley <john@bunsenlabs.org>  Tue, 14 Apr 2020 14:15:53 +0900
+
 bunsen-pipemenus (10.2-1) lithium; urgency=medium
 
   * bl-install-pipemenu: fix bug with libreoffice meta package,
