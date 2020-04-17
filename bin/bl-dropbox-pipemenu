@@ -44,7 +44,8 @@ Options:
     is downloaded from dropbox and run with the arguments "start -i".
 
 See the dropbox website https://www.dropbox.com and
-http://www.dropboxwiki.com/tips-and-tricks/using-the-official-dropbox-command-line-interface-cli
+https://www.dropboxforum.com/
+https://help.dropbox.com/
 for more information.
 '
 # look for a help option somewhere
@@ -190,11 +191,12 @@ else
 
 #        if "$USER_DBPY" running; then
         if pgrep -x dropbox >/dev/null; then
-            menuItem 'Start Dropbox' "$0 --start-dropbox"
-        else
             menuItem 'Stop Dropbox' "$0 --stop-dropbox"
+        else
+            menuItem 'Start Dropbox' "$0 --start-dropbox"
         fi
         menuSeparator
+        menuItem 'Dropbox CLI utility help' "x-terminal-emulator -T '${USER_DBPY##*/} help' -e sh -c '$USER_DBPY help; bash'"
         menuItem 'Launch Dropbox Website' 'x-www-browser https://www.dropbox.com/home'
     fi
     menuItem 'Dropbox Terms' 'x-www-browser https://www.dropbox.com/terms'
