@@ -22,9 +22,11 @@
 # to control dropbox. Otherwise, use the absolute path /path/to/dropbox.py
 USER_DBPY_DIR="$HOME/bin"
 USER_DBPY="$USER_DBPY_DIR/dropbox"
-# If dropbox.py is already installed, use that.
-# Otherwise, name executable "dropbox".
-[[ -e "$USER_DBPY_DIR/dropbox.py" ]] && USER_DBPY="$USER_DBPY_DIR/dropbox.py"
+# If dropbox.py is already installed, link to that,
+# so executable is named "dropbox".
+[[ -x "$USER_DBPY_DIR/dropbox.py" && ! -e "$USER_DBPY_DIR/dropbox" ]] && {
+    ln -s dropbox.py "$USER_DBPY_DIR/dropbox"
+}
 
 
 REMOTE_DBPY='https://www.dropbox.com/download?dl=packages/dropbox.py'
