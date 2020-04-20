@@ -50,9 +50,8 @@ do
         exit 0
         ;;
     -s|--standalone)
-        exec jgmenu --csv-cmd="$0" --simple --icon-size=0 --config-file=<( sed '/menu_padding_top/ s/^/#/' ~/.config/jgmenu/jgmenurc )
-        echo "${0}: failed to launch jgmenu" >&2
-        exit 1
+        # redirect stdout from this point
+        exec > >( jgmenu --simple --icon-size=0 --config-file=<( sed '/menu_padding_top/ s/^/#/' ~/.config/jgmenu/jgmenurc ) )
         ;;
     esac
 done
