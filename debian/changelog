@@ -1,3 +1,10 @@
+bunsen-pipemenus (10.2.2-1) lithium; urgency=medium
+
+  * bl-beepmein-pipemenu: add --standalone option for launchers.
+  * bl-dropbox-pipemenu: "dropbox": make symlink to "dropbox.py" if existing.
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 20 Apr 2020 11:45:51 +0900
+
 bunsen-pipemenus (10.2.1-1) lithium; urgency=medium
 
   * bl-dropbox-pipemenu: bugfix
