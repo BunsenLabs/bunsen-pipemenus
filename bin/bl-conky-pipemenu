@@ -76,7 +76,7 @@ getSessions(){  # read any saved sessions from save-sessions file
 
 loadChooserMenu(){
     if type bl-conky-manager &>/dev/null;then  # bl-conky-manager script found
-        menuItem "Conky Chooser" "bl-conky-manager"
+        menuItem "Conky Manager" "bl-conky-manager"
     fi
 }
 

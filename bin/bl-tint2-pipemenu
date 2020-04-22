@@ -83,7 +83,7 @@ getTint2s(){
 
 loadChoosermenu(){
     if type $TMGR &>/dev/null;then  # bl-tint2-manager script found
-        menuItem "Tint2 Chooser" "$TMGR"
+        menuItem "Tint2 Manager" "$TMGR"
     fi
 }
 
