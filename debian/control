@@ -2,13 +2,13 @@ Source: bunsen-pipemenus
 Section: misc
 Priority: optional
 Maintainer: John Crawley <john@bunsenlabs.org>
-Build-Depends: debhelper (>= 10), 
- help2man, 
- lua5.2, 
- lua-posix, 
- lua-socket, 
- lua-penlight, 
- python, 
+Build-Depends: debhelper (>= 10),
+ help2man,
+ lua5.2,
+ lua-posix,
+ lua-socket,
+ lua-penlight,
+ python,
  python-paramiko
 Standards-Version: 4.3.0
 Homepage: https://github.com/BunsenLabs/bunsen-pipemenus
@@ -20,25 +20,25 @@ Architecture: all
 Depends: ${misc:Depends},
  bunsen-common,
  xterm | x-terminal-emulator,
- yad, 
- wget, 
- python, 
- python-paramiko, 
- mesa-utils, 
- lua5.2, 
- lua-expat, 
- lua-penlight, 
- lua-posix, 
+ yad,
+ wget,
+ python,
+ python-paramiko,
+ mesa-utils,
+ lua5.2,
+ lua-expat,
+ lua-penlight,
+ lua-posix,
  lua-socket
-Recommends: bunsen-configs, 
- bunsen-utilities, 
- bunsen-docs, 
- bunsen-conky, 
- openbox, 
- tint2, 
- compton, 
+Recommends: bunsen-configs,
+ bunsen-utilities,
+ bunsen-docs,
+ bunsen-conky,
+ openbox,
+ tint2,
+ compton,
  inotify-tools
 Description: Various Openbox and jgmenu pipemenus
  Contains various pipemenus for use with Bunsen Linux. Some generate xml for
- openbox, and some csv for jgmenu. 
+ openbox, and some csv for jgmenu.
  (jgmenu is able to use openbox-style xml too.)

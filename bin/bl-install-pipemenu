@@ -25,7 +25,7 @@ HELP='    bl-install-pipemenu a jgmenu Pipe Menu for installing applications
 Options (usually passed from the menu):
     -h --help   show this message
     --install   install a package
-    (the package must be in the one of the app lists in this file)
+    (the package must be in one of the app lists in this file)
 
     If bl-install-pipemenu is called with no options (the usual method),
     it will output a csv jgmenu pipemenu for installing applications.
@@ -33,6 +33,7 @@ Options (usually passed from the menu):
 '
 
 # install apps lists
+BROWSERS=('firefox-esr' 'chromium' 'dillo')
 TERMS=('rxvt-unicode' 'terminator' 'mate-terminal' 'gnome-terminal' 'xfce4-terminal' 'lxterminal')
 MM_APPS=('mpv' 'vlc' 'audacious' 'smplayer' 'gnome-mpv')
 MM_EDITORS=('mhwaveedit' 'audacity' 'openshot')
@@ -71,7 +72,7 @@ fi
 
 declare -A AppName AppStatus
 
-for curApp in "${TERMS[@]}" "${MM_APPS[@]}" "${MM_EDITORS[@]}" "${MM_UTILS[@]}" "${GRAPHICS_APPS[@]}" "${GRAPHICS_SCROTS[@]}"; do
+for curApp in "${BROWSERS[@]}" "${TERMS[@]}" "${MM_APPS[@]}" "${MM_EDITORS[@]}" "${MM_UTILS[@]}" "${GRAPHICS_APPS[@]}" "${GRAPHICS_SCROTS[@]}"; do
     words=(${curApp//-/ })
     AppName[$curApp]="${AppName[$curApp]:-${words[*]^}}"
     command="${pkg_cmd[$curApp]:-$curApp}" # use package name as command if not defined in pkg_cmd
@@ -164,6 +165,7 @@ else # pipemenu
         [[ -n ${menu_content[$tag]} ]] && jgmenuSubmenu 'root' "$tag" "$label"
     }
 
+    generate_installmenu 'browsers' 'Web Browsers' "${BROWSERS[@]}"
     generate_installmenu 'terms' 'Terminal Emulators'  "${TERMS[@]}"
     generate_installmenu 'mmapps' 'Multimedia Players'  "${MM_APPS[@]}"
     generate_installmenu 'mmeditors' 'Multimedia Editors' "${MM_EDITORS[@]}"
