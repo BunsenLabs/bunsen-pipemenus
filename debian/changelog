@@ -1,3 +1,9 @@
+bunsen-pipemenus (10.2.4-1) lithium; urgency=medium
+
+  * bl-install-pipemenu: add "Web Browsers" section.
+
+ -- John Crawley <john@bunsenlabs.org>  Sat, 11 Jul 2020 18:18:11 +0900
+
 bunsen-pipemenus (10.2.3-1) lithium; urgency=medium
 
   * bl-{conky,tint2}-pipemenu: Relabel "Chooser" to "Manager".
