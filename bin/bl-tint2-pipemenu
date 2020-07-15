@@ -76,7 +76,8 @@ getTint2s(){
         if type bl-tint2edit &>/dev/null;then  # bl-tint2edit script found
             menuItem "Tint2 Editor" "bl-tint2edit"
         fi
-        menuItem "Tint2 Config GUI" "tint2conf"
+# tint2conf removed here but still available from "Applications" menu as Settings > Panel Manager
+#        menuItem "Tint2 Config GUI" "tint2conf"
         loadTEditmenu
     menuSubmenuEnd
 }
