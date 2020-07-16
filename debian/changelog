@@ -1,3 +1,9 @@
+bunsen-pipemenus (10.2.5-1) lithium; urgency=medium
+
+  * tint2-pipemenu: Remove tint2conf entry.
+
+ -- John Crawley <john@bunsenlabs.org>  Thu, 16 Jul 2020 14:33:27 +0900
+
 bunsen-pipemenus (10.2.4-1) lithium; urgency=medium
 
   * bl-install-pipemenu: add "Web Browsers" section.
