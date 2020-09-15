@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #    bl-sshconfig-pipemenu - an Openbox pipemenu for Graphics applications
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2015  Ankur Khanna
@@ -54,20 +54,20 @@ else:
     config.parse(config_file)
     hosts = config._config
 
-print '<openbox_pipe_menu>'
+print('<openbox_pipe_menu>')
 
 need_separator = False
 if not  os.access('/usr/sbin/sshd', os.X_OK):
-    print ('<menu id="ssh install" label="SSH server">')
-    print ('    <item label="Install OpenSSH server">')
-    print ('        <action name="Execute">')
-    print ('            <command>')
-    print ('                bl-install --name &apos;OpenSSH server and client&apos; bunsen-meta-ssh')
-    print ('            </command>')
-    print ('        </action>')
-    print ('    </item>')
-    print ('</menu>')
-    print ('<separator/>')
+    print('<menu id="ssh install" label="SSH server">')
+    print('    <item label="Install OpenSSH server">')
+    print('        <action name="Execute">')
+    print('            <command>')
+    print('                bl-install --name &apos;OpenSSH server and client&apos; bunsen-meta-ssh')
+    print('            </command>')
+    print('        </action>')
+    print('    </item>')
+    print('</menu>')
+    print('<separator/>')
 if len(hosts) >= 2:
     for host_entries in hosts:
         for host_name in host_entries['host']:
@@ -77,28 +77,28 @@ if len(hosts) >= 2:
                               ' || echo &quot;Press any key to close this window&quot;; read REPLY&apos;'
                 # build a ssh for filesystem command
                 fs_command = 'bl-file-manager ssh://' + host_name
-                print ('<menu id="' + host_name + '" label="' + host_name + '">')
-                print ('    <item label="Start terminal session">')
-                print ('        <action name="Execute">')
-                print ('            <command>')
-                print ('                ' + ssh_command)
-                print ('            </command>')
-                print ('        </action>')
-                print ('    </item>')
-                print ('    <item label="Browse with File Manager">')
-                print ('        <action name="Execute">')
-                print ('            <command>')
-                print ('                ' + fs_command)
-                print ('            </command>')
-                print ('        </action>')
-                print ('    </item>')
-                print ('</menu>')
-print ('<separator/>')
-print ('<item label="Edit ~/.ssh/config">')
-print ('    <action name="Execute">')
-print ('        <command>')
-print ('            bl-text-editor ~/.ssh/config')
-print ('        </command>')
-print ('    </action>')
-print ('</item>')
-print ('</openbox_pipe_menu>')
+                print('<menu id="' + host_name + '" label="' + host_name + '">')
+                print('    <item label="Start terminal session">')
+                print('        <action name="Execute">')
+                print('            <command>')
+                print('                ' + ssh_command)
+                print('            </command>')
+                print('        </action>')
+                print('    </item>')
+                print('    <item label="Browse with File Manager">')
+                print('        <action name="Execute">')
+                print('            <command>')
+                print('                ' + fs_command)
+                print('            </command>')
+                print('        </action>')
+                print('    </item>')
+                print('</menu>')
+print('<separator/>')
+print('<item label="Edit ~/.ssh/config">')
+print('    <action name="Execute">')
+print('        <command>')
+print('            bl-text-editor ~/.ssh/config')
+print('        </command>')
+print('    </action>')
+print('</item>')
+print('</openbox_pipe_menu>')
