@@ -29,9 +29,9 @@ USER_DBPY="$USER_DBPY_DIR/dropbox"
 }
 
 
-REMOTE_DBPY='https://www.dropbox.com/download?dl=packages/dropbox.py'
+REMOTE_DBPY='https://linux.dropbox.com/packages/dropbox.py'
 
-USERDBDIR="$HOME/.dropbox-dist/"
+USER_DB_DIR="$HOME/.dropbox-dist/"
 
 HELP='    bl-dropbox-pipemenu an Openbox Pipe Menu for use with dropbox
     It should normally be called from an openbox menu.
@@ -83,7 +83,7 @@ declareDependencies wget
 yad_common_args+=('--title=Dropbox Installation' '--image=dropbox')
 
 dropbox_is_installed() {
-    [[ -x "$USERDBDIR/dropboxd" ]] || return 1
+    [[ -x "$USER_DB_DIR/dropboxd" ]] || return 1
     return 0
 }
 
