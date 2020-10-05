@@ -36,7 +36,7 @@ try:
     config_file = open(cfgfile)
 except IOError:
     if not os.path.exists(cfgdir):
-        os.makedirs(cfgdir, 0700)
+        os.makedirs(cfgdir, 0o700)
     f = open(cfgfile, 'w')
     o = '# SSH config file, \'man ssh_config\' for more details.\n\n'
     o += '#Host example\n'
@@ -44,7 +44,7 @@ except IOError:
     o += '#    user joebloggs\n'
     f.write(o)
     f.close()
-    os.chmod(cfgfile, 0600)
+    os.chmod(cfgfile, 0o600)
     config_file = open(cfgfile)
     config = SSHConfig()
     config.parse(config_file)
