@@ -33,7 +33,7 @@ cfgdir = os.getenv("HOME")+"/.ssh"
 cfgfile = cfgdir+"/config"
 
 try:
-    config_file = file(cfgfile)
+    config_file = open(cfgfile)
 except IOError:
     if not os.path.exists(cfgdir):
         os.makedirs(cfgdir, 0700)
@@ -45,7 +45,7 @@ except IOError:
     f.write(o)
     f.close()
     os.chmod(cfgfile, 0600)
-    config_file = file(cfgfile)
+    config_file = open(cfgfile)
     config = SSHConfig()
     config.parse(config_file)
     hosts = config._config
