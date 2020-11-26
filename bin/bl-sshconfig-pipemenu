@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
+
 #    bl-sshconfig-pipemenu - an Openbox pipemenu for Graphics applications
+#
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2015  Ankur Khanna
 #    Copyright (C) 2016 xaos52 <xaos52@bunsenlabs.org>
 #    Copyright (C) 2018 tknomanzr <webradley9929@gmail.com>
+#    Copyright (C) 2020 jmechnich
+#                       Jens John <dev@2ion.de>
+#                       John Crawley <john@bunsenlabs.org>
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -17,88 +23,140 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-from paramiko.config import SSHConfig
+from pathlib import Path
+from shlex import quote
+from xml.etree import ElementTree as ET
 import argparse
+import os
 import sys
 
-ap = argparse.ArgumentParser(description="""Openbox pipemenu to handle secure shell installation and configuration.
-The install menu item is only shown when '/usr/sbin/sshd' is not executable. """)
-opts = ap.parse_args(sys.argv[1:])
 
-cfgdir = os.getenv("HOME")+"/.ssh"
-cfgfile = cfgdir+"/config"
+from paramiko.config import SSHConfig # type: ignore
 
-try:
-    config_file = open(cfgfile)
-except IOError:
-    if not os.path.exists(cfgdir):
-        os.makedirs(cfgdir, 0o700)
-    f = open(cfgfile, 'w')
-    o = '# SSH config file, \'man ssh_config\' for more details.\n\n'
-    o += '#Host example\n'
-    o += '#    hostname example.com\n'
-    o += '#    user joebloggs\n'
-    f.write(o)
-    f.close()
-    os.chmod(cfgfile, 0o600)
-    config_file = open(cfgfile)
-    config = SSHConfig()
-    config.parse(config_file)
-    hosts = config._config
-else:
-    config = SSHConfig()
-    config.parse(config_file)
-    hosts = config._config
 
-print('<openbox_pipe_menu>')
+def error(*args, **kwargs):
+    _kwargs = {**kwargs}
+    _kwargs.update({ "file": sys.stderr })
+    print(*args, **_kwargs)
 
-need_separator = False
-if not  os.access('/usr/sbin/sshd', os.X_OK):
-    print('<menu id="ssh install" label="SSH server">')
-    print('    <item label="Install OpenSSH server">')
-    print('        <action name="Execute">')
-    print('            <command>')
-    print('                bl-install --name &apos;OpenSSH server and client&apos; bunsen-meta-ssh')
-    print('            </command>')
-    print('        </action>')
-    print('    </item>')
-    print('</menu>')
-    print('<separator/>')
-if len(hosts) >= 2:
-    for host_entries in hosts:
-        for host_name in host_entries['host']:
-            if host_name != "*":
-                # build a secure shell command
-                ssh_command = 'x-terminal-emulator -e sh -c &apos; ssh ' + host_name + \
-                              ' || echo &quot;Press any key to close this window&quot;; read REPLY&apos;'
-                # build a ssh for filesystem command
-                fs_command = 'bl-file-manager ssh://' + host_name
-                print('<menu id="' + host_name + '" label="' + host_name + '">')
-                print('    <item label="Start terminal session">')
-                print('        <action name="Execute">')
-                print('            <command>')
-                print('                ' + ssh_command)
-                print('            </command>')
-                print('        </action>')
-                print('    </item>')
-                print('    <item label="Browse with File Manager">')
-                print('        <action name="Execute">')
-                print('            <command>')
-                print('                ' + fs_command)
-                print('            </command>')
-                print('        </action>')
-                print('    </item>')
-                print('</menu>')
-print('<separator/>')
-print('<item label="Edit ~/.ssh/config">')
-print('    <action name="Execute">')
-print('        <command>')
-print('            bl-text-editor ~/.ssh/config')
-print('        </command>')
-print('    </action>')
-print('</item>')
-print('</openbox_pipe_menu>')
+
+def getopts() -> argparse.Namespace:
+    ap = argparse.ArgumentParser(description="""Openbox pipemenu to handle SSH installation and configuration""")
+    ap.add_argument("-c", "--config-file", type=Path, default=Path(os.path.expanduser("~/.ssh/config")))
+    return ap.parse_args()
+
+
+def main() -> int:
+    opts = getopts()
+
+    config_dir = Path(os.path.dirname(opts.config_file))
+
+    # Ensure that the SSH config directory and at least a stub SSH config file exists.
+
+    if not config_dir.exists():
+        try:
+            config_dir.mkdir(0o700, parents=True)
+        except PermissionError:
+            error(f"Permission denied when attempting to create directory: {config_dir}")
+            return 1
+    if not opts.config_file.exists():
+        try:
+            with opts.config_file.open("w") as HANDLE:
+                HANDLE.write("""
+# SSH config file, 'man ssh_config' for more details.
+
+#Host example
+#  hostname example.com
+#  user johndoe
+    """)
+            opts.config_file.chmod(0o600)
+        except PermissionError:
+            error(f"Permission denied when attempting to create stub config: {opts.config_file}")
+            return 1
+
+    # Load config, and build a pipemenu with one entry per logical SSH host. We ignore wildcarded
+    # hostnames.
+
+    config = SSHConfig.from_path(opts.config_file)
+    hosts = sorted(filter(lambda s: "*" not in s, config.get_hostnames()))
+    pipemenu = ET.Element("openbox_pipe_menu")
+
+    # Offer to install SSH tooling if not already completely installed.
+
+    have_sshd = Path("/usr/sbin/sshd").exists()
+    if not have_sshd:
+        ET.SubElement(
+            ET.SubElement(
+                ET.SubElement(
+                    ET.SubElement(
+                        pipemenu,
+                        "menu",
+                        { "id": "ssh_install", "label": "SSH server"}
+                    ),
+                    "item",
+                    { "label": "Install OpenSSH server" }
+                ),
+                "action",
+                { "name": "Execute" }
+            ),
+            "command"
+        ).text = "bl-install --name 'OpenSSH server and client'; bunsen-meta-ssh"
+        ET.SubElement(pipemenu, "separator")
+
+    # Build per SSH host menu entries
+
+    for hostname in hosts:
+        _hostname = quote(hostname)
+        sshcmd = f"x-terminal-emulator -e sh -c 'ssh {_hostname} || echo \"Press any key to close this window\" ; read REPLY'"
+        fscmd = f"bl-file-manager ssh://{_hostname}"
+        hostmenu = ET.SubElement( pipemenu, "menu", { "id": hostname, "label": hostname })
+        ET.SubElement(
+            ET.SubElement(
+                ET.SubElement(
+                    hostmenu,
+                    "item",
+                    { "label": "Start terminal session" }
+                ),
+                "action",
+                { "name": "Execute" }
+            ),
+            "command"
+        ).text = sshcmd
+        ET.SubElement(
+            ET.SubElement(
+                ET.SubElement(
+                    hostmenu,
+                    "item",
+                    { "label": "Browse with File Manager" }
+                ),
+                "action",
+                { "name": "Execute" }
+            ),
+            "command"
+        ).text = fscmd
+
+    # Add menu item for editing the SSH config file
+
+    if not have_sshd and len(hosts) != 0:
+        ET.SubElement(pipemenu, "separator")
+    ET.SubElement(
+       ET.SubElement(
+           ET.SubElement(
+               pipemenu,
+               "item",
+               { "label": "Edit SSH user config" }
+           ),
+           "action",
+           { "name": "Execute" }
+       ),
+       "command"
+    ).text = f"bl-text-editor {quote(str(opts.config_file))}"
+
+    print(ET.tostring(pipemenu, encoding="unicode"))
+
+    return 0
+
+
+if __name__ == "__main__":
+    ret = main()
+    sys.exit(ret)
