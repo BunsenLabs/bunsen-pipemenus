@@ -77,7 +77,9 @@ def main() -> int:
     # Load config, and build a pipemenu with one entry per logical SSH host. We ignore wildcarded
     # hostnames.
 
-    config = SSHConfig.from_path(opts.config_file)
+#    config = SSHConfig.from_path(opts.config_file)
+    config = SSHConfig()
+    config.parse(open(opts.config_file))
     hosts = sorted(filter(lambda s: "*" not in s, config.get_hostnames()))
     pipemenu = ET.Element("openbox_pipe_menu")
 
