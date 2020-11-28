@@ -8,8 +8,8 @@ Build-Depends: debhelper (>= 10),
  lua-posix,
  lua-socket,
  lua-penlight,
- python,
- python-paramiko
+ python3,
+ python3-paramiko
 Standards-Version: 4.3.0
 Homepage: https://github.com/BunsenLabs/bunsen-pipemenus
 Vcs-Git: https://github.com/BunsenLabs/bunsen-pipemenus.git
@@ -22,8 +22,8 @@ Depends: ${misc:Depends},
  xterm | x-terminal-emulator,
  yad,
  wget,
- python,
- python-paramiko,
+ python3,
+ python3-paramiko,
  mesa-utils,
  lua5.2,
  lua-expat,
