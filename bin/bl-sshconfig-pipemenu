@@ -25,13 +25,13 @@
 
 from pathlib import Path
 from shlex import quote
-from xml.etree import ElementTree as ET
 import argparse
 import os
 import sys
 
 
 from paramiko.config import SSHConfig # type: ignore
+from lxml import etree as ET # type: ignore
 
 
 def error(*args, **kwargs):
@@ -157,7 +157,7 @@ def main() -> int:
        "command"
     ).text = f"bl-text-editor {quote(str(opts.config_file))}"
 
-    print(ET.tostring(pipemenu, encoding="unicode"))
+    print(ET.tostring(pipemenu, encoding="unicode", pretty_print=True), end="")
 
     return 0
 
