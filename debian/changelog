@@ -1,3 +1,13 @@
+bunsen-pipemenus (10.3-1) lithium; urgency=medium
+
+  * bl-dropbox-pipemenu: Update download url for dropbox.py.
+  [ jmechnich ]
+  * bl-sshconfig-pipemenu: Port to python3.
+  [ Jens John ]
+  * bl-sshconfig-pipemenu: Improve code.
+
+ -- John Crawley <john@bunsenlabs.org>  Wed, 13 Jan 2021 17:59:45 +0900
+
 bunsen-pipemenus (10.2.5-1) lithium; urgency=medium
 
   * tint2-pipemenu: Remove tint2conf entry.
