@@ -7,18 +7,16 @@ bl-beepmein-pipemenu
 bl-compositor
 bl-conky-pipemenu
 bl-dropbox-pipemenu
-bl-graphics-pipemenu
 bl-help-pipemenu
+bl-install-pipemenu
 bl-kb-pipemenu
-bl-libreoffice-pipemenu
-bl-multimedia-pipemenu
 bl-places-pipemenu
 bl-printing-pipemenu
 bl-recent-files-pipemenu
 bl-remote-desktop-pipemenu
+bl-scrot-pipemenu
 bl-sshconfig-pipemenu
 bl-tint2-pipemenu
-bl-x-www-browser-pipemenu
 
 They are mostly used by the BunsenLabs jgmenu menu defined in bunsen-configs,
 but may be launched as stand-alone utilities.

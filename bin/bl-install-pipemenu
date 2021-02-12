@@ -129,12 +129,12 @@ if [[ ${1-} = --install ]]; then
         args=('bunsen-meta-libreoffice')
         ;;
     libreoffice-*)
-        if allInstalled libreoffice-gtk2; then
+        if allInstalled libreoffice-gtk3; then
             desc="This script will install $appName (without recommends)."
             args=( '--no-install-recommends' "$packageName" )
         else
-            args=( '--no-install-recommends' "$packageName" 'libreoffice-gtk2' )
-            desc="This script will install $appName and libreoffice-gtk2 (without recommends)."
+            args=( '--no-install-recommends' "$packageName" 'libreoffice-gtk3' )
+            desc="This script will install $appName and libreoffice-gtk3 (without recommends)."
         fi
         ;;
     *)
