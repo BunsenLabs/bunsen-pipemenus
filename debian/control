@@ -2,7 +2,7 @@ Source: bunsen-pipemenus
 Section: misc
 Priority: optional
 Maintainer: John Crawley <john@bunsenlabs.org>
-Build-Depends: debhelper (>= 10),
+Build-Depends: debhelper-compat (= 12),
  help2man,
  lua5.2,
  lua-posix,
@@ -10,7 +10,7 @@ Build-Depends: debhelper (>= 10),
  lua-penlight,
  python3,
  python3-paramiko
-Standards-Version: 4.3.0
+Standards-Version: 4.5.1
 Homepage: https://github.com/BunsenLabs/bunsen-pipemenus
 Vcs-Git: https://github.com/BunsenLabs/bunsen-pipemenus.git
 Vcs-Browser: https://github.com/BunsenLabs/bunsen-pipemenus
