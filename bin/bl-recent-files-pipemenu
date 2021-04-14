@@ -28,7 +28,9 @@ end
 local M = xml.new("openbox_pipe_menu")
 
 local function quote(s)
-  return string.format("%q", s)
+  s = s:gsub("'", "'\\''")
+  s = "'" .. s .. "'"
+  return s
 end
 
 local function printf(f, ...)
