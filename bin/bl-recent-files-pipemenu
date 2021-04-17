@@ -60,8 +60,8 @@ local function mk_action_tag(name, command_tag)
   return xml.elem("action", { name = name, command_tag })
 end
 
-local function mk_command_tag(cmd, args)
-  return xml.elem("command"):text(quote(cmd) .. ' ' .. quote(args))
+local function mk_command_tag(cmd, arg)
+  return xml.elem("command"):text(cmd .. ' ' .. quote(arg))
 end
 
 local function add_executable_item(m, label, cmd, args)
@@ -83,7 +83,8 @@ end
 -- @return XML object if successful, otherwise nil
 local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
   local function clean_executable_name(s)
-    return s:match("([^'^%s]+)")
+    s = s:match("^'%s*(.-)%s*'$")
+    return s:gsub("%s+%%u$", "")
   end
 
   local function clean_file_path(s)
