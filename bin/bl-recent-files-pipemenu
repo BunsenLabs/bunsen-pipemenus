@@ -52,6 +52,12 @@ local function decode_url(s)
   return s
 end
 
+--- Sanitizes a file URL for use in a menu label
+local function clean_label(s)
+  local s = s
+  return s:gsub("_", "__")           -- prevent underscores from becoming shortcuts
+end
+
 local function mk_item_tag(label, actions)
   return xml.elem("item", { label = label, table.unpack(actions)})
 end
@@ -102,16 +108,21 @@ local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
 
   for bookmark in x:childtags() do
     local file = bookmark:get_attribs().href
+    file = clean_file_path(file)
+    if not posix.access(file, r) then
+      goto continue
+    end
     local apps = bookmark:get_elements_with_name("bookmark:application")
     local prop = apps[#apps]:get_attribs()
-    local i = mk_item_tag(decode_url(posix.basename(file)), {
-        mk_action_tag("Execute", mk_command_tag(override_cmd or clean_executable_name(prop.exec), clean_file_path(file)))
+    local i = mk_item_tag(clean_label(posix.basename(file)), {
+        mk_action_tag("Execute", mk_command_tag(override_cmd or clean_executable_name(prop.exec), file))
       })
     if reverse_output then
       table.insert(buf, 1, i)
     else
       table.insert(buf, i)
     end
+    ::continue::
   end
 
   for i,v in ipairs(buf) do
