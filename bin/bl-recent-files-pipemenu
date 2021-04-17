@@ -86,6 +86,14 @@ local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
     return s:match("([^'^%s]+)")
   end
 
+  local function clean_file_path(s)
+    s = s:gsub("^file://", "")
+    if s:find("%", 1, true) then
+      s = url.unescape(s)
+    end
+    return s
+  end
+
   local x = xml.parse(path, true)
   if not x then return nil end
 
@@ -96,7 +104,7 @@ local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
     local apps = bookmark:get_elements_with_name("bookmark:application")
     local prop = apps[#apps]:get_attribs()
     local i = mk_item_tag(decode_url(posix.basename(file)), {
-        mk_action_tag("Execute", mk_command_tag(override_cmd or clean_executable_name(prop.exec), file))
+        mk_action_tag("Execute", mk_command_tag(override_cmd or clean_executable_name(prop.exec), clean_file_path(file)))
       })
     if reverse_output then
       table.insert(buf, 1, i)
