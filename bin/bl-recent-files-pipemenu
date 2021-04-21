@@ -88,9 +88,15 @@ end
 -- instead of the originally assigned application
 -- @return XML object if successful, otherwise nil
 local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
+
   local function clean_executable_name(s)
-    s = s:match("^'%s*(.-)%s*'$")
-    return s:gsub("%s+%%u$", "")
+    s = s:match("^'(.*)'$")
+    s = s:gsub("%s+%%%a$", "")
+    local words = {}
+    for w in s:gmatch("%S+")
+      do table.insert(words, quote(w))
+    end
+    return table.concat(words, " ")
   end
 
   local function clean_file_path(s)
