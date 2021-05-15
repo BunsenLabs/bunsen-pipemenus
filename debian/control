@@ -37,7 +37,7 @@ Recommends: bunsen-configs,
  bunsen-conky,
  openbox,
  tint2,
- compton,
+ picom,
  inotify-tools
 Description: Various Openbox and jgmenu pipemenus
  Contains various pipemenus for use with Bunsen Linux. Some generate xml for
