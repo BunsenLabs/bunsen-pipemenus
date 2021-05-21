@@ -1,3 +1,10 @@
+bunsen-pipemenus (11.1-1) beryllium; urgency=medium
+
+  * bl-compositor: switch from compton to picom.
+     (bl-compositor is still usable if compton is installed instead of picom.)
+
+ -- John Crawley <john@bunsenlabs.org>  Fri, 21 May 2021 15:40:05 +0900
+
 bunsen-pipemenus (11.0-1) beryllium; urgency=medium
 
   * Migrate for Debian Bullseye.
