@@ -1,7 +1,7 @@
 #!/bin/bash
 #    bl-conky-pipemenu - an Openbox pipemenu for manipulating conky
 #    Copyright (C) 2015 damo <damo@bunsenlabs.org>
-#                  2016-2019 John Crawley <john@bunsenlabs.org>
+#                  2016-2021 John Crawley <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 HELP='    bl-conky-pipemenu an Openbox Pipe Menu for use with conky
-    It should normally be called from an openbox menu.
+    It should normally be called from an openbox menu or jgmenu.
 
 Options:
     -h --help   show this message
@@ -42,8 +42,8 @@ done
 BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
 CONKYPATH="$HOME/.config/conky"
+BLDEFAULT="$CONKYPATH/BL-Default-conky.conf"
 CONKYDEFAULT="$CONKYPATH/conky.conf"
-SESSIONFILE="$CONKYPATH/conky-sessionfile"
 SESSIONS="$CONKYPATH/saved-sessions"
 HELPFILE="/usr/share/bunsen/docs/helpfile-conky-manager.txt"
 
@@ -51,44 +51,67 @@ if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     echo "Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
     exit 1
 fi
-if [ ! -e "$SESSIONFILE" ] ; then
-    echo "Failed to locate ${SESSIONFILE}, generating default..." >&2
-    echo "conky -c $CONKYDEFAULT & sleep 1s" > "$SESSIONFILE"
-fi
-if [ ! -e "$SESSIONS" ] ; then
-    echo "$0: Failed to locate saved-sessions in $CONKYPATH" >&2
-fi
 
 declareDependencies yad
 
-getSessions(){  # read any saved sessions from save-sessions file
-    menuItem "Default" "bl-conky-session $SESSIONFILE"
-    if [ -e "$SESSIONS" ]
+getSessions(){  # read any saved sessions from saved-sessions file
+    menuItem "Default Startup Session" "bl-conky-session"
+    if [ -r "$SESSIONS" ]
     then
         while read -r session ;do
             [[ -z $session ]] && continue   # skip if line is blank
-            menuItem "$session" "bl-conky-session $session"
+            menuItem "${session#${CONKYPATH}/}" "bl-conky-session '$session'"
         done < "$SESSIONS"
-    else
-        echo "$0: Failed to locate saved-sessions in $CONKYPATH" >&2
     fi
 }
 
-loadChooserMenu(){
+loadChooser(){
     if type bl-conky-manager &>/dev/null;then  # bl-conky-manager script found
         menuItem "Conky Manager" "bl-conky-manager"
     fi
 }
 
-loadNewsessionMenu(){
-    if type bl-conky-manager &>/dev/null;then  # bl-conky-manager script found
-        menuItem "New Conky Session" "bl-conky-manager -z"
+loadReload(){
+    if type bl-conky-session &>/dev/null;then  # bl-conky-session script found
+        menuItem "Reload Startup Session" "bl-conky-session"
     fi
 }
 
-loadReloadMenu(){
-    if type bl-conky-session &>/dev/null;then  # bl-conky-session script found
-        menuItem "Reload Conkys" "bl-conky-session"
+loadEditSubmenu(){
+    menuSubmenu "EditConky" "Edit Conkys"
+        if type bl-conky-edit &>/dev/null;then  # bl-conky-edit script found
+            menuItem "Conky Editor" "bl-conky-edit"
+        fi
+        menuItem "Default conkyrc" "bl-text-editor '$BLDEFAULT'"
+        if [[ $(pidof conky) ]];then
+            menuSubmenu "RunningConky" "Running Conkys"
+            while read -r pid; do
+                mapfile -d '' -t command < "/proc/${pid}/cmdline" # use NULL delimiter to split cmdline into array 'command'
+                for i in "${!command[@]}"; do
+                    [[ ${command[i]} = '-c' ]] && { CPATH="${command[i+1]}"; break;}
+                    [[ ${command[i]} = '--config='* ]] && { CPATH="${command[i]#--config=}"; break;}
+                done
+                CONKY=${CPATH#${CONKYPATH}/}
+                if [[ -z $CPATH ]];then
+                    CPATH="$CONKYDEFAULT"
+                    CONKY="Default conky.conf"
+                fi
+                menuItem "$CONKY" "bl-text-editor '$CPATH'"
+            done < <(pgrep -x 'conky' -u "$USER")
+            menuSubmenuEnd
+        fi
+    menuSubmenuEnd
+}
+
+loadMove(){
+    if type bl-conkymove &>/dev/null;then
+        menuItem "Move a Conky" "bl-conkymove"
+    fi
+}
+
+loadNewsession(){
+    if type bl-conky-manager &>/dev/null;then  # bl-conky-manager script found
+        menuItem "New Conky Session" "bl-conky-manager -z"
     fi
 }
 
@@ -98,45 +121,6 @@ loadSavedsessionSubmenu(){
         getSessions
         menuSubmenuEnd
     fi
-}
-
-loadMoveMenu(){
-    if type bl-conkymove &>/dev/null;then
-        menuItem "Move a Conky" "bl-conkymove"
-        menuSeparator
-    fi
-}
-
-loadEditMenu(){
-    menuItem "Default conkyrc" "bl-text-editor $CONKYDEFAULT"
-    if [[ $(pidof conky) ]];then
-        menuSubmenu "RunningConky" "Running Conkys"
-        pgrep -a conky | while read -r pid cmd; do #get running conkys from pgrep
-            if [[ ${cmd%% *} = conky ]]; then
-                CPATH=${cmd##* }
-                CONKY="${CPATH#*.config/}"
-                if [[ $CPATH = conky ]];then
-                    CPATH="$CONKYDEFAULT"
-                    CONKY="Default conkyrc"
-                fi
-                menuItem "$CONKY" "bl-text-editor $CPATH"
-            fi
-        done
-        menuSubmenuEnd
-    else
-        menuItem "No Running Conkys"
-    fi
-}
-
-getConkys(){
-    menuSubmenu "EditConky" "Edit Conkys"
-        if type bl-conkyedit &>/dev/null;then  # bl-conkyedit script found
-            menuItem "Conky Editor" "bl-conkyedit"
-            loadEditMenu
-        else
-            loadEditMenu
-        fi
-    menuSubmenuEnd
 }
 
 checkHelpfile(){
@@ -152,12 +136,13 @@ checkHelpfile(){
 }
 
 menuStart "Conkymenu" "Conky"
-loadChooserMenu
-loadReloadMenu
-getConkys
+loadChooser
+loadReload
+loadEditSubmenu
 menuSeparator
-loadMoveMenu
-loadNewsessionMenu
+loadMove
+menuSeparator
+loadNewsession
 loadSavedsessionSubmenu
 menuSeparator
 checkHelpfile
