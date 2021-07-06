@@ -123,6 +123,12 @@ loadSavedsessionSubmenu(){
     fi
 }
 
+loadStartupChooser(){
+    if type bl-conky-manager >/dev/null && type bl-conky-session  >/dev/null;then
+        menuItem "Choose startup session" 'bl-conky-manager --choose-startup'
+    fi
+}
+
 checkHelpfile(){
     DLG="yad --text-info --center --borders=20 \
     --title='BunsenLabs Conky Manager Help' \
@@ -137,13 +143,14 @@ checkHelpfile(){
 
 menuStart "Conkymenu" "Conky"
 loadChooser
-loadReload
 loadEditSubmenu
 menuSeparator
 loadMove
 menuSeparator
+loadReload
 loadNewsession
 loadSavedsessionSubmenu
+loadStartupChooser
 menuSeparator
 checkHelpfile
 menuEnd
