@@ -2,6 +2,7 @@
 
 #    bl-tint2-pipemenu - an Openbox pipemenu for tint2 manipulation
 #    Copyright (C) 2015-2017 damo    <damo@bunsenlabs.org>
+#                  2021 John Crawley <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -43,7 +44,7 @@ done
 BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
 TINT2PATH="$HOME/.config/tint2"
-TINT2RC="$TINT2PATH/tint2rc"
+TINT2DEFAULT="$TINT2PATH/tint2rc"
 TMGR="bl-tint2-manager"
 
 if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
@@ -51,53 +52,52 @@ if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     exit 1
 fi
 
-loadTEditmenu(){
-    menuSeparator
-    menuItem "Default tint2rc" "bl-text-editor $TINT2RC"
-    if [ "$(pidof tint2)" ];then
-        menuSubmenu "RunningTint2" "Running Tint2s"
-        pgrep -a tint2 | while read -r pid cmd; do
-            if [[ ${cmd%% *} = tint2 ]]; then
-                TINT=${cmd##* }
-                TINT2=${TINT#$HOME/.config/}
-                if [[ $TINT = tint2 ]];then
-                    TINT="$TINT2RC"
-                    TINT2="Default tint2rc"
-                fi
-                menuItem "$TINT2" "bl-text-editor $TINT"
-            fi
-        done
-        menuSubmenuEnd
-    fi
-}
-
-getTint2s(){
-    menuSubmenu "EditTint2" "Edit Tint2s"
-        if type bl-tint2edit &>/dev/null;then  # bl-tint2edit script found
-            menuItem "Tint2 Editor" "bl-tint2edit"
-        fi
-# tint2conf removed here but still available from "Applications" menu as Settings > Panel Manager
-#        menuItem "Tint2 Config GUI" "tint2conf"
-        loadTEditmenu
-    menuSubmenuEnd
-}
-
-loadChoosermenu(){
+loadChooser(){
     if type $TMGR &>/dev/null;then  # bl-tint2-manager script found
         menuItem "Tint2 Manager" "$TMGR"
     fi
 }
 
-loadRestartmenu(){
+loadRestart(){
     if [ "$(pidof tint2)" ];then
-        if type bl-tint2restart &>/dev/null;then  # bl-tint2restart script found
-            menuItem "Restart Tint2" "bl-tint2restart"
+        if type bl-restart &>/dev/null;then
+            menuItem "Restart Tint2" "bl-restart tint2"
         fi
     fi
 }
 
+loadEditSubmenu(){
+    local pid command TPATH TINT2
+    menuSubmenu "EditTint2" "Edit Tint2s"
+        if type bl-tint2-edit &>/dev/null;then
+            menuItem "Tint2 Editor" "bl-tint2-edit"
+        fi
+# tint2conf removed here but still available from "Applications" menu as Settings > Panel Manager
+#        menuItem "Tint2 Config GUI" "tint2conf"
+        menuItem "Default tint2rc" "bl-text-editor '$TINT2DEFAULT'"
+        if pidof tint2 >/dev/null;then
+            menuSubmenu "RunningTint2" "Running Tint2s"
+            while read -r pid; do
+                mapfile -d '' -t command < "/proc/${pid}/cmdline" # use NULL delimiter to split cmdline into array 'command'
+                [[ ${command[0]} = 'tint2' ]]  || { echo "$0: pgrep parsing failed: command is not 'tint2'" >&2; continue;}
+                if (( ${#command[@]} > 1 )); then
+                    TPATH=${command[-1]} # tint2 takes no options other than -c, which is optional
+                    [[ $TPATH = /* ]] || TPATH="$HOME/$TPATH" # assume path is relative to $HOME
+                    TINT2=${TPATH#${TINT2PATH}/}
+                else
+                    TPATH="$TINT2DEFAULT"
+                    TINT2="Default tint2rc"
+                fi
+                [[ -f $TPATH ]] || { echo "$0: pgrep tint2 parsing failed: $TPATH is not a file" >&2; continue;}
+                menuItem "$TINT2" "bl-text-editor ${TPATH@Q}"
+            done < <(pgrep -x 'tint2' -u "$USER")
+            menuSubmenuEnd
+        fi
+    menuSubmenuEnd
+}
+
 menuStart "Tintmenu" "Tint2"
-loadChoosermenu
-loadRestartmenu
-getTint2s
+loadChooser
+loadRestart
+loadEditSubmenu
 menuEnd
