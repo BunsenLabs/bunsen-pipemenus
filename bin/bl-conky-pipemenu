@@ -59,31 +59,32 @@ getSessions(){  # read any saved sessions from saved-sessions file
     if [ -r "$SESSIONS" ]
     then
         while read -r session ;do
-            [[ -z $session ]] && continue   # skip if line is blank
+            [[ -z $session ]] && continue
             menuItem "${session#${CONKYPATH}/}" "bl-conky-session '$session'"
         done < "$SESSIONS"
     fi
 }
 
 loadChooser(){
-    if type bl-conky-manager &>/dev/null;then  # bl-conky-manager script found
+    if type bl-conky-manager &>/dev/null;then
         menuItem "Conky Manager" "bl-conky-manager"
     fi
 }
 
 loadReload(){
-    if type bl-conky-session &>/dev/null;then  # bl-conky-session script found
+    if type bl-conky-session &>/dev/null;then
         menuItem "Reload Startup Session" "bl-conky-session"
     fi
 }
 
 loadEditSubmenu(){
+    local pid command CPATH CONKY
     menuSubmenu "EditConky" "Edit Conkys"
         if type bl-conky-edit &>/dev/null;then  # bl-conky-edit script found
             menuItem "Conky Editor" "bl-conky-edit"
         fi
         menuItem "Default conkyrc" "bl-text-editor '$BLDEFAULT'"
-        if [[ $(pidof conky) ]];then
+        if pidof conky >/dev/null;then
             menuSubmenu "RunningConky" "Running Conkys"
             while read -r pid; do
                 mapfile -d '' -t command < "/proc/${pid}/cmdline" # use NULL delimiter to split cmdline into array 'command'
@@ -96,7 +97,7 @@ loadEditSubmenu(){
                     CPATH="$CONKYDEFAULT"
                     CONKY="Default conky.conf"
                 fi
-                menuItem "$CONKY" "bl-text-editor '$CPATH'"
+                menuItem "$CONKY" "bl-text-editor ${CPATH@Q}"
             done < <(pgrep -x 'conky' -u "$USER")
             menuSubmenuEnd
         fi
@@ -110,13 +111,13 @@ loadMove(){
 }
 
 loadNewsession(){
-    if type bl-conky-manager &>/dev/null;then  # bl-conky-manager script found
+    if type bl-conky-manager &>/dev/null;then
         menuItem "New Conky Session" "bl-conky-manager -z"
     fi
 }
 
 loadSavedsessionSubmenu(){
-    if type bl-conky-session &>/dev/null;then  # bl-conky-session script found
+    if type bl-conky-session &>/dev/null;then
         menuSubmenu "Sessions" "Saved Sessions"
         getSessions
         menuSubmenuEnd
@@ -125,7 +126,7 @@ loadSavedsessionSubmenu(){
 
 loadStartupChooser(){
     if type bl-conky-manager >/dev/null && type bl-conky-session  >/dev/null;then
-        menuItem "Choose startup session" 'bl-conky-manager --choose-startup'
+        menuItem "Choose startup session" "bl-conky-manager --choose-startup"
     fi
 }
 
