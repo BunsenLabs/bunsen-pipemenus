@@ -2,7 +2,7 @@
 #    bl-dropbox-pipemenu: an Openbox pipemenu for use with Dropbox
 #    Copyright (C) 2012 Philip Newborough <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
-#    Copyright (C) 2015-2020  John Crawley <john@bunsenlabs.org>
+#    Copyright (C) 2015-2021  John Crawley <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -127,7 +127,7 @@ elif [[ $1 = '--install-dropbox' ]]; then
         yad_question 'We need to install the package python3-gpg.\nDo you want to proceed?' || exit 0
         tmpFile=$(mktemp --tmpdir=/tmp)
         bl-install --file "$tmpFile" 'python3-gpg'
-        sleep 0.3 # allow time for bl-install to write to $tmpFile
+        #sleep 0.3 # allow time for bl-install to write to $tmpFile (now done in bl-install)
         retval=$(<"$tmpFile")
         [[ -f $tmpFile && $tmpFile = /tmp/* ]] && rm "$tmpFile"
         [[ $retval -ne 0 ]] && {
@@ -143,7 +143,7 @@ elif [[ $1 = '--install-dropbox' ]]; then
 \nWould you like to install this?" && {
             tmpFile=$(mktemp --tmpdir=/tmp)
             bl-install --name 'context-menu items from Dropbox for Thunar' --file "$tmpFile"  --no-install-recommends thunar-dropbox-plugin
-            sleep 0.3 # allow time for bl-install to write to $tmpFile
+            #sleep 0.3 # allow time for bl-install to write to $tmpFile (now done in bl-install)
             retval=$(<"$tmpFile")
             [[ -f $tmpFile && $tmpFile = /tmp/* ]] && rm "$tmpFile"
             [[ $retval -ne 0 ]] && {
