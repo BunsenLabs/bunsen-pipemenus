@@ -31,14 +31,15 @@ Depends: ${misc:Depends},
  lua-penlight,
  lua-posix,
  lua-socket
-Recommends: bunsen-configs,
- bunsen-utilities,
+Recommends: bunsen-configs (>= 11.3-1),
+ bunsen-utilities (>= 11.1-1),
  bunsen-docs,
  bunsen-conky,
  openbox,
  tint2,
  picom,
  inotify-tools
+Breaks: bunsen-utilities (<< 11.1-1)
 Description: Various Openbox and jgmenu pipemenus
  Contains various pipemenus for use with Bunsen Linux. Some generate xml for
  openbox, and some csv for jgmenu.
