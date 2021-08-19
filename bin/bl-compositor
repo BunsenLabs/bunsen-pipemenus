@@ -136,13 +136,13 @@ elif [[ $1 = '--start' ]]; then
     if ! pgrep -x -u "$USER" "$compositor" >/dev/null; then
         startComp
         sleep 1
-        bl-tint2restart || true
+        bl-restart tint2
     else
         echo "$0 --start: $compositor already running" >&2
     fi
 elif [[ $1 = '--stop' ]]; then
     safeKill "$compositor"
-    bl-tint2restart || true
+    bl-restart tint2
 elif [[ $1 = '--restart' ]]; then
     if pgrep -x -u "$USER" "$compositor" >/dev/null; then
         safeKill "$compositor"
