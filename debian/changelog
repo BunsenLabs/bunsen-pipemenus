@@ -1,3 +1,12 @@
+bunsen-pipemenus (11.2-1) beryllium; urgency=medium
+
+  * bl-conky-pipemenu, bl-tint2-pipemenu:
+     adjust to match updated scripts in bunsen-utilities 11.1-1.
+  * bl-conky-pipemenu: add item to set conky startup session.
+  * bl-compositor: use bl-restart instead of bl-tint2restart.
+
+ -- John Crawley <john@bunsenlabs.org>  Thu, 19 Aug 2021 15:41:18 +0900
+
 bunsen-pipemenus (11.1-1) beryllium; urgency=medium
 
   * bl-compositor: switch from compton to picom.
