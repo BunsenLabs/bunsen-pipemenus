@@ -66,6 +66,12 @@ loadRestart(){
     fi
 }
 
+loadReload(){
+    if type bl-tint2-session &>/dev/null;then
+        menuItem "Reload Default Session" "bl-tint2-session"
+    fi
+}
+
 loadEditSubmenu(){
     local pid command TPATH TINT2
     menuSubmenu "EditTint2" "Edit Tint2s"
@@ -99,5 +105,6 @@ loadEditSubmenu(){
 menuStart "Tintmenu" "Tint2"
 loadChooser
 loadRestart
+loadReload
 loadEditSubmenu
 menuEnd
