@@ -3,7 +3,7 @@
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
 #    Copyright (C) 2018 Matthew T Hoare <matthew.t.hoare@gmail.com>
-#    Copyright (C) 2015-2019 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2021 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -35,20 +35,28 @@ Options (usually passed from the menu):
 # install apps lists
 BROWSERS=('firefox-esr' 'chromium' 'dillo')
 TERMS=('rxvt-unicode' 'terminator' 'mate-terminal' 'gnome-terminal' 'xfce4-terminal' 'lxterminal')
-MM_APPS=('mpv' 'vlc' 'audacious' 'smplayer' 'gnome-mpv')
+MM_APPS=('mpv' 'vlc' 'audacious' 'smplayer' 'celluloid')
 MM_EDITORS=('mhwaveedit' 'audacity' 'openshot')
-MM_UTILS=('xfburn' 'brasero' 'k3b' 'gtk-recordmydesktop' )
+MM_UTILS=('xfburn' 'brasero' 'k3b' 'simplescreenrecorder' )
 GRAPHICS_APPS=( 'mirage' 'viewnior' 'gpicview' 'ristretto' 'geeqie' 'gthumb' 'gimp' 'inkscape')
 GRAPHICS_SCROTS=('xfce4-screenshooter' 'scrot')
 LO_APPS=('libreoffice-writer' 'libreoffice-calc' 'libreoffice-impress' 'libreoffice-draw' 'libreoffice-base' 'libreoffice')
+UTILITIES=('hw-probe' 'mc' 'mdadm' 'gnome-calculator')
 
 # associative array: commands which are different from package names
 # These commands are used to test if the package is installed or not.
 # If the package command is the same as its name it is not necessary to define it.
 # If a package provides several commands, it is enough to define one.
-declare -A pkg_cmd
+declare -A pkg_cmd=()
 #pkg_cmd[mpv]='bl-mpv'
 pkg_cmd[rxvt-unicode]='urxvt'
+
+# Descriptive names when package name is not enough
+declare -A AppName=()
+AppName[mc]='Midnight Commander file manager'
+AppName[hw-probe]='hw-probe hardware checker'
+AppName[k3b]='k3b CD/DVD burner'
+AppName[mdadm]='mdadm Multi-Disk manager'
 
 ########################################################################
 
@@ -70,9 +78,9 @@ if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     exit 1
 fi
 
-declare -A AppName AppStatus
+declare -A AppStatus
 
-for curApp in "${BROWSERS[@]}" "${TERMS[@]}" "${MM_APPS[@]}" "${MM_EDITORS[@]}" "${MM_UTILS[@]}" "${GRAPHICS_APPS[@]}" "${GRAPHICS_SCROTS[@]}"; do
+for curApp in "${BROWSERS[@]}" "${TERMS[@]}" "${UTILITIES[@]}" "${MM_APPS[@]}" "${MM_EDITORS[@]}" "${MM_UTILS[@]}" "${GRAPHICS_APPS[@]}" "${GRAPHICS_SCROTS[@]}"; do
     words=(${curApp//-/ })
     AppName[$curApp]="${AppName[$curApp]:-${words[*]^}}"
     command="${pkg_cmd[$curApp]:-$curApp}" # use package name as command if not defined in pkg_cmd
@@ -167,6 +175,7 @@ else # pipemenu
 
     generate_installmenu 'browsers' 'Web Browsers' "${BROWSERS[@]}"
     generate_installmenu 'terms' 'Terminal Emulators'  "${TERMS[@]}"
+    generate_installmenu 'utils' 'Utilities'  "${UTILITIES[@]}"
     generate_installmenu 'mmapps' 'Multimedia Players'  "${MM_APPS[@]}"
     generate_installmenu 'mmeditors' 'Multimedia Editors' "${MM_EDITORS[@]}"
     generate_installmenu 'mmutils' 'Multimedia Utilities' "${MM_UTILS[@]}"
