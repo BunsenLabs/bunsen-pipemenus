@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Tint2 Pipemenu
+TryExec=jgmenu
+Exec=bl-jgpop -o bl-tint2-pipemenu
+Icon=obconf
+Terminal=false
+Categories=Settings;DesktopSettings

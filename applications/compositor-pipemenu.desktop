@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Compositor Pipemenu
+TryExec=jgmenu
+Exec=bl-jgpop -o bl-compositor
+Icon=obconf
+Terminal=false
+Categories=Settings;DesktopSettings

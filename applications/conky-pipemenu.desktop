@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Conky Pipemenu
+TryExec=jgmenu
+Exec=bl-jgpop -o bl-conky-pipemenu
+Icon=obconf
+Terminal=false
+Categories=Settings;DesktopSettings
