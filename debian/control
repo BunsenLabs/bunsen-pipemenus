@@ -19,26 +19,27 @@ Package: bunsen-pipemenus
 Architecture: all
 Depends: ${misc:Depends},
  bunsen-common,
- xterm | x-terminal-emulator,
- yad,
- wget,
+ jgmenu,
+ mesa-utils,
  python3,
  python3-paramiko,
  python3-lxml,
- mesa-utils,
  lua5.2,
  lua-expat,
  lua-penlight,
  lua-posix,
- lua-socket
+ lua-socket,
+ wget,
+ xterm | x-terminal-emulator,
+ yad
 Recommends: bunsen-configs (>= 11.3-1),
- bunsen-utilities (>= 11.1-1),
- bunsen-docs,
  bunsen-conky,
+ bunsen-docs,
+ bunsen-utilities (>= 11.1-1),
+ inotify-tools,
  openbox,
- tint2,
  picom,
- inotify-tools
+ tint2
 Breaks: bunsen-utilities (<< 11.1-1)
 Description: Various Openbox and jgmenu pipemenus
  Contains various pipemenus for use with Bunsen Linux. Some generate xml for
