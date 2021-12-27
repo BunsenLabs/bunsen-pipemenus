@@ -59,7 +59,7 @@ loadChooser(){
 }
 
 loadRestart(){
-    if [ "$(pidof tint2)" ];then
+    if pgrep -x -u "$USER" tint2 >/dev/null;then
         if type bl-restart &>/dev/null;then
             menuItem "Restart Tint2" "bl-restart tint2"
         fi
@@ -81,7 +81,7 @@ loadEditSubmenu(){
 # tint2conf removed here but still available from "Applications" menu as Settings > Panel Manager
 #        menuItem "Tint2 Config GUI" "tint2conf"
         menuItem "Default tint2rc" "bl-text-editor '$TINT2DEFAULT'"
-        if pidof tint2 >/dev/null;then
+        if pgrep -x -u "$USER" tint2 >/dev/null;then
             menuSubmenu "RunningTint2" "Running Tint2s"
             while read -r pid; do
                 mapfile -d '' -t command < "/proc/${pid}/cmdline" # use NULL delimiter to split cmdline into array 'command'

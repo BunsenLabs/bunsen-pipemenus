@@ -84,7 +84,7 @@ loadEditSubmenu(){
             menuItem "Conky Editor" "bl-conky-edit"
         fi
         menuItem "Default conkyrc" "bl-text-editor '$BLDEFAULT'"
-        if pidof conky >/dev/null;then
+        if pgrep -x -u "$USER" conky >/dev/null;then
             menuSubmenu "RunningConky" "Running Conkys"
             while read -r pid; do
                 mapfile -d '' -t command < "/proc/${pid}/cmdline" # use NULL delimiter to split cmdline into array 'command'
