@@ -17,7 +17,8 @@
 
 HELP="    bl-beepmein-pipemenu a beepmein pipe menu for jgmenu
 
-Usage: bl-beepmein-pipemenu | jgmenu --simple --icon-size=0
+Usage: (standalone) bl-beepmein-pipemenu | jgmenu --vsimple --at-pointer
+        (or use --standalone option)
 
     It can be called from a tint2 button, launcher or jgmenu menu.
 
@@ -51,7 +52,7 @@ do
         ;;
     -s|--standalone)
         # redirect stdout from this point
-        exec > >( jgmenu --simple --icon-size=0 --config-file=<( sed '/menu_padding_top/ s/^/#/' ~/.config/jgmenu/jgmenurc ) )
+        exec > >( jgmenu --simple --config-file=<( sed '/menu_padding_top/ { s/^/#/ }; $ a tabs = 0' ~/.config/jgmenu/jgmenurc ) )
         ;;
     esac
 done
