@@ -1,3 +1,16 @@
+bunsen-pipemenus (11.3-1) beryllium; urgency=medium
+
+  * Add bl-jgpop, utility for calling standalone instance of a pipemenu.
+  * Add desktop files for compositor, conky and tint2 pipemenus.
+  * bl-tint2-pipemenu: add item to restore default tint2 session.
+  * bl-install-pipemenu: 
+     - replace gnome-mpv with celluloid
+     - replace gtk-recordmydesktop with simplescreenrecorder
+     - add "Utilities" section with hw-probe, mc, mdadm and gnome-calculator
+  * Remove bl-help-pipemenu, superseded by an include from bunsen-configs.
+
+ -- John Crawley <john@bunsenlabs.org>  Wed, 12 Jan 2022 10:21:40 +0900
+
 bunsen-pipemenus (11.2-1) beryllium; urgency=medium
 
   * bl-conky-pipemenu, bl-tint2-pipemenu:
