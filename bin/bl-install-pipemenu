@@ -56,7 +56,7 @@ declare -A AppName=()
 AppName[mc]='Midnight Commander file manager'
 AppName[hw-probe]='hw-probe hardware checker'
 AppName[k3b]='k3b CD/DVD burner'
-AppName[mdadm]='mdadm Multi-Disk manager'
+AppName[mdadm]='mdadm Multi-Disk (RAID) manager'
 
 ########################################################################
 
