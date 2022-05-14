@@ -1,3 +1,10 @@
+bunsen-pipemenus (11.3.1-1) beryllium; urgency=medium
+
+  * Fix helpfile paths in conky & tint2 pipemenus.
+  * bl-install-pipemenu: mdadm: add mention of RAID.
+
+ -- John Crawley <john@bunsenlabs.org>  Sat, 14 May 2022 15:33:27 +0900
+
 bunsen-pipemenus (11.3-1) beryllium; urgency=medium
 
   * Add bl-jgpop, utility for calling standalone instance of a pipemenu.
