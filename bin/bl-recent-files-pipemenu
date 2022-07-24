@@ -28,7 +28,9 @@ end
 local M = xml.new("openbox_pipe_menu")
 
 local function quote(s)
-  return string.format("%q", s)
+  s = s:gsub("'", "'\\''")
+  s = "'" .. s .. "'"
+  return s
 end
 
 local function printf(f, ...)
@@ -50,6 +52,12 @@ local function decode_url(s)
   return s
 end
 
+--- Sanitizes a file URL for use in a menu label
+local function clean_label(s)
+  local s = s
+  return s:gsub("_", "__")           -- prevent underscores from becoming shortcuts
+end
+
 local function mk_item_tag(label, actions)
   return xml.elem("item", { label = label, table.unpack(actions)})
 end
@@ -58,8 +66,8 @@ local function mk_action_tag(name, command_tag)
   return xml.elem("action", { name = name, command_tag })
 end
 
-local function mk_command_tag(cmd, args)
-  return xml.elem("command"):text(quote(cmd) .. ' ' .. quote(args))
+local function mk_command_tag(cmd, arg)
+  return xml.elem("command"):text(cmd .. ' ' .. quote(arg))
 end
 
 local function add_executable_item(m, label, cmd, args)
@@ -80,8 +88,44 @@ end
 -- instead of the originally assigned application
 -- @return XML object if successful, otherwise nil
 local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
+
+  local function which(cmd)
+    local path = os.getenv("PATH")
+    if cmd:match("^/") and posix.access(cmd, x) then -- absolute path
+      local cdir = posix.dirname(cmd)
+      for p in path:gmatch("[^:]+") do
+        if p == cdir then return cmd end
+      end
+    elseif not cmd:match("/") then -- reject relative path fragments
+      for p in path:gmatch("[^:]+") do
+        local fp = p.."/"..cmd
+        if posix.access(fp, x) then return fp end
+      end
+    end
+    return nil
+  end
+
   local function clean_executable_name(s)
-    return s:match("([^'^%s]+)")
+    s = s:match("^'(.*)'$")
+    s = s:gsub("%s+%%%a$", "")
+    local words = {}
+    for w in s:gmatch("%S+") do
+      table.insert(words, w)
+    end
+    words[1] = which(words[1])
+    if not words[1] then return nil end
+    for i, w in ipairs(words) do
+      words[i] = quote(w)
+    end
+    return table.concat(words, " ")
+  end
+
+  local function clean_file_path(s)
+    s = s:gsub("^file://", "")
+    if s:find("%", 1, true) then
+      s = url.unescape(s)
+    end
+    return s
   end
 
   local x = xml.parse(path, true)
@@ -91,16 +135,21 @@ local function add_items_from_xbel(m, path, reverse_output, cnt, override_cmd)
 
   for bookmark in x:childtags() do
     local file = bookmark:get_attribs().href
+    file = clean_file_path(file)
+    if not posix.access(file, r) then goto continue end
     local apps = bookmark:get_elements_with_name("bookmark:application")
     local prop = apps[#apps]:get_attribs()
-    local i = mk_item_tag(decode_url(posix.basename(file)), {
-        mk_action_tag("Execute", mk_command_tag(override_cmd or clean_executable_name(prop.exec), file))
+    local command = override_cmd or clean_executable_name(prop.exec)
+    if not command then goto continue end
+    local i = mk_item_tag(clean_label(posix.basename(file)), {
+        mk_action_tag("Execute", mk_command_tag(command, file))
       })
     if reverse_output then
       table.insert(buf, 1, i)
     else
       table.insert(buf, i)
     end
+    ::continue::
   end
 
   for i,v in ipairs(buf) do
