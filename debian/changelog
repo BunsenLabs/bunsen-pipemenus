@@ -1,3 +1,14 @@
+bunsen-pipemenus (12.0-1) boron; urgency=medium
+
+  * Migrate for Debian Bookworm
+    - debian/control: Bump Standards-Version to 4.6.1.0 - no changes required.
+    - debian/control: Declare debhelper compatibility 13.
+    - debian/control: Add Rules-Requires-Root: no
+    - debian/control: Add previously missing Build-Depends: python3-lxml
+    - debian/copyright: update year, use https Format url.
+
+ -- John Crawley <john@bunsenlabs.org>  Sun, 22 Jan 2023 14:21:26 +0900
+
 bunsen-pipemenus (11.3.1-1) beryllium; urgency=medium
 
   * Fix helpfile paths in conky & tint2 pipemenus.
@@ -10,7 +21,7 @@ bunsen-pipemenus (11.3-1) beryllium; urgency=medium
   * Add bl-jgpop, utility for calling standalone instance of a pipemenu.
   * Add desktop files for compositor, conky and tint2 pipemenus.
   * bl-tint2-pipemenu: add item to restore default tint2 session.
-  * bl-install-pipemenu: 
+  * bl-install-pipemenu:
      - replace gnome-mpv with celluloid
      - replace gtk-recordmydesktop with simplescreenrecorder
      - add "Utilities" section with hw-probe, mc, mdadm and gnome-calculator
@@ -301,7 +312,7 @@ bunsen-pipemenus (8.9-1) bunsen-hydrogen; urgency=medium
 
 bunsen-pipemenus (8.8.4-1) bunsen-hydrogen; urgency=low
 
-  * bl-conky-pipemenu, bl-tint2-pipemenu, bl-kb-pipemenu: 
+  * bl-conky-pipemenu, bl-tint2-pipemenu, bl-kb-pipemenu:
     Gracefuly handle absence of bunsen-utilities.
 
  -- John Crawley <john@bunsenlabs.org>  Thu, 24 Mar 2016 15:38:47 +0900
