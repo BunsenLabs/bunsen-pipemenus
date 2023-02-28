@@ -2,7 +2,7 @@
 #    bl-dropbox-pipemenu: an Openbox pipemenu for use with Dropbox
 #    Copyright (C) 2012 Philip Newborough <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
-#    Copyright (C) 2015-2021  John Crawley <john@bunsenlabs.org>
+#    Copyright (C) 2015-2023  John Crawley <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -188,8 +188,14 @@ else
     if ! dropbox_is_installed; then
         menuItem 'Install Dropbox' "$0 --install-dropbox"
     else
-        [[ -d $HOME/Dropbox ]] &&
-            menuItem 'Open Dropbox Folder' "bl-file-manager $HOME/Dropbox"
+        if hash jq
+        then
+            dropbox_folder="$( jq -r '.["personal"].path' "$HOME/.dropbox/info.json" )"
+        else
+            dropbox_folder="$HOME/Dropbox"
+        fi
+        [[ -d "$dropbox_folder" ]] &&
+            menuItem 'Open Dropbox Folder' "bl-file-manager \"$dropbox_folder\""
 
 #        if "$USER_DBPY" running; then
         if pgrep -x dropbox >/dev/null; then
