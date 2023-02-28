@@ -3,7 +3,7 @@
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
 #    Copyright (C) 2018 Matthew T Hoare <matthew.t.hoare@gmail.com>
-#    Copyright (C) 2015-2021 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2023 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -173,6 +173,10 @@ else # pipemenu
         [[ -n ${menu_content[$tag]} ]] && jgmenuSubmenu 'root' "$tag" "$label"
     }
 
+    # Custom entries can be added here, they will appear at
+    # the start of their submenu (set by <tag>):
+    # jgmenuItem <tag> <label> <command>
+
     generate_installmenu 'browsers' 'Web Browsers' "${BROWSERS[@]}"
     generate_installmenu 'terms' 'Terminal Emulators'  "${TERMS[@]}"
     generate_installmenu 'utils' 'Utilities'  "${UTILITIES[@]}"
@@ -182,6 +186,18 @@ else # pipemenu
     generate_installmenu 'graphicapps' 'Graphics Apps' "${GRAPHICS_APPS[@]}"
     generate_installmenu 'graphicscrots' 'Graphics Scrots' "${GRAPHICS_SCROTS[@]}"
     generate_installmenu 'libreo' 'Libreoffice' "${LO_APPS[@]}"
+
+    # Custom entries added here will appear at the end of their submenu.
+
+    # extra entry in "Utilities" submenu for Dropbox:
+    USER_DB_DIR="$HOME/.dropbox-dist/"
+    dropbox_is_installed() {
+        [[ -x "$USER_DB_DIR/dropboxd" ]] || return 1
+        return 0
+    }
+    if ! dropbox_is_installed && hash bl-dropbox-pipemenu ; then
+        jgmenuItem 'utils' 'Install Dropbox' 'bl-dropbox-pipemenu --install-dropbox'
+    fi
 
     jgmenuEnd
 
