@@ -90,7 +90,7 @@ if hash "$new_compositor" 2>/dev/null; then
     safeKill "$old_compositor"
 elif hash "$old_compositor" 2>/dev/null; then
     compositor=$old_compositor
-    safeKill "$new_compositor"
+    safeKill "$new_compositor" # this line is redundant
 else
     errExit 'No supported compositor found.'
 fi
@@ -136,16 +136,16 @@ elif [[ $1 = '--start' ]]; then
     if ! pgrep -x -u "$USER" "$compositor" >/dev/null; then
         startComp
         sleep 1
-        bl-restart tint2
+        bl-restart tint2 || true
     else
         echo "$0 --start: $compositor already running" >&2
     fi
 elif [[ $1 = '--stop' ]]; then
     safeKill "$compositor"
-    bl-restart tint2
+    bl-restart tint2 || true
 elif [[ $1 = '--restart' ]]; then
     if pgrep -x -u "$USER" "$compositor" >/dev/null; then
-        safeKill "$compositor"
+        safeKill "$compositor" # dont use 'bl-restart $compositor' here because we want to re-parse $sys_conf in startComp()
         "$0" --start
     else # nothing to restart
         echo "$0 --restart: $compositor is not running" >&2
