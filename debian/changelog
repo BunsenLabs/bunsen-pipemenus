@@ -1,3 +1,9 @@
+bunsen-pipemenus (12.1-1) boron; urgency=medium
+
+  * bl-install-pipemenu: add Dropbox item under "Utilities".
+
+ -- John Crawley <john@bunsenlabs.org>  Tue, 11 Jul 2023 09:36:35 +0900
+
 bunsen-pipemenus (12.0-1) boron; urgency=medium
 
   * Migrate for Debian Bookworm
