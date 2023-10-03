@@ -43,7 +43,7 @@ In the case of BunsenLabs this will be bl-rc.xml.
 
 NOTE: Most of the functionality of this pipemenu depends on the scripts
 /usr/bin/bl-kb and /usr/bin/bl-xbk
-which are provided by the package "bunsen-utilities".
+which are provided by the same package "bunsen-pipemenus".
 '
 # look for a help option somewhere
 for i in "$@"
@@ -61,7 +61,7 @@ USR_OBCFG_DIR="$HOME/.config/openbox"
 USR_CACHE_DIR="$HOME/.cache/bunsen"
 KBTEXT="$USR_CACHE_DIR/kbinds.txt"
 MENU_CACHE="$USR_CACHE_DIR/kbinds_menu.xml"
-KBSCRIPT="bl-kb"
+OBSCRIPT="bl-kb"
 XBKSCRIPT="bl-xbk"
 RCPATH="$USR_OBCFG_DIR/rc.xml"
 XBKPATH="$HOME/.xbindkeysrc"
@@ -94,13 +94,13 @@ then
     fi
 fi
 
-KBSCRIPT_CMD=( "$KBSCRIPT" '--openbox-rc' "$RCPATH" '--openbox-kbinds' "$KBTEXT" )
+OBSCRIPT_CMD=( "$OBSCRIPT" '--openbox-rc' "$RCPATH" '--openbox-kbinds' "$KBTEXT" )
 XBKSCRIPT_CMD=( "$XBKSCRIPT" '--xbindkeys-rc' "$XBKPATH" '--kbinds-text' "$KBTEXT" )
 
 # test if bl-kb exists in path
-if  [[ $using_openbox = true ]] && ! type "$KBSCRIPT" &> /dev/null;then
+if  [[ $using_openbox = true ]] && ! type "$OBSCRIPT" &> /dev/null;then
     menuStart
-    menuSeparator "$KBSCRIPT is not available. Try installing bunsen-utilities."
+    menuSeparator "$OBSCRIPT is not available. Try installing bunsen-utilities."
     menuEnd
     exit 1
 fi
@@ -137,10 +137,10 @@ case $1 in
         "${XBKSCRIPT_CMD[@]}"
     elif [[ $using_xbindkeys = false ]];then
         GUI_TITLE='Openbox keybinds'
-        "${KBSCRIPT_CMD[@]}" > /dev/null
+        "${OBSCRIPT_CMD[@]}" > /dev/null
     else
         GUI_TITLE='Openbox & Xbindkeys keybinds'
-        "${KBSCRIPT_CMD[@]}" > /dev/null
+        "${OBSCRIPT_CMD[@]}" > /dev/null
         "${XBKSCRIPT_CMD[@]}"
     fi
     yad --text-info --title="$GUI_TITLE" --window-icon=distributor-logo-bunsenlabs\
@@ -152,7 +152,7 @@ case $1 in
     # run script to write kbinds.txt, suppress terminal output
     if [[ $RCPATH -nt $MENU_CACHE || $XBKPATH -nt $MENU_CACHE ]]; then
         :> "$KBTEXT"
-        [[ $using_openbox = true ]] && "${KBSCRIPT_CMD[@]}" > /dev/null 2>&1
+        [[ $using_openbox = true ]] && "${OBSCRIPT_CMD[@]}" > /dev/null 2>&1
         [[ $using_xbindkeys = true ]] && "${XBKSCRIPT_CMD[@]}"
 
         OB_Wmenu=''
