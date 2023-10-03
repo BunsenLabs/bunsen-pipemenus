@@ -3,7 +3,8 @@
 #    bl-kb: a script to read openbox's rc.xml and write out the keybinds
 #    Copyright (C) 2010 wlourf
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
-#    Copyright (C) 2018 Jens John <dev@2ion.de>
+#    Copyright (C) 2018 Jens John    <dev@2ion.de>
+#    Copyright (C) 2023 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -84,6 +85,12 @@ def read_keybindings(openbox_rc: str) -> OrderedDict:
             elif name == "ShowMenu":
                 menu = action.xpath("A:menu", **ns)[0].text
                 effects.append(("o", menu,))
+            elif name == "GoToDesktop" or name == "SendToDesktop":
+                target = action.xpath("A:to", **ns)[0].text
+                effects.append(("o", name + " " + target,))
+            elif name == "DirectionalCycleWindows":
+                direction = action.xpath("A:direction", **ns)[0].text
+                effects.append(("o", name + " " + direction,))
             else:
                 effects.append(("o", name,))
         data[key] = effects
@@ -113,6 +120,7 @@ def keybind2readabletext(key: str, effects: list) -> List[str]:
 
 def emit_textfile(path: str, bindings: dict) -> None:
     with open(path, "w") as FILE:
+        print("\n#### openbox keybinds ####\n", file=FILE)
         for key, effects in bindings.items():
             for line in keybind2readabletext(key, effects):
                 print(line, file=FILE)
@@ -170,8 +178,9 @@ if __name__ == "__main__":
     try:
         if opts.gui:
             emit_gui(opts.openbox_kbinds, bindings)
-        else:
-            emit_stdout(bindings)
+# no need to print to stdout
+#        else:
+#            emit_stdout(bindings)
     except Exception as err:
         print("Failed to show bindings: {}".format(err),file=sys.stderr)
         sys.exit(1)
