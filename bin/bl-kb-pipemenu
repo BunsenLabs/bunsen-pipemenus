@@ -1,7 +1,7 @@
 #!/bin/bash
 #    bl-kb-pipemenu - an Openbox pipemenu for displaying keybinds
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
-#                  2016-2020 John Crawley    <john@bunsenlabs.org>
+#                  2016-2023 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -81,7 +81,8 @@ then
     using_openbox=true
     rc_regex='--config-file (.*\.xml)($|[[:blank:]])'
     if [[ $ob_cmd =~ $rc_regex ]]
-        then RCPATH=${BASH_REMATCH[1]} # otherwise stay with default
+    then
+        RCPATH=${BASH_REMATCH[1]} # otherwise stay with default
     fi
 fi
 
@@ -117,6 +118,7 @@ case $1 in
     ;;
 
 '--gui')
+    # run script to write kbinds.txt, then open it in yad
     :> "$KBTEXT" # XBKSCRIPT does not blank file, it appends
     if [[ $using_openbox = false ]];then
         GUI_TITLE='Xbindkeys keybinds'
