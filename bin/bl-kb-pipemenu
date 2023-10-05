@@ -73,6 +73,8 @@ if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     exit 1
 fi
 
+declareDependencies "$OBSCRIPT" "$XBKSCRIPT"
+
 using_openbox=false
 if ob_cmd=$( pgrep -u "$USER" -ax openbox )
 then
@@ -96,22 +98,6 @@ fi
 
 OBSCRIPT_CMD=( "$OBSCRIPT" '--openbox-rc' "$RCPATH" '--openbox-kbinds' "$KBTEXT" )
 XBKSCRIPT_CMD=( "$XBKSCRIPT" '--xbindkeys-rc' "$XBKPATH" '--kbinds-text' "$KBTEXT" )
-
-# test if bl-kb exists in path
-if  [[ $using_openbox = true ]] && ! type "$OBSCRIPT" &> /dev/null;then
-    menuStart
-    menuSeparator "$OBSCRIPT is not available. Try installing bunsen-utilities."
-    menuEnd
-    exit 1
-fi
-
-# test if parse-xbk exists in path
-if  [[ $using_xbindkeys = true ]] && ! type "$XBKSCRIPT" &> /dev/null;then
-    menuStart
-    menuSeparator "$XBKSCRIPT is not available. Try installing bunsen-utilities."
-    menuEnd
-    exit 1
-fi
 
 case $1 in
 '--xbkedit') # "Backup & Edit .xbindkeysrc" is chosen in menu
