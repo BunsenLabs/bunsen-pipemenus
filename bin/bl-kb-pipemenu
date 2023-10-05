@@ -171,19 +171,19 @@ case $1 in
 
         menuStart > "$MENU_CACHE"
 
-        [[ -n $OB_XBKmenu ]] && {
-            menuSeparator "Xbindkeys 'Run' commands"
-            echo "${OB_XBKmenu}"
+        [[ -n $OB_Wmenu ]] && {
+            menuSeparator "Openbox window commands"
+            echo "${OB_Wmenu}"
         } >> "$MENU_CACHE"
         [[ -n $OB_Rmenu ]] && {
             menuSeparator
             menuSeparator "Openbox 'Run' commands"
             echo "${OB_Rmenu}"
         } >> "$MENU_CACHE"
-        [[ -n $OB_Wmenu ]] && {
+        [[ -n $OB_XBKmenu ]] && {
             menuSeparator
-            menuSeparator "Openbox window commands"
-            echo "${OB_Wmenu}"
+            menuSeparator "Xbindkeys 'Run' commands"
+            echo "${OB_XBKmenu}"
         } >> "$MENU_CACHE"
 
         menuEnd >> "$MENU_CACHE"
