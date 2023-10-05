@@ -27,7 +27,7 @@ HELP='    bl-kb-pipemenu an Openbox Pipe Menu for displaying keybinds
 
 Options (usually passed from the menu):
     -h --help   show this message
-    --keybinds  display keybindings in .xbindkeysrc and [bl-]rc.xml as a menu
+    --kbmenu  display keybindings in .xbindkeysrc and [bl-]rc.xml as a menu
     (The keybinds in the menu are clickable, except for the Openbox
      commands, which just exit the menu.)
     --xbkedit   backup and edit .xbindkeysrc
@@ -148,8 +148,10 @@ case $1 in
     --fontname=Monospace --button=gtk-close
     ;;
 
-'--keybinds')
-    # run script to write kbinds.txt, suppress terminal output
+'--kbmenu')
+    # If MENU_CACHE needs updating, run scripts to write kbinds.txt
+    # and then generate MENU_CACHE.
+    # If MENU_CACHE is new enough, just output it.
     if [[ $RCPATH -nt $MENU_CACHE || $XBKPATH -nt $MENU_CACHE ]]; then
         :> "$KBTEXT"
         [[ $using_openbox = true ]] && "${OBSCRIPT_CMD[@]}" > /dev/null 2>&1
