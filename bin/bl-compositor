@@ -90,7 +90,6 @@ if hash "$new_compositor" 2>/dev/null; then
     safeKill "$old_compositor"
 elif hash "$old_compositor" 2>/dev/null; then
     compositor=$old_compositor
-    safeKill "$new_compositor" # this line is redundant
 else
     errExit 'No supported compositor found.'
 fi
@@ -158,13 +157,6 @@ else
     # Output Openbox menu
     menuStart
     menuSeparator "$compositor"
-    if ! pgrep -x -u "$USER" "$compositor" >/dev/null; then
-        menuItem 'Enable Compositing' "$0 --start"
-    else
-        menuItem 'Restart Compositing' "$0 --restart"
-        menuItem 'Disable Compositing' "$0 --stop"
-        menuSeparator
-    fi
     menuItem 'Edit Compositing Settings' "$0 --edit"
     if [[ -f "$sys_conf" ]]; then
         if hash bl-text-editor;then
@@ -172,6 +164,13 @@ else
         else
             menuItem 'Edit Compositing system settings (root)' "x-terminal-emulator -T \"edit ${sys_conf##*/}\" -e sudo nano \"$sys_conf\""
         fi
+    fi
+    menuSeparator
+    if ! pgrep -x -u "$USER" "$compositor" >/dev/null; then
+        menuItem 'Enable Compositing' "$0 --start"
+    else
+        menuItem 'Restart Compositing' "$0 --restart"
+        menuItem 'Disable Compositing' "$0 --stop"
     fi
     menuEnd
 fi
