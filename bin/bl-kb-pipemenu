@@ -137,10 +137,10 @@ case $1 in
         "${XBKSCRIPT_CMD[@]}"
     elif [[ $using_xbindkeys = false ]];then
         GUI_TITLE='Openbox keybinds'
-        "${OBSCRIPT_CMD[@]}" > /dev/null
+        "${OBSCRIPT_CMD[@]}"
     else
         GUI_TITLE='Openbox & Xbindkeys keybinds'
-        "${OBSCRIPT_CMD[@]}" > /dev/null
+        "${OBSCRIPT_CMD[@]}"
         "${XBKSCRIPT_CMD[@]}"
     fi
     yad --text-info --title="$GUI_TITLE" --window-icon=distributor-logo-bunsenlabs\
@@ -153,8 +153,8 @@ case $1 in
     # and then generate MENU_CACHE.
     # If MENU_CACHE is new enough, just output it.
     if [[ $RCPATH -nt $MENU_CACHE || $XBKPATH -nt $MENU_CACHE ]]; then
-        :> "$KBTEXT"
-        [[ $using_openbox = true ]] && "${OBSCRIPT_CMD[@]}" > /dev/null 2>&1
+        :> "$KBTEXT" # XBKSCRIPT does not blank file, it appends
+        [[ $using_openbox = true ]] && "${OBSCRIPT_CMD[@]}"
         [[ $using_xbindkeys = true ]] && "${XBKSCRIPT_CMD[@]}"
 
         OB_Wmenu=''
