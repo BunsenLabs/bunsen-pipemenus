@@ -196,11 +196,11 @@ case $1 in
 '')
     # pipemenu
     menuStart
-    [[ $using_xbindkeys = true ]] && menuItem "Backup and Edit .xbindkeysrc" "bl-kb-pipemenu --xbkedit"
-    [[ $using_openbox = true ]] && menuItem "Backup and Edit ${RCPATH##*/}" "bl-kb-pipemenu --rcedit"
-    menuSeparator
     menuItem "Display Keybinds in new window" "bl-kb-pipemenu --gui"
-    echo '        <menu execute="bl-kb-pipemenu --keybinds" id="Display keybinds" label="Display Keybinds in menu"/>'
+    echo '        <menu execute="bl-kb-pipemenu --kbmenu" id="Display keybinds" label="Display Keybinds in menu"/>'
+#    menuSeparator
+#    [[ $using_xbindkeys = true ]] && menuItem "Backup and Edit .xbindkeysrc" "bl-kb-pipemenu --xbkedit"
+#    [[ $using_openbox = true ]] && menuItem "Backup and Edit ${RCPATH##*/}" "bl-kb-pipemenu --rcedit"
     menuEnd
     ;;
 *)
