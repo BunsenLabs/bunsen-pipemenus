@@ -1,3 +1,19 @@
+bunsen-pipemenus (12.2-1) boron; urgency=medium
+
+  * Move bl-kb and bl-xbk here from bunsen-utilities.
+     They are used by bl-kb-pipemenu.
+  * bl-kb: Output destination of openbox keybinds:
+     GoToDesktop, SendToDesktop and DirectionalCycleWindows
+  * bl-kb: do not print to stdout - output goes directly to a file.
+  * bl-kb-pipemenu: rename option --keybinds to --kbmenu.
+  * bl-kb-pipemenu: rearrange items when outputting keybinds as menu,
+     with openbox at the top.
+  * bl-kb-pipemenu: comment out "Backup and Edit..." items from pipemenu.
+     They will be in the parent menu.
+  * bl-compositor: pipemenu: put config file edit items at the top.
+
+ -- John Crawley <john@bunsenlabs.org>  Fri, 06 Oct 2023 16:19:51 +0900
+
 bunsen-pipemenus (12.1-1) boron; urgency=medium
 
   * bl-install-pipemenu: add Dropbox item under "Utilities".
