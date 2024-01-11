@@ -36,7 +36,7 @@ Options (usually passed from the menu):
 BROWSERS=('firefox-esr' 'chromium' 'dillo')
 TERMS=('rxvt-unicode' 'terminator' 'mate-terminal' 'gnome-terminal' 'xfce4-terminal' 'lxterminal')
 MM_APPS=('mpv' 'vlc' 'audacious' 'smplayer' 'celluloid')
-MM_EDITORS=('mhwaveedit' 'audacity' 'openshot')
+MM_EDITORS=('mhwaveedit' 'audacity' 'openshot-qt')
 MM_UTILS=('xfburn' 'brasero' 'k3b' 'simplescreenrecorder' )
 GRAPHICS_APPS=( 'mirage' 'viewnior' 'gpicview' 'ristretto' 'geeqie' 'gthumb' 'gimp' 'inkscape')
 GRAPHICS_SCROTS=('xfce4-screenshooter' 'scrot')
@@ -57,6 +57,7 @@ AppName[mc]='Midnight Commander file manager'
 AppName[hw-probe]='hw-probe hardware checker'
 AppName[k3b]='k3b CD/DVD burner'
 AppName[mdadm]='mdadm Multi-Disk (RAID) manager'
+AppName[openshot-qt]='OpenShot Video Editor'
 
 ########################################################################
 
