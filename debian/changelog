@@ -1,3 +1,9 @@
+bunsen-pipemenus (12.2.1-1) boron; urgency=medium
+
+  * bl-install-pipemenu: fix package name of openshot-qt from openshot.
+
+ -- John Crawley <john@bunsenlabs.org>  Thu, 11 Jan 2024 14:47:44 +0900
+
 bunsen-pipemenus (12.2-1) boron; urgency=medium
 
   * Move bl-kb and bl-xbk here from bunsen-utilities.
