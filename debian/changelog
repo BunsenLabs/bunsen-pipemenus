@@ -1,3 +1,9 @@
+bunsen-pipemenus (12.2.2-1) boron; urgency=medium
+
+  * Fix autostart path in Dropbox pipemenu.
+
+ -- John Crawley <john@bunsenlabs.org>  Fri, 26 Jan 2024 18:13:35 +0900
+
 bunsen-pipemenus (12.2.1-2) boron; urgency=medium
 
   * Update copyright year.
