@@ -2,7 +2,7 @@
 #    bl-dropbox-pipemenu: an Openbox pipemenu for use with Dropbox
 #    Copyright (C) 2012 Philip Newborough <corenominal@corenominal.org>
 #    Copyright (C) 2013 Aleks-Daniel Jakimenko
-#    Copyright (C) 2015-2023  John Crawley <john@bunsenlabs.org>
+#    Copyright (C) 2015-2024  John Crawley <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -161,13 +161,18 @@ elif [[ $1 = '--install-dropbox' ]]; then
     notify-send -i dialog-information 'Dropbox Installation' 'Dropbox has been installed.'
     yad_info "Dropbox CLI frontend dropbox.py has been installed in $USER_DBPY_DIR.
 Run '$USER_DBPY help' to view options.
-(If $USER_DBPY_DIR is in your PATH, then the path $USER_DBPY_DIR can be omitted.)"
+(If $USER_DBPY_DIR is in your PATH, then the path $USER_DBPY_DIR can be omitted.)
+
+There is also a Dropbox pipemenu in the default BunsenLabs menu,
+which you might want to consider enabling.
+See ~/.config/jgmenu/prepend.csv
+"
 
     yad_question 'Dropbox can be started automatically when you start your session. Would you like to autostart Dropbox when you login?'
     if [[ $? = 0 ]]; then # add to autostart
         ans=$(yad --image=dropbox --list --radiolist "${yad_common_args[@]}" --text="$PROMPT_DELAY_TEXT" --print-column=2 --separator='' --column='Pick':RD --column='Seconds:':NUM "${PROMPT_DELAY_VARIANTS[@]}")
         if [[ $? = 0 ]]; then
-            cat <<DRBX >> "$HOME/.config/openbox/autostart"
+            cat <<DRBX >> "$HOME/.config/bunsen/autostart"
 
 # Autostart the Dropbox daemon
 (sleep ${ans}s; $USER_DBPY start) &
