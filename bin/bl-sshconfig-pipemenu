@@ -112,7 +112,7 @@ def main() -> int:
 
     for hostname in hosts:
         _hostname = quote(hostname)
-        sshcmd = f"x-terminal-emulator -e sh -c 'ssh {_hostname} ; echo \"Press any key to close this window\" ; read REPLY'"
+        sshcmd = f"x-terminal-emulator -e sh -c 'ssh {_hostname} ; echo \"Press Enter to close this window\" ; read -r REPLY'"
         fscmd = f"bl-file-manager ssh://{_hostname}"
         hostmenu = ET.SubElement( pipemenu, "menu", { "id": hostname, "label": hostname })
         ET.SubElement(
