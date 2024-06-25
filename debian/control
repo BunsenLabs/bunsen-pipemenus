@@ -48,6 +48,10 @@ Description: Various Openbox and jgmenu pipemenus
  Contains various pipemenus for use with Bunsen Linux.
  Some generate xml for openbox, and some csv for jgmenu.
  (jgmenu is able to use openbox-style xml too.)
+.
  Also provides two scripts used by bl-kb-pipemenu:
   bl-xbk: parse xbindkeys keyboard shortcuts
   bl-kb: parse openbox keyboard shortcuts
+ and:
+  bl-jgpop: a utility for launching standalone popup menus
+

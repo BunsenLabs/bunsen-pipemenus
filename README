@@ -17,9 +17,14 @@ bl-scrot-pipemenu
 bl-sshconfig-pipemenu
 bl-tint2-pipemenu
 
+also included:
 bl-jgpop
     a utility for launching standalone popup menus
-
+bl-kb
+	a utility to parse openbox keyboard shortcuts
+bl-xbk
+	a utility to parse xbindkeys keyboard shortcuts
+	
 They are mostly used by the BunsenLabs jgmenu menu defined in bunsen-configs,
 but may be launched as stand-alone utilities.
 Some are native jgmenu pipemenus, generating csv files, and some generate xml,
