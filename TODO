@@ -3,3 +3,6 @@
     in favour of supporting only the POSIX short options API. This is
     fine on Debian Stretch (lua-posix=31) but needs to be fixed for
     newer releases and portability to other distros.
+  * Provisionally worked around in 2025-07-31 by disabling the long options.
+    This means that genman.sh needs a special argument to pass the short -h
+    in order to generate a manpage. (See genman.sh --help)
