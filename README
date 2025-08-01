@@ -6,7 +6,6 @@ Current scripts are:
 bl-beepmein-pipemenu
 bl-compositor
 bl-conky-pipemenu
-bl-dropbox-pipemenu
 bl-install-pipemenu
 bl-kb-pipemenu
 bl-places-pipemenu
@@ -15,6 +14,8 @@ bl-recent-files-pipemenu
 bl-remote-desktop-pipemenu
 bl-scrot-pipemenu
 bl-sshconfig-pipemenu
+
+bl-dropbox-pipemenu
 bl-tint2-pipemenu
 
 also included:
@@ -31,4 +32,7 @@ Some are native jgmenu pipemenus, generating csv files, and some generate xml,
 which jgmenu is also able to display.
 
 EDIT 2020/4/13: bl-dropbox-pipemenu is commented out of the default menu,
+but is still shipped in this package and users can enable it.
+
+EDIT 2025/8/1: bl-tint2-pipemenu is commented out of the default menu,
 but is still shipped in this package and users can enable it.
