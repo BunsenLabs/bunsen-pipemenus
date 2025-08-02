@@ -1,6 +1,6 @@
 bunsen-pipemenus (13.1-1) carbon; urgency=medium
 
-  * bl-recent-files-pipemenu: remove long options which are 
+  * bl-recent-files-pipemenu: remove long options which are
      no longer supported by lua-posix 34.0.
   * Update documentation.
   * genman.sh: update to Version 20250802 which supports passing
