@@ -4,7 +4,7 @@
 # to generate man files from executables' --help options,
 # using help2man.
 # Tested on Dash, should work with other POSIX shells.
-# Version 20250731
+# Version 20250802
 
 #    Copyright (C) 2018-2025  John Crawley <john@bunsenlabs.org>
 #
@@ -323,8 +323,10 @@ do
     build_mans "$list"
 done
 
+[ "$found_list" = true ] && exit 0
+
 # simple option
-if [ "$found_list" != true ] && [ -f debian/genman-list ]
+if [ -f debian/genman-list ]
 then
     section="$default_section"
     manpages_file=debian/manpages
