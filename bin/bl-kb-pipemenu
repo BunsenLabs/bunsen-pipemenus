@@ -39,7 +39,7 @@ it will output an xml openbox pipemenu for displaying keybindings.
 
 By default, this pipemenu uses rc.xml, but if openbox has been called
 with --config-file then it uses whatever xml file is referenced there.
-In the case of BunsenLabs this will be bl-rc.xml.
+In the case of BunsenLabs this will be ~/.config/bunsen/openbox/rc.xml.
 
 NOTE: Most of the functionality of this pipemenu depends on the scripts
 /usr/bin/bl-kb and /usr/bin/bl-xbk
