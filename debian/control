@@ -41,7 +41,7 @@ Recommends: bunsen-configs (>= 11.3-1),
  inotify-tools,
  openbox,
  picom,
- tint2
+ xfce4-panel | tint2
 Breaks: bunsen-utilities (<< 12.3-1)
 Replaces: bunsen-utilities (<< 12.3-1)
 Description: Various Openbox and jgmenu pipemenus
