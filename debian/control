@@ -34,14 +34,14 @@ Depends: ${misc:Depends},
  wget,
  xterm | x-terminal-emulator,
  yad
-Recommends: bunsen-configs (>= 11.3-1),
- bunsen-conky,
- bunsen-docs,
- bunsen-utilities (>= 11.1-1),
+Recommends: bunsen-configs-base | bunsen-configs-lite | bunsen-configs,
+ bunsen-utilities,
  inotify-tools,
  openbox,
  picom,
  xfce4-panel | tint2
+Suggests: bunsen-docs,
+ bunsen-conky
 Breaks: bunsen-utilities (<< 12.3-1)
 Replaces: bunsen-utilities (<< 12.3-1)
 Description: Various Openbox and jgmenu pipemenus
