@@ -3,7 +3,7 @@
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2015 damo    <damo@bunsenlabs.org>
 #    Copyright (C) 2018 Matthew T Hoare <matthew.t.hoare@gmail.com>
-#    Copyright (C) 2015-2023 John Crawley    <john@bunsenlabs.org>
+#    Copyright (C) 2015-2026 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,16 +19,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-HELP='    bl-install-pipemenu a jgmenu Pipe Menu for installing applications
-    It should normally be called from a jgmenu menu.
+HELP='    bl-install-pipemenu a Pipe Menu for installing applications
+    It should normally be called from a jgmenu or labwc menu
+    and will output a csv jgmenu menu or xml labwc pipemenu.
+    The type is automatically chosen from the current desktop environment,
+    but can also be set manually.
 
-Options (usually passed from the menu):
+Options:
     -h --help   show this message
-    --install   install a package
+    --install   install a package (option usually passed from the menu)
     (the package must be in one of the app lists in this file)
+    -t --type <csv|xml>  force the output menu type to csv or xml
 
     If bl-install-pipemenu is called with no options (the usual method),
-    it will output a csv jgmenu pipemenu for installing applications.
+    it will output a csv or xml pipemenu for installing applications.
 
 '
 
@@ -107,6 +111,7 @@ done
 # which is defined in /usr/share/lib/bunsen/bl-includes.
 # This means setupAppName can modify the arguments passed to promptInstall.
 
+# shellcheck disable=SC2317  # Don't warn about unreachable commands in this function
 setupGimp() {
     tput clear
     local title="INSTALL GIMP"
@@ -122,13 +127,15 @@ ${title//?/-}
     fi # name, message and args will be passed to promptInstall() in bl-install
 }
 
-
-if [[ ${1-} = --install ]]; then
+type=''
+case "${1-}" in
+--install)
     setup_args=()
     packageName=$2
     appName=${AppName[$packageName]}
     setupFunctionName="setup${appName//[^a-zA-Z]/}" # setupFunctionName should now be in format like 'setupChromium'
     if [[ $(type -t "$setupFunctionName") = 'function' ]]; then
+    # shellcheck disable=SC2163
     export -f "$setupFunctionName"
     setup_args=( '--setup' "$setupFunctionName" )
     fi
@@ -152,16 +159,41 @@ if [[ ${1-} = --install ]]; then
         ;;
     esac
     bl-install "${setup_args[@]}" --name "$appName" --message "$desc" "${args[@]}"
-
-elif [[ ${1-} ]]; then
+    ;;
+-t|--type)
+    type="$2"
+    ;;
+'')
+    ;;
+*)
     echo "$0: no such option $*" >&2
     exit 1
+    ;;
+esac
 
-else # pipemenu
+if [[ -z "$type" ]]
+then
+    # labwc is running
+    if pgrep -x labwc >/dev/null
+    then
+        type=xml
+    # jgmenu is installed
+    elif command -v jgmenu_run >/dev/null
+    then
+        type=csv
+    else
+        echo "${0}: cannot determine menu type" >&2
+        exit 1
+    fi
+fi
 
-    # This function is specific to this script.
-    # It generates an install submenu for a group of packages.
-    # Usage: generate_installmenu tag label list (of packages)
+# pipemenu starts here
+
+# This function is specific to this script.
+# It generates an install submenu for a group of packages.
+# Usage: generate_installmenu tag/id label list (of packages)
+case "$type" in
+csv)
     generate_installmenu() {
         local tag=$1
         local label=$2
@@ -173,35 +205,44 @@ else # pipemenu
         done
         [[ -n ${menu_content[$tag]} ]] && jgmenuSubmenu 'root' "$tag" "$label"
     }
-
-    # Custom entries can be added here, they will appear at
-    # the start of their submenu (set by <tag>):
-    # jgmenuItem <tag> <label> <command>
-
-    generate_installmenu 'browsers' 'Web Browsers' "${BROWSERS[@]}"
-    generate_installmenu 'terms' 'Terminal Emulators'  "${TERMS[@]}"
-    generate_installmenu 'utils' 'Utilities'  "${UTILITIES[@]}"
-    generate_installmenu 'mmapps' 'Multimedia Players'  "${MM_APPS[@]}"
-    generate_installmenu 'mmeditors' 'Multimedia Editors' "${MM_EDITORS[@]}"
-    generate_installmenu 'mmutils' 'Multimedia Utilities' "${MM_UTILS[@]}"
-    generate_installmenu 'graphicapps' 'Graphics Apps' "${GRAPHICS_APPS[@]}"
-    generate_installmenu 'graphicscrots' 'Graphics Scrots' "${GRAPHICS_SCROTS[@]}"
-    generate_installmenu 'libreo' 'Libreoffice' "${LO_APPS[@]}"
-
-    # Custom entries added here will appear at the end of their submenu.
-
-    # extra entry in "Utilities" submenu for Dropbox:
-    USER_DB_DIR="$HOME/.dropbox-dist/"
-    dropbox_is_installed() {
-        [[ -x "$USER_DB_DIR/dropboxd" ]] || return 1
-        return 0
+    ;;
+xml)
+    generate_installmenu() {
+        local id=$1
+        local label=$2
+        shift 2
+        menuSubmenu "$id" "$label"
+        for curApp in "${@}"; do
+            if ! [[ ${AppStatus[$curApp]} = installed ]]; then
+                menuItem "Install ${AppName[$curApp]}" "$0 --install $curApp"
+            fi
+        done
+        menuSubmenuEnd
     }
-    if ! dropbox_is_installed && hash bl-dropbox-pipemenu ; then
-        jgmenuItem 'utils' 'Install Dropbox' 'bl-dropbox-pipemenu --install-dropbox'
-    fi
+    ;;
+esac
 
+case "$type" in
+xml)
+    menuStart
+    ;;
+esac
+
+generate_installmenu 'browsers' 'Web Browsers' "${BROWSERS[@]}"
+generate_installmenu 'terms' 'Terminal Emulators'  "${TERMS[@]}"
+generate_installmenu 'utils' 'Utilities'  "${UTILITIES[@]}"
+generate_installmenu 'mmapps' 'Multimedia Players'  "${MM_APPS[@]}"
+generate_installmenu 'mmeditors' 'Multimedia Editors' "${MM_EDITORS[@]}"
+generate_installmenu 'mmutils' 'Multimedia Utilities' "${MM_UTILS[@]}"
+generate_installmenu 'graphicapps' 'Graphics Apps' "${GRAPHICS_APPS[@]}"
+generate_installmenu 'graphicscrots' 'Graphics Scrots' "${GRAPHICS_SCROTS[@]}"
+generate_installmenu 'libreo' 'Libreoffice' "${LO_APPS[@]}"
+
+case "$type" in
+csv)
     jgmenuEnd
-
-#    menuEnd
-fi
-exit 0
+    ;;
+xml)
+    menuEnd
+    ;;
+esac

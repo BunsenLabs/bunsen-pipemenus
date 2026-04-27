@@ -2,8 +2,8 @@
 #    bl-scrot-pipemenu - a jgmenu pipe menu for screenshots
 #    Copyright (C) 2012 Philip Newborough   <corenominal@corenominal.org>
 #    Copyright (C) 2016 Jens John <dev@2ion.de>
-#    Copyright (C) 2015-2019 John Crawley    <john@bunsenlabs.org>
 #    Copyright (C) 2015-2020 damo    <damo@bunsenlabs.org>
+#    Copyright (C) 2015-2026 John Crawley    <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -18,14 +18,18 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-HELP='    bl-scrot-pipemenu a jgmenu Pipe Menu for taking screenshots
-    It should normally be called from a jgmenu menu.
+HELP='    bl-scrot-pipemenu a Pipe Menu for taking screenshots
+    It should normally be called from a jgmenu or labwc menu
+    and will output a csv jgmenu menu or xml labwc pipemenu.
+    The type is automatically chosen from the current desktop environment,
+    but can also be set manually.
 
-Options (usually passed from the menu):
+Options:
     -h --help   show this message
+    -t --type <csv|xml>  force the output menu type to csv or xml
 
     If bl-scrot-pipemenu is called with no options (the usual method),
-    it will output a csv jgmenu pipemenu for taking screenshots.
+    it will output a csv or xml pipemenu for taking screenshots.
 
 '
 
@@ -47,6 +51,35 @@ do
         ;;
     esac
 done
+
+type=''
+case "${1-}" in
+-t|--type)
+    type="$2"
+    ;;
+'')
+    ;;
+*)
+    echo "$0: no such option $*" >&2
+    exit 1
+    ;;
+esac
+
+if [[ -z "$type" ]]
+then
+    # labwc is running
+    if pgrep -x labwc >/dev/null
+    then
+        type=xml
+    # jgmenu is installed
+    elif command -v jgmenu_run >/dev/null
+    then
+        type=csv
+    else
+        echo "${0}: cannot determine menu type" >&2
+        exit 1
+    fi
+fi
 
 BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 
@@ -74,54 +107,123 @@ for curApp in "${GRAPHICS_SCROTS[@]}"; do
     hash "${AppCmd[$curApp]}" 2>/dev/null && AppStatus[$curApp]='installed' || AppStatus[$curApp]=''
 done
 
-writeScrot() {                  # Write scrot submenu items
-    IMG="$SCROTSDIR/%F-%H-%M-%S_scrot.png"
-    VIEW="'bl-image-viewer $IMG'"
-    jgmenuSubmenu 'root' 'takescrot' 'scrot Screenshooter'
-        jgmenuItem 'takescrot' "scrot Now" "scrot $IMG -e $VIEW"
-        jgmenuItem 'takescrot' "scrot In 5 secs..." "scrot -d 5 $IMG -e $VIEW"
-        jgmenuItem 'takescrot' "scrot In 10 secs..." "scrot -d 10 $IMG -e $VIEW"
-        jgmenuItem 'takescrot' "scrot Select Area" "scrot -s $IMG -e $VIEW"
-        jgmenuItem 'takescrot' "scrot Current Focus" "scrot -u $IMG -e $VIEW"
-        jgmenuItem 'takescrot' "scrot Multi-Monitor" "scrot -m $IMG -e $VIEW"
-}
+case "$type" in
+csv)
+    writeScrot() {                  # Write scrot submenu items
+        IMG="$SCROTSDIR/%F-%H-%M-%S_scrot.png"
+        VIEW="'bl-image-viewer $IMG'"
+        jgmenuSubmenu 'root' 'takescrot' 'scrot Screenshooter'
+            jgmenuItem 'takescrot' "scrot Now" "scrot $IMG -e $VIEW"
+            jgmenuItem 'takescrot' "scrot In 5 secs..." "scrot -d 5 $IMG -e $VIEW"
+            jgmenuItem 'takescrot' "scrot In 10 secs..." "scrot -d 10 $IMG -e $VIEW"
+            jgmenuItem 'takescrot' "scrot Select Area" "scrot -s $IMG -e $VIEW"
+            jgmenuItem 'takescrot' "scrot Current Focus" "scrot -u $IMG -e $VIEW"
+            jgmenuItem 'takescrot' "scrot Multi-Monitor" "scrot -m $IMG -e $VIEW"
+    }
 
-writeImgur() {                  # Write Imgur submenu items
-    jgmenuSubmenu 'root' 'imgur' 'Imgur - Upload Screenshot'
+    writeImgur() {                  # Write Imgur submenu items
+        jgmenuSubmenu 'root' 'imgur' 'Imgur - Upload Screenshot'
 
-    if bl-imgur-upload --test-account;then
-        # take screenshot and upload to account (BBCode is returned)
-        jgmenuSubmenu 'imgur' 'imgur_acct' 'Upload to Account'
-            jgmenuItem 'imgur_acct' "screenshot Now" "bl-imgur-upload -l"
-            jgmenuItem 'imgur_acct' "screenshot In 5 secs..." "bl-imgur-upload -l -d 5"
-            jgmenuItem 'imgur_acct' "screenshot In 10 secs..." "bl-imgur-upload -l -d 10"
-            jgmenuItem 'imgur_acct' "screenshot Select Area" "bl-imgur-upload -l -s"
-            jgmenuItem 'imgur_acct' "screenshot Current Window" "bl-imgur-upload -l -w"
-    else
-        jgmenuItem 'imgur' "Setup Imgur Account" "bl-imgur-upload --register"
-    fi
+        if bl-imgur-upload --test-account;then
+            # take screenshot and upload to account (BBCode is returned)
+            jgmenuSubmenu 'imgur' 'imgur_acct' 'Upload to Account'
+                jgmenuItem 'imgur_acct' "screenshot Now" "bl-imgur-upload -l"
+                jgmenuItem 'imgur_acct' "screenshot In 5 secs..." "bl-imgur-upload -l -d 5"
+                jgmenuItem 'imgur_acct' "screenshot In 10 secs..." "bl-imgur-upload -l -d 10"
+                jgmenuItem 'imgur_acct' "screenshot Select Area" "bl-imgur-upload -l -s"
+                jgmenuItem 'imgur_acct' "screenshot Current Window" "bl-imgur-upload -l -w"
+        else
+            jgmenuItem 'imgur' "Setup Imgur Account" "bl-imgur-upload --register"
+        fi
 
-    # take screenshot and upload anonymously (BBCode is returned)
-    jgmenuSubmenu 'imgur' 'imgur_anon' 'Anonymous Upload'
-        jgmenuItem 'imgur_anon' "screenshot Now" "bl-imgur-upload"
-        jgmenuItem 'imgur_anon' "screenshot In 5 secs..." "bl-imgur-upload -d 5"
-        jgmenuItem 'imgur_anon' "screenshot In 10 secs..." "bl-imgur-upload -d 10"
-        jgmenuItem 'imgur_anon' "screenshot Select Area" "bl-imgur-upload -s"
-        jgmenuItem 'imgur_anon' "screenshot Current Window" "bl-imgur-upload -w"
-}
+        # take screenshot and upload anonymously (BBCode is returned)
+        jgmenuSubmenu 'imgur' 'imgur_anon' 'Anonymous Upload'
+            jgmenuItem 'imgur_anon' "screenshot Now" "bl-imgur-upload"
+            jgmenuItem 'imgur_anon' "screenshot In 5 secs..." "bl-imgur-upload -d 5"
+            jgmenuItem 'imgur_anon' "screenshot In 10 secs..." "bl-imgur-upload -d 10"
+            jgmenuItem 'imgur_anon' "screenshot Select Area" "bl-imgur-upload -s"
+            jgmenuItem 'imgur_anon' "screenshot Current Window" "bl-imgur-upload -w"
+    }
+    ;;
+xml)
+    writeScrot() {                  # Write scrot submenu items
+        IMG="$SCROTSDIR/%F-%H-%M-%S_scrot.png"
+        VIEW="'bl-image-viewer $IMG'"
+        menuSubmenu 'takescrot' 'scrot Screenshooter'
+            menuItem 'scrot Now' "scrot $IMG -e $VIEW"
+            menuItem 'scrot In 5 secs...' "scrot -d 5 $IMG -e $VIEW"
+            menuItem 'scrot In 10 secs...' "scrot -d 10 $IMG -e $VIEW"
+            menuItem 'scrot Select Area' "scrot -s $IMG -e $VIEW"
+            menuItem 'scrot Current Focus' "scrot -u $IMG -e $VIEW"
+            menuItem 'scrot Multi-Monitor' "scrot -m $IMG -e $VIEW"
+        menuSubmenuEnd
+    }
+
+    writeImgur() {                  # Write Imgur submenu items
+        menuSubmenu 'imgur' 'Imgur - Upload Screenshot'
+
+        if bl-imgur-upload --test-account;then
+            # take screenshot and upload to account (BBCode is returned)
+            menuSubmenu 'imgur_acct' 'Upload to Account'
+                menuItem 'screenshot Now' "bl-imgur-upload -l"
+                menuItem 'screenshot In 5 secs...' "bl-imgur-upload -l -d 5"
+                menuItem 'screenshot In 10 secs...' "bl-imgur-upload -l -d 10"
+                menuItem 'screenshot Select Area' "bl-imgur-upload -l -s"
+                menuItem 'screenshot Current Window' "bl-imgur-upload -l -w"
+            menuSubmenuEnd
+        else
+            menuItem 'Setup Imgur Account' "bl-imgur-upload --register"
+        fi
+
+        # take screenshot and upload anonymously (BBCode is returned)
+            menuSubmenu 'imgur_anon' 'Anonymous Upload'
+                menuItem "screenshot Now" "bl-imgur-upload"
+                menuItem "screenshot In 5 secs..." "bl-imgur-upload -d 5"
+                menuItem "screenshot In 10 secs..." "bl-imgur-upload -d 10"
+                menuItem "screenshot Select Area" "bl-imgur-upload -s"
+                menuItem "screenshot Current Window" "bl-imgur-upload -w"
+            menuSubmenuEnd
+        menuSubmenuEnd
+    }
+    ;;
+esac
+
 # pipemenu
+
+case "$type" in
+
+xml)
+    menuStart
+    ;;
+esac
+
 for curScrot in "${GRAPHICS_SCROTS[@]}"; do
     if [[ ${AppStatus[$curScrot]} = installed ]]; then
-        if [[ "$curScrot" = scrot ]];then
+        if [[ "$curScrot" = 'scrot' ]];then
             writeScrot
-        elif [[ "$curScrot" = "Imgur upload Screenshot" ]];then
+        elif [[ "$curScrot" = 'Imgur upload Screenshot' ]];then
             writeImgur
         else
-            jgmenuItem 'root' "${AppName[$curScrot]}" "${AppCmd[$curScrot]}"
+            case "$type" in
+            csv)
+                jgmenuItem 'root' "${AppName[$curScrot]}" "${AppCmd[$curScrot]}"
+                ;;
+            xml)
+                menuItem "${AppName[$curScrot]}" "${AppCmd[$curScrot]}"
+                ;;
+            esac
+
         fi
     fi
 done
 
-jgmenuEnd
+case "$type" in
+csv)
+    jgmenuEnd
+    ;;
+xml)
+    menuEnd
+    ;;
+esac
 
 exit 0
