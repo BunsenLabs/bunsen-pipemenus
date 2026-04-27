@@ -1,3 +1,10 @@
+bunsen-pipemenus (13.2-1) carbon; urgency=medium
+
+  * bl-install-pipemenu, bl-scrot-pipemenu: support xml as well as csv,
+     so the output menus can be used by labwc as well as jgmenu. 
+
+ -- John Crawley <john@bunsenlabs.org>  Mon, 27 Apr 2026 17:57:11 +0900
+
 bunsen-pipemenus (13.1.1-1) carbon; urgency=medium
 
   * Loosen dependencies so that bunsen-configs -lite or -base are acceptable.
