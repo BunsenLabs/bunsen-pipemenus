@@ -1,7 +1,7 @@
 #!/bin/bash
 #    bl-conky-pipemenu - an Openbox pipemenu for manipulating conky
 #    Copyright (C) 2015 damo <damo@bunsenlabs.org>
-#                  2016-2021 John Crawley <john@bunsenlabs.org>
+#                  2016-2026 John Crawley <john@bunsenlabs.org>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -44,9 +44,14 @@ BL_COMMON_LIBDIR='/usr/lib/bunsen/common'
 CONKYPATH="$HOME/.config/conky"
 BLDEFAULT="$CONKYPATH/BL-Default-conky.conf"
 CONKYDEFAULT="$CONKYPATH/conky.conf"
-SESSIONS="$CONKYPATH/saved-sessions"
+SAVEDSESSIONS="$CONKYPATH/saved-sessions"
+CUSTOMSESSION="$CONKYPATH/custom-session"
+# if bl-conky-session is launched with a single non-default sessionfile, it will be written to CUSTOMSESSION
+# CUSTOMSESSION will be cleared next time bl-conky-session is run with default or multiple sessionfiles
+
 HELPFILE="/usr/share/bunsen/docs/helpfiles/helpfile-conkytint2-manager.txt"
 
+# shellcheck source=/dev/null
 if ! . "$BL_COMMON_LIBDIR/bl-includes" 2> /dev/null; then
     echo "Error: Failed to source bl-includes in $BL_COMMON_LIBDIR" >&2
     exit 1
@@ -56,24 +61,34 @@ declareDependencies yad
 
 getSessions(){  # read any saved sessions from saved-sessions file
     menuItem "Default Startup Session" "bl-conky-session"
-    if [ -r "$SESSIONS" ]
+    if [[ -r "$SAVEDSESSIONS" ]]
     then
         while read -r session ;do
             [[ -z $session ]] && continue
-            menuItem "${session#${CONKYPATH}/}" "bl-conky-session '$session'"
-        done < "$SESSIONS"
+            menuItem "${session#"${CONKYPATH}"/}" "bl-conky-session '$session'"
+        done < "$SAVEDSESSIONS"
     fi
 }
 
-loadChooser(){
+loadManager(){
+    customsess=$(<"$CUSTOMSESSION")
     if type bl-conky-manager &>/dev/null;then
-        menuItem "Conky Manager" "bl-conky-manager"
+        if [[ -n $customsess ]];then
+            menuItem "Conky Manager" "bl-conky-manager -f $customsess"
+        else
+            menuItem "Conky Manager" "bl-conky-manager"
+        fi
     fi
 }
 
 loadReload(){
+    customsess=$(<"$CUSTOMSESSION")
     if type bl-conky-session &>/dev/null;then
-        menuItem "Reload Startup Session" "bl-conky-session"
+        if [[ -n $customsess ]];then
+            menuItem "Reload Current Startup Session" "bl-conky-session $customsess"
+        else
+            menuItem "Reload Current Startup Session" "bl-conky-session"
+        fi
     fi
 }
 
@@ -92,7 +107,7 @@ loadEditSubmenu(){
                     [[ ${command[i]} = '-c' ]] && { CPATH="${command[i+1]}"; break;}
                     [[ ${command[i]} = '--config='* ]] && { CPATH="${command[i]#--config=}"; break;}
                 done
-                CONKY=${CPATH#${CONKYPATH}/}
+                CONKY=${CPATH#"${CONKYPATH}"/}
                 if [[ -z $CPATH ]];then
                     CPATH="$CONKYDEFAULT"
                     CONKY="Default conky.conf"
@@ -142,16 +157,36 @@ checkHelpfile(){
     fi
 }
 
-menuStart "Conkymenu" "Conky"
-loadChooser
-loadEditSubmenu
-menuSeparator
-loadMove
-menuSeparator
-loadReload
-loadNewsession
-loadSavedsessionSubmenu
-loadStartupChooser
-menuSeparator
-checkHelpfile
-menuEnd
+case "$BUNSEN_SESSION_TYPE"
+in
+x11)
+    menuStart "Conkymenu" "Conky"
+    loadManager
+    loadEditSubmenu
+    menuSeparator
+    loadMove
+    menuSeparator
+    loadReload
+    loadNewsession
+    loadSavedsessionSubmenu
+    loadStartupChooser
+    menuSeparator
+    checkHelpfile
+    menuEnd
+    ;;
+wayland)
+    menuStart "Conkymenu" "Conky"
+    loadManager
+    loadEditSubmenu
+    menuSeparator
+    #loadMove
+    #menuSeparator
+    loadReload
+    loadNewsession
+    loadSavedsessionSubmenu
+    loadStartupChooser
+    menuSeparator
+    checkHelpfile
+    menuEnd
+    ;;
+esac
